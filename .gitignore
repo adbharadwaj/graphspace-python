@@ -11,3 +11,5 @@ dist/
 tests/*
 venv-*
 .idea
+_build
+_templates

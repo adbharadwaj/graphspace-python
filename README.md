@@ -4,10 +4,10 @@ A Python library for the GraphSpace REST API. It simplifies the process of authe
 
 ## Installation
 
-Install yelp-python from PyPI using:
+Install graphspace_api from PyPI using:
 
 ```
-    pip install yelp
+    pip install graphspace_api
 ```
 
 ## Usage

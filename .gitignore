@@ -1,0 +1,13 @@
+*.egg-info
+*.pyc
+.DS_Store
+.cache/
+.coverage
+.tox/
+MANIFEST
+__pycache__
+build/
+dist/
+tests/*
+venv-*
+.idea

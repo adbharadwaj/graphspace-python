@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from graphspace.graphs.classes.gsgraph import GSGraph
+from graphspace_api.graphs.classes.gsgraph import GSGraph
 
 
 class CyJSFormat:

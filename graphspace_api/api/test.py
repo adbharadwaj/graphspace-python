@@ -1,5 +1,5 @@
-from graphspace.graphs.classes.gsgraph import GSGraph
-from graphspace.api.client import GraphSpace
+from graphspace_api.graphs.classes.gsgraph import GSGraph
+from graphspace_api.api.client import GraphSpace
 
 
 def test_graph_crud():

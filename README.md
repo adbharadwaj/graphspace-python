@@ -1,22 +1,22 @@
-# graphspace-python
+## GraphSpace Python Client
 
-A Python library for the GraphSpace REST API. It simplifies the process of authentication, request construction, and response parsing for Python developers using the GraphSpace API. This clientlib is built and tested on Python 2.7.
+GraphSpace Python Client is library for the GraphSpace REST API. It simplifies the process of authentication, request construction, and response parsing for Python developers using the GraphSpace API. This client library is built and tested on Python 2.7.
 
-## Installation
+### Installation
 
 Install graphspace_api from PyPI using:
 
 ```
-    pip install graphspace_api
+pip install graphspace_api
 ```
 
-## Usage
+### Usage
 
 The library uses a client object to query against the API.
 
-### Add a Graph to GraphSpace
+#### Add a Graph to GraphSpace
 
-```
+```python
 graphspace = GraphSpace('user1@example.com', 'user1')
 
 # Users can change the host for the API ENDPOINTS.
@@ -39,9 +39,9 @@ graphspace.post_graph(graph1)
 ```
 
 
-### Get a Graph from GraphSpace
+#### Get a Graph from GraphSpace
 
-```
+```python
 graphspace = GraphSpace('user1@example.com', 'user1')
 
 # Users can change the host for the API ENDPOINTS.
@@ -50,9 +50,9 @@ graphspace = GraphSpace('user1@example.com', 'user1')
 graphspace.get_graph('My Sample Graph')
 ```
 
-### Make a graph publicly viewable on GraphSpace
+#### Make a graph publicly viewable on GraphSpace
 
-```
+```python
 graphspace = GraphSpace('user1@example.com', 'user1')
 
 # Users can change the host for the API ENDPOINTS.
@@ -61,9 +61,9 @@ graphspace = GraphSpace('user1@example.com', 'user1')
 graphspace.make_graph_public('My Sample Graph')
 ```
 
-### Make a graph privately viewable on GraphSpace
+#### Make a graph privately viewable on GraphSpace
 
-```
+```python
 graphspace = GraphSpace('user1@example.com', 'user1')
 
 # Users can change the host for the API ENDPOINTS.
@@ -72,9 +72,9 @@ graphspace = GraphSpace('user1@example.com', 'user1')
 graphspace.make_graph_private('My Sample Graph')
 ```
 
-### Update a graph on GraphSpace
+#### Update a graph on GraphSpace
 
-```
+```python
 graphspace = GraphSpace('user1@example.com', 'user1')
 
 # Users can change the host for the API ENDPOINTS.
@@ -95,9 +95,9 @@ graph1.set_data(data={
 graphspace.update_graph('My Sample Graph', graph=graph1, is_public=1)
 ```
 
-### Delete a Graph from GraphSpace
+#### Delete a Graph from GraphSpace
 
-```
+```python
 graphspace = GraphSpace('user1@example.com', 'user1')
 
 # Users can change the host for the API ENDPOINTS.

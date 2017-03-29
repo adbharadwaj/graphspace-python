@@ -3,24 +3,51 @@ from graphspace_api.api.client import GraphSpace
 
 
 def test_graph_crud():
-	graph_id = test_post_graph(name='MyTestGraph')
-	assert test_get_graph(graph_id)['id'] == graph_id
-	test_update_graph(graph_id)
-	print (test_delete_graph(graph_id))
+	test_post_graph(name='MyTestGraph')
+	test_get_graph(name='MyTestGraph')
+	test_make_graph_public(name='MyTestGraph')
+	test_update_graph(name='MyTestGraph')
+	test_delete_graph(name='MyTestGraph')
 
 
-def test_update_graph(graph_id):
+def test_make_graph_public(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	assert graphspace.make_graph_public(graph_id)['is_public'] == 1
+	graphspace.set_api_host('localhost:8000')
+	assert graphspace.make_graph_public(name)['is_public'] == 1
 
 
-def test_delete_graph(graph_id):
+def test_update_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	return graphspace.delete_graph(graph_id)
+	graphspace.set_api_host('localhost:8000')
+
+	graph1 = GSGraph()
+	if name is not None:
+		graph1.set_name(name)
+	graph1.add_node('a', popup='sample node popup text', label='A updated')
+	graph1.add_node_style('a', shape='ellipse', color='green', width=90, height=90)
+	graph1.add_node('b', popup='sample node popup text', label='B updated')
+	graph1.add_node_style('b', shape='ellipse', color='yellow', width=40, height=40)
+
+	graph1.set_data(data={
+		'description': 'my sample graph'
+	})
+	response = graphspace.update_graph(name, graph=graph1, is_public=1)
+	assert 'name' in response and response['name'] == graph1.get_name()
+	assert response['is_public'] == 1
+	assert len(response['graph_json']['elements']['edges']) == 0
+	assert len(response['graph_json']['elements']['nodes']) == 2
+
+
+def test_delete_graph(name):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	graphspace.delete_graph(name)
+	assert graphspace.get_graph(name) is None
 
 
 def test_post_graph(name=None):
 	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
 	graph1 = GSGraph()
 	if name is not None:
 		graph1.set_name(name)
@@ -35,14 +62,16 @@ def test_post_graph(name=None):
 		'description': 'my sample graph'
 	})
 	graph1.set_tags(['sample'])
-	return graphspace.post_graph(graph1)['id']
+	response = graphspace.post_graph(graph1)
+	assert 'name' in response and response['name'] == graph1.get_name()
 
 
-def test_get_graph(graph_id):
+def test_get_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	return graphspace.get_graph(graph_id)
+	graphspace.set_api_host('localhost:8000')
+	graph = graphspace.get_graph(name)
+	assert graph is not None and graph['name'] == name
 
 
-test_graph_crud()
-# print(test_post_graph(name="MyTestGraph14"))
-# test_get_graph(77)
+test_post_graph('MyTestGraph')
+test_update_graph(name='MyTestGraph')

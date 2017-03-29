@@ -46,7 +46,7 @@ class GSGraph(nx.DiGraph):
 		super(GSGraph, self).__init__(*args, **kwargs)
 		self.graph_json = self.compute_graph_json()
 		self.style_json = {'style': []}
-		self.set_name('Graph ' + datetime.now().strftime("%I:%M%p on %B %d, %Y"))
+		self.set_name('Graph ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
 
 	def compute_graph_json(self):
 

@@ -1,5 +1,5 @@
-from graphspace_api.graphs.classes.gsgraph import GSGraph
-from graphspace_api.api.client import GraphSpace
+from graphspace_python.graphs.classes.gsgraph import GSGraph
+from graphspace_python.api.client import GraphSpace
 
 
 def test_graph_crud():
@@ -73,5 +73,4 @@ def test_get_graph(name):
 	assert graph is not None and graph['name'] == name
 
 
-test_post_graph('MyTestGraph')
-test_update_graph(name='MyTestGraph')
+# test_graph_crud()

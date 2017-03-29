@@ -1,0 +1,1063 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>graphspace_python.graphs.classes.gsgraph &mdash; GraphSpace Python Client 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="GraphSpace Python Client 1.0.0 documentation" href="../../../../index.html"/>
+        <link rel="up" title="Module code" href="../../../index.html"/> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> GraphSpace Python Client
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="simple">
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">GraphSpace Python Client</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>graphspace_python.graphs.classes.gsgraph</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for graphspace_python.graphs.classes.gsgraph</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="kn">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<div class="viewcode-block" id="GSGraph"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph">[docs]</a><span class="k">class</span> <span class="nc">GSGraph</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">):</span>
+	<span class="n">ALLOWED_NODE_SHAPES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rectangle&#39;</span><span class="p">,</span> <span class="s1">&#39;roundrectangle&#39;</span><span class="p">,</span> <span class="s1">&#39;ellipse&#39;</span><span class="p">,</span> <span class="s1">&#39;triangle&#39;</span><span class="p">,</span>
+	                       <span class="s1">&#39;pentagon&#39;</span><span class="p">,</span> <span class="s1">&#39;hexagon&#39;</span><span class="p">,</span> <span class="s1">&#39;heptagon&#39;</span><span class="p">,</span> <span class="s1">&#39;octagon&#39;</span><span class="p">,</span> <span class="s1">&#39;star&#39;</span><span class="p">,</span>
+	                       <span class="s1">&#39;diamond&#39;</span><span class="p">,</span> <span class="s1">&#39;vee&#39;</span><span class="p">,</span> <span class="s1">&#39;rhomboid&#39;</span><span class="p">]</span>
+
+	<span class="n">ALLOWED_NODE_BORDER_STYLES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dotted&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">,</span> <span class="s1">&#39;double&#39;</span><span class="p">]</span>
+
+	<span class="n">ALLOWED_NODE_BACKGROUND_REPEAT</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;no-repeat&#39;</span><span class="p">,</span> <span class="s1">&#39;repeat-x&#39;</span><span class="p">,</span> <span class="s1">&#39;repeat-y&#39;</span><span class="p">,</span> <span class="s1">&#39;repeat&#39;</span><span class="p">]</span>
+
+	<span class="n">ALLOWED_NODE_TEXT_TRANSFORM</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;uppercase&#39;</span><span class="p">,</span> <span class="s1">&#39;lowercase&#39;</span><span class="p">]</span>
+
+	<span class="n">ALLOWED_NODE_TEXT_WRAP</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;wrap&#39;</span><span class="p">]</span>
+
+	<span class="n">ALLOWED_TEXT_BACKROUND_SHAPE</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rectangle&#39;</span><span class="p">,</span> <span class="s1">&#39;roundrectangle&#39;</span><span class="p">]</span>
+
+	<span class="n">ALLOWED_TEXT_HALIGN</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]</span>
+
+	<span class="n">ALLOWED_TEXT_VALIGN</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;bottom&#39;</span><span class="p">]</span>
+
+	<span class="c1">## See http://js.cytoscape.org/#style/labels</span>
+	<span class="n">ALLOWED_TEXT_WRAP</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;wrap&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]</span>
+
+	<span class="c1">## See http://js.cytoscape.org/#style/edge-arrow</span>
+	<span class="n">ALLOWED_ARROW_SHAPES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tee&#39;</span><span class="p">,</span> <span class="s1">&#39;triangle&#39;</span><span class="p">,</span> <span class="s1">&#39;triangle-tee&#39;</span><span class="p">,</span> <span class="s1">&#39;triangle-backcurve&#39;</span><span class="p">,</span>
+	                        <span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="s1">&#39;circle&#39;</span><span class="p">,</span> <span class="s1">&#39;diamond&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]</span>
+
+	<span class="c1">## See http://js.cytoscape.org/#style/edge-line</span>
+	<span class="n">ALLOWED_EDGE_STYLES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dotted&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">]</span>
+
+	<span class="n">ALLOWED_ARROW_FILL</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;filled&#39;</span><span class="p">,</span> <span class="s1">&#39;hollow&#39;</span><span class="p">]</span>
+
+	<span class="n">NODE_COLOR_ATTRIBUTES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;background-color&#39;</span><span class="p">,</span> <span class="s1">&#39;border-color&#39;</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">,</span>
+	                         <span class="s1">&#39;text-outline-color&#39;</span><span class="p">,</span> <span class="s1">&#39;text-shadow-color&#39;</span><span class="p">,</span>
+	                         <span class="s1">&#39;text-border-color&#39;</span><span class="p">]</span>
+
+	<span class="n">EDGE_COLOR_ATTRIBUTES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;line-color&#39;</span><span class="p">,</span> <span class="s1">&#39;source-arrow-color&#39;</span><span class="p">,</span>
+	                         <span class="s1">&#39;mid-source-arrow-color&#39;</span><span class="p">,</span> <span class="s1">&#39;target-arrow-color&#39;</span><span class="p">,</span>
+	                         <span class="s1">&#39;mid-target-arrow-color&#39;</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">GSGraph</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">graph_json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_graph_json</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">style_json</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s1">&#39;Graph &#39;</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%I:%M%p on %B </span><span class="si">%d</span><span class="s2">, %Y&quot;</span><span class="p">))</span>
+
+<div class="viewcode-block" id="GSGraph.compute_graph_json"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.compute_graph_json">[docs]</a>	<span class="k">def</span> <span class="nf">compute_graph_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">graph_json</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span>
+			<span class="s1">&#39;elements&#39;</span><span class="p">:</span> <span class="p">{</span>
+				<span class="s1">&#39;nodes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">True</span><span class="p">)],</span>
+				<span class="s1">&#39;edges&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">True</span><span class="p">)],</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_json</span></div>
+
+<div class="viewcode-block" id="GSGraph.get_graph_json"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.get_graph_json">[docs]</a>	<span class="k">def</span> <span class="nf">get_graph_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_json</span></div>
+
+<div class="viewcode-block" id="GSGraph.get_style_json"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.get_style_json">[docs]</a>	<span class="k">def</span> <span class="nf">get_style_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">style_json</span></div>
+
+<div class="viewcode-block" id="GSGraph.set_graph_json"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_graph_json">[docs]</a>	<span class="k">def</span> <span class="nf">set_graph_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_json</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">graph_json</span> <span class="o">=</span> <span class="n">graph_json</span></div>
+
+<div class="viewcode-block" id="GSGraph.set_style_json"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_style_json">[docs]</a>	<span class="k">def</span> <span class="nf">set_style_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">style_json</span><span class="p">):</span>
+		<span class="n">GSGraph</span><span class="o">.</span><span class="n">validate_style_json</span><span class="p">(</span><span class="n">style_json</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">style_json</span> <span class="o">=</span> <span class="n">style_json</span></div>
+
+<div class="viewcode-block" id="GSGraph.get_name"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.get_name">[docs]</a>	<span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GSGraph.set_name"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_name">[docs]</a>	<span class="k">def</span> <span class="nf">set_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="GSGraph.get_data"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.get_data">[docs]</a>	<span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span></div>
+
+<div class="viewcode-block" id="GSGraph.set_data"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_data">[docs]</a>	<span class="k">def</span> <span class="nf">set_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">()):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GSGraph.get_tags"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.get_tags">[docs]</a>	<span class="k">def</span> <span class="nf">get_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tags&quot;</span><span class="p">,</span> <span class="p">[])</span></div>
+
+<div class="viewcode-block" id="GSGraph.set_tags"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_tags">[docs]</a>	<span class="k">def</span> <span class="nf">set_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="GSGraph.add_edge"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.add_edge">[docs]</a>	<span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">attr</span><span class="p">):</span>
+		<span class="n">attr_dict</span> <span class="o">=</span> <span class="n">attr_dict</span> <span class="k">if</span> <span class="n">attr_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">()</span>
+		<span class="k">if</span> <span class="s1">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attr_dict</span><span class="p">:</span>
+			<span class="n">attr_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">()})</span>
+
+		<span class="k">if</span> <span class="n">popup</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">})</span>
+		<span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="n">k</span><span class="p">})</span>
+
+		<span class="k">if</span> <span class="n">attr_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;is_directed&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span> <span class="ow">or</span> <span class="n">directed</span><span class="p">:</span>
+			<span class="n">attr_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;is_directed&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">})</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">attr_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;is_directed&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">})</span>
+
+		<span class="n">attr_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">target</span><span class="p">})</span>
+
+		<span class="n">GSGraph</span><span class="o">.</span><span class="n">validate_edge_data_properties</span><span class="p">(</span><span class="n">data_properties</span><span class="o">=</span><span class="n">attr_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span> <span class="n">nodes_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">GSGraph</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">attr_dict</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GSGraph.add_node"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.add_node">[docs]</a>	<span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">attr</span><span class="p">):</span>
+		<span class="n">attr_dict</span> <span class="o">=</span> <span class="n">attr_dict</span> <span class="k">if</span> <span class="n">attr_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">()</span>
+
+		<span class="k">if</span> <span class="s1">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attr_dict</span><span class="p">:</span>
+			<span class="n">attr_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">()})</span>
+
+		<span class="k">if</span> <span class="n">popup</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">popup</span><span class="p">})</span>
+		<span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="n">k</span><span class="p">})</span>
+		<span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">label</span><span class="p">})</span>
+
+		<span class="n">attr_dict</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">node_name</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">node_name</span><span class="p">})</span>
+
+		<span class="n">GSGraph</span><span class="o">.</span><span class="n">validate_node_data_properties</span><span class="p">(</span><span class="n">data_properties</span><span class="o">=</span><span class="n">attr_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">()),</span> <span class="n">nodes_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">GSGraph</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">attr_dict</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GSGraph.add_node_style"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.add_node_style">[docs]</a>	<span class="k">def</span> <span class="nf">add_node_style</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;ellipse&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#FFFFFF&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+	                                   <span class="n">width</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">bubble</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">valign</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">halign</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;solid&quot;</span><span class="p">,</span>
+	                                   <span class="n">border_color</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span><span class="p">,</span> <span class="n">border_width</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Add the style for the given node in the style json.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		node_name: string - name of the node.</span>
+<span class="sd">		shape: string -- shape of node. Default = &quot;ellipse&quot;.</span>
+<span class="sd">		color: string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name. Default = white.</span>
+<span class="sd">		height: int -- height of the node&#39;s body. Use None to determine height from the number of lines in the label. Default = None.</span>
+<span class="sd">		width: int -- width of the node&#39;s body, or None to determine width from length of label.  Default=None.</span>
+<span class="sd">		bubble: string -- color of the text outline. Using this option gives a &quot;bubble&quot; effect; see the bubbleeffect() function. Optional.</span>
+<span class="sd">		valign: string -- vertical alignment. Default = center.</span>
+<span class="sd">		halign: string -- horizontal alignment. Default = center.</span>
+<span class="sd">		style: string -- style of border. Default is &quot;solid&quot;.  If Bubble is specified, then style is overwritten.</span>
+<span class="sd">		border_color: string -- color of border. Default is #000000. If Bubble is specified, then style is overwritten.</span>
+<span class="sd">		border_width: int -- width of border. Default is 4.  If Bubble is specified, then style is overwritten.</span>
+
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		None</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">attr_dict</span> <span class="o">=</span> <span class="n">attr_dict</span> <span class="k">if</span> <span class="n">attr_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">()</span>
+
+		<span class="n">selector</span> <span class="o">=</span> <span class="s1">&#39;node[name=&quot;</span><span class="si">%s</span><span class="s1">&quot;]&#39;</span> <span class="o">%</span> <span class="n">node_name</span>
+
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_shape_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_color_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_label_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_width_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_height_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_vertical_alignment_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">valign</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_horizontal_alignment_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">halign</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_border_style_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_border_color_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">border_color</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_border_width_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">border_width</span><span class="p">)</span>
+
+		<span class="c1"># If bubble is specified, use the provided color,</span>
+		<span class="k">if</span> <span class="n">bubble</span><span class="p">:</span>
+			<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_bubble_effect_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">bubble</span><span class="p">,</span> <span class="n">whitetext</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+		<span class="n">attr_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">style_properties</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">set_style_json</span><span class="p">({</span>
+			<span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_style_json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="p">[{</span>
+				<span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="n">selector</span><span class="p">,</span>
+				<span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="n">attr_dict</span>
+			<span class="p">}]</span>
+		<span class="p">})</span></div>
+
+<div class="viewcode-block" id="GSGraph.add_edge_style"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.add_edge_style">[docs]</a>	<span class="k">def</span> <span class="nf">add_edge_style</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">arrow_shape</span><span class="o">=</span><span class="s1">&#39;triangle&#39;</span><span class="p">,</span>
+	                   <span class="n">edge_style</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="n">arrow_fill</span><span class="o">=</span><span class="s1">&#39;filled&#39;</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Add the style for the given edge in the style json.</span>
+
+<span class="sd">		source: string -- unique ID of the source node</span>
+<span class="sd">		target: string -- unique ID of the target node</span>
+<span class="sd">		color: string -- hexadecimal representation of the color (e.g., #000000), or the color name. Default = black.</span>
+<span class="sd">		directed: bool - if True, draw the edge as directed. Default = False.</span>
+<span class="sd">		width: float -- width of the edge.  Default = 1.0</span>
+<span class="sd">		arrow_shape: string -- shape of arrow head. Default is &quot;triangle&quot;</span>
+<span class="sd">		edge_style: string -- style of edge. Default is &quot;solid&quot;</span>
+<span class="sd">		arrow_fill: string -- fill of arrow. Default is &quot;filled&quot;</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		None</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">data_properties</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">data_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">source</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">target</span><span class="p">})</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_edge_color_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_edge_width_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_edge_target_arrow_shape_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">arrow_shape</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_edge_directionality_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">directed</span><span class="p">,</span> <span class="n">arrow_shape</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_edge_line_style_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">edge_style</span><span class="p">)</span>
+		<span class="n">style_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_edge_target_arrow_fill</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">arrow_fill</span><span class="p">)</span>
+
+		<span class="n">attr_dict</span> <span class="o">=</span> <span class="n">attr_dict</span> <span class="k">if</span> <span class="n">attr_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="nb">dict</span><span class="p">()</span>
+
+		<span class="n">selector</span> <span class="o">=</span> <span class="s1">&#39;edge[source=&quot;</span><span class="si">%s</span><span class="s1">&quot;][target=&quot;</span><span class="si">%s</span><span class="s1">&quot;]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+
+		<span class="n">attr_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">style_properties</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">set_style_json</span><span class="p">({</span>
+			<span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_style_json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="p">[{</span>
+				<span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="n">selector</span><span class="p">,</span>
+				<span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="n">attr_dict</span>
+			<span class="p">}]</span>
+		<span class="p">})</span></div>
+
+
+
+
+	<span class="c1">####################################################################</span>
+	<span class="c1">### NODE PROPERTY FUNCTIONS #################################################</span>
+
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_label_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_label_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_label_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the label &quot;label&quot; to a &quot;node_properties&quot; dict and return the &quot;node_properties&quot; dict.</span>
+<span class="sd">		The label is stored under &quot;content&quot; in the node information. Also set wrap = &#39;wrap&#39; so newlines are interpreted.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+<span class="sd">		label - text to display on node. &quot;\n&quot; will be interpreted as a newline.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">label</span><span class="p">})</span>
+		<span class="n">node_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_wrap_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="s1">&#39;wrap&#39;</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_wrap_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_wrap_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_wrap_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">wrap</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Adding node wrap allows the newline &#39;\n&#39; to be interpreted as a line break for the node.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+<span class="sd">		wrap - string denoting the type of wrap: one of &quot;wrap&quot; or &quot;none&quot;.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		Raises</span>
+<span class="sd">		-------</span>
+
+<span class="sd">		Exception - if the wrap parameter is not one of the allowed wrap styles. See ALLOWED_NODE_TEXT_WRAP for more details.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">wrap</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_NODE_TEXT_WRAP</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot; is not an allowed text wrap style.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">wrap</span><span class="p">))</span>
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;text-wrap&#39;</span><span class="p">:</span> <span class="n">wrap</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_shape_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_shape_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_shape_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Add a shape property &quot;shape&quot; to the node_properties.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+<span class="sd">		shape - string -- shape of node. Default = &quot;ellipse&quot;.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		Raises</span>
+<span class="sd">		-------</span>
+
+<span class="sd">		Exception - if the shape is not one of the allowed node shapes. See ALLOWED_NODE_SHAPES global variable.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">shape</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_NODE_SHAPES</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot; is not an allowed shape.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">shape</span><span class="p">))</span>
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="n">shape</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_color_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_color_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_color_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Add a background color to the node_properties.</span>
+<span class="sd">		Color can be a name (e.g., &#39;black&#39;) or an HTML string (e.g., #00000).</span>
+
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+<span class="sd">		color - string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		Raises</span>
+<span class="sd">		-------</span>
+
+<span class="sd">		Exception - if the color is improperly formatted.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">error</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">check_color_hex</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;background-color&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_height_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_height_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_height_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Add a node height property to the node_properties.</span>
+<span class="sd">		If the height is &#39;None&#39;, then the height of the node is determined by the number of newlines in the label that will be displayed.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+<span class="sd">		height - int -- height of the node&#39;s body. Use None to determine height from the number of lines in the label.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">height</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">height</span> <span class="o">=</span> <span class="s1">&#39;label&#39;</span>
+
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="n">height</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_width_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_width_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_width_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Add a node width property to the node_properties.</span>
+<span class="sd">		If the width is &#39;None&#39;, then the width of the node is determined by the length of the label.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+<span class="sd">		width - int -- width of the node&#39;s body, or None to determine width from length of label.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">width</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="c1">## take the longest width of the label after interpreting newlines.</span>
+			<span class="n">width</span> <span class="o">=</span> <span class="s1">&#39;label&#39;</span>
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="n">width</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_bubble_effect_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_bubble_effect_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_bubble_effect_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">whitetext</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Add a &quot;bubble effect&quot; to the node by making the</span>
+<span class="sd">		border color the same as the text outline color.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		whitetext - Boolean -- if True, text is colored white instead of black. Default is False.</span>
+<span class="sd">		color - string -- hexadecimal representation of the text outline color (e.g., #FFFFFF) or a color name.</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;text-outline-color&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">})</span>
+		<span class="n">node_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_node_border_color_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+		<span class="c1"># also make outline thicker and text larger</span>
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;text-outline-width&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span>
+		<span class="k">if</span> <span class="n">whitetext</span><span class="p">:</span>
+			<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;white&#39;</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_border_width_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_border_width_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_border_width_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">border_width</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the border width in node_properties.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;border-width&#39;</span><span class="p">:</span> <span class="n">border_width</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_border_style_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_border_style_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_border_style_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">border_style</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the border width in node_properties.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		Raises</span>
+<span class="sd">		-------</span>
+
+<span class="sd">		Exception - if the border_style parameter is not one of the allowed border styles. See ALLOWED_NODE_BORDER_STYLES for more details.</span>
+
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">border_style</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_NODE_BORDER_STYLES</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot; is not an allowed node border style.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">border_style</span><span class="p">))</span>
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;border-style&#39;</span><span class="p">:</span> <span class="n">border_style</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_border_color_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_border_color_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_border_color_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">border_color</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the border_color in node_properties.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		color - string -- hexadecimal representation of the text outline color (e.g., #FFFFFF) or a color name.</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		Raises</span>
+<span class="sd">		-------</span>
+
+<span class="sd">		Exception - if the border_color is improperly formatted.</span>
+
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">error</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">check_color_hex</span><span class="p">(</span><span class="n">border_color</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;border-color&#39;</span><span class="p">:</span> <span class="n">border_color</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_vertical_alignment_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_vertical_alignment_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_vertical_alignment_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">valign</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the vertical alignment of label in node_properties.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		valign - string -- alignment of text.</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;text-valign&#39;</span><span class="p">:</span> <span class="n">valign</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_node_horizontal_alignment_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_node_horizontal_alignment_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_node_horizontal_alignment_property</span><span class="p">(</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">halign</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the horizontal alignment of label in node_properties.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		valign - halign -- alignment of text.</span>
+<span class="sd">		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of node attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="n">node_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;text-halign&#39;</span><span class="p">:</span> <span class="n">halign</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">node_properties</span></div>
+
+
+	<span class="c1">####################################################################</span>
+	<span class="c1">### EDGE PROPERTY FUNCTIONS #################################################</span>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_edge_color_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_edge_color_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_edge_color_property</span><span class="p">(</span><span class="n">edge_properties</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Add a edge color to the edge_properties.</span>
+
+<span class="sd">		Color both the line and the target arrow; if the edge</span>
+<span class="sd">		is undirected, then the target arrow color doesn&#39;t matter.</span>
+<span class="sd">		If it&#39;s directed, then the arrow color will match the line color.</span>
+
+<span class="sd">		Color can be a name (e.g., &#39;black&#39;) or an HTML string (e.g., #00000).</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.</span>
+<span class="sd">		color - string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of edge attributes.</span>
+
+<span class="sd">		Raises</span>
+<span class="sd">		-------</span>
+
+<span class="sd">		Exception - if the color is improperly formatted.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">error</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">check_color_hex</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+		<span class="n">edge_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;line-color&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">})</span>
+		<span class="n">edge_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;target-arrow-color&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">edge_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_edge_directionality_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_edge_directionality_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_edge_directionality_property</span><span class="p">(</span><span class="n">edge_properties</span><span class="p">,</span> <span class="n">directed</span><span class="p">,</span> <span class="n">arrow_shape</span><span class="o">=</span><span class="s1">&#39;triangle&#39;</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets a target arrow shape.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.</span>
+<span class="sd">		directed - bool - if True, draw the edge as directed.</span>
+<span class="sd">		arrow_shape - string -- shape of arrow. See ALLOWED_ARROW_SHAPES.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of edge attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">directed</span><span class="p">:</span>
+			<span class="n">edge_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_edge_target_arrow_shape_property</span><span class="p">(</span><span class="n">edge_properties</span><span class="p">,</span> <span class="n">arrow_shape</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">edge_properties</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">set_edge_target_arrow_shape_property</span><span class="p">(</span><span class="n">edge_properties</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">edge_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_edge_width_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_edge_width_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_edge_width_property</span><span class="p">(</span><span class="n">edge_properties</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the width property of the edge.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.</span>
+<span class="sd">		width - float -- width of the edge.  Default = 1.0</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of edge attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">edge_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="n">width</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">edge_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_edge_target_arrow_shape_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_edge_target_arrow_shape_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_edge_target_arrow_shape_property</span><span class="p">(</span><span class="n">edge_properties</span><span class="p">,</span> <span class="n">arrow_shape</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Assigns an arrow shape to edge</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of edge attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">edge_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;target-arrow-shape&#39;</span><span class="p">:</span> <span class="n">arrow_shape</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">edge_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_edge_line_style_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_edge_line_style_property">[docs]</a>	<span class="k">def</span> <span class="nf">set_edge_line_style_property</span><span class="p">(</span><span class="n">edge_properties</span><span class="p">,</span> <span class="n">style</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Adds the edge line style to edge</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.</span>
+<span class="sd">		style - string -- style of line</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of edge attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">edge_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;line-style&#39;</span><span class="p">:</span> <span class="n">style</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">edge_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.set_edge_target_arrow_fill"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.set_edge_target_arrow_fill">[docs]</a>	<span class="k">def</span> <span class="nf">set_edge_target_arrow_fill</span><span class="p">(</span><span class="n">edge_properties</span><span class="p">,</span> <span class="n">fill</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Adds the arrowhead fill to edge</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.</span>
+<span class="sd">		fill - string -- fill of arrowhead.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		Dictionary of edge attributes.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">edge_properties</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;target-arrow-fill&#39;</span><span class="p">:</span> <span class="n">fill</span><span class="p">})</span>
+		<span class="k">return</span> <span class="n">edge_properties</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.check_color_hex"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.check_color_hex">[docs]</a>	<span class="k">def</span> <span class="nf">check_color_hex</span><span class="p">(</span><span class="n">color_code</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Check the validity of the hexadecimal code of various node and edge color</span>
+<span class="sd">		related attributes.</span>
+
+<span class="sd">		This function returns an error if the hexadecimal code is not of the format</span>
+<span class="sd">		&#39;#XXX&#39; or &#39;#XXXXXX&#39;, i.e. hexadecimal color code is not valid.</span>
+
+<span class="sd">		:param color_code: color code</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># if color name is given instead of hex code, no need to check its validity</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">color_code</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+			<span class="k">return</span> <span class="bp">None</span>
+		<span class="n">valid</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">r&#39;^#(?:[0-9a-fA-F]{1}){3,6}$&#39;</span><span class="p">,</span> <span class="n">color_code</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">valid</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">color_code</span> <span class="o">+</span> <span class="s1">&#39; is not a valid hex color code.&#39;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">None</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.validate_property"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.validate_property">[docs]</a>	<span class="k">def</span> <span class="nf">validate_property</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">element_selector</span><span class="p">,</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">valid_property_values</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Goes through array to see if property is contained in the array.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		element: Element to search for in network</span>
+<span class="sd">		element_selector: selector for element in the network</span>
+<span class="sd">		property_name: name of the property</span>
+<span class="sd">		valid_property_values: List of valid properties</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		None - if the property is valid or does not exist</span>
+<span class="sd">		Error message - if the property is not valid</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">property_name</span> <span class="ow">in</span> <span class="n">element</span> <span class="ow">and</span> <span class="n">element</span><span class="p">[</span><span class="n">property_name</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_property_values</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">element_selector</span> <span class="o">+</span> <span class="s2">&quot; contains illegal value for property: &quot;</span> <span class="o">+</span> <span class="n">property_name</span> <span class="o">+</span> <span class="s2">&quot;.  Value given for this property was: &quot;</span> <span class="o">+</span> \
+			       <span class="n">element</span><span class="p">[</span>
+				       <span class="n">property_name</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.  Accepted values for property: &quot;</span> <span class="o">+</span> <span class="n">property_name</span> <span class="o">+</span> <span class="s2">&quot; are: [&quot;</span> <span class="o">+</span> <span class="n">valid_property_values</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span>
+
+		<span class="k">return</span> <span class="bp">None</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.validate_node_data_properties"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.validate_node_data_properties">[docs]</a>	<span class="k">def</span> <span class="nf">validate_node_data_properties</span><span class="p">(</span><span class="n">data_properties</span><span class="p">,</span> <span class="n">nodes_list</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Validates the data properties.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		data_properties: dict of node data properties</span>
+<span class="sd">		nodes_list: list of nodes.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		None - if node_properties are valid</span>
+
+<span class="sd">		Raises</span>
+<span class="sd">		--------</span>
+<span class="sd">		Raises an exception - if properties are not valid.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="c1"># Check to see if name is in node_properties</span>
+		<span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data_properties</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;All nodes must have a unique name.  Please verify that all nodes meet this requirement.&quot;</span><span class="p">)</span>
+
+		<span class="c1"># Check the data type of node_properties, should be int, float or string</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_properties</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">basestring</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;All nodes must be strings, integers or floats&quot;</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">data_properties</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">nodes_list</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;There are multiple nodes with name: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+				<span class="n">data_properties</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.  Please make sure all node names are unique.&quot;</span><span class="p">)</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.validate_style_properties"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.validate_style_properties">[docs]</a>	<span class="k">def</span> <span class="nf">validate_style_properties</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">selector</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Validates the style properties.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		style_properties: dict of elements style properties</span>
+<span class="sd">		selector: selector for the element</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		None - if node_properties are valid</span>
+
+<span class="sd">		Raises</span>
+<span class="sd">		--------</span>
+<span class="sd">		Raises an exception - if properties are not valid.</span>
+
+<span class="sd">		Notes</span>
+<span class="sd">		-----</span>
+
+<span class="sd">		Refer to http://js.cytoscape.org/#selectors for selectors.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">error_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+		<span class="c1"># This list contains tuple values (property_name, allowed_property_values) where property_name is the name of the property to be checked and</span>
+		<span class="c1"># allowed_property_values is the list of allowed or legal values for that property.</span>
+		<span class="n">node_validity_checklist</span> <span class="o">=</span> <span class="p">[</span>
+			<span class="c1"># Node specific</span>
+			<span class="p">(</span><span class="s2">&quot;shape&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_NODE_SHAPES</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;border-style&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_NODE_BORDER_STYLES</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;background-repeat&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_NODE_BACKGROUND_REPEAT</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;text-transform&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_NODE_TEXT_TRANSFORM</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;text-wrap&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_NODE_TEXT_WRAP</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;text-background-shape&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_NODE_SHAPES</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;text-halign&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_TEXT_HALIGN</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;text-valign&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_TEXT_VALIGN</span><span class="p">),</span>
+			<span class="c1"># Edge specific</span>
+			<span class="p">(</span><span class="s2">&quot;source-arrow-shape&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_ARROW_SHAPES</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;mid-source-arrow-shape&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_ARROW_SHAPES</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;target-arrow-shape&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_ARROW_SHAPES</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;mid-target-arrow-shape&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_ARROW_SHAPES</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;line-style&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_EDGE_STYLES</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;source-arrow-fill&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_ARROW_FILL</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;mid-source-arrow-fill&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_ARROW_FILL</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;target-arrow-fill&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_ARROW_FILL</span><span class="p">),</span>
+			<span class="p">(</span><span class="s2">&quot;mid-target-arrow-fill&quot;</span><span class="p">,</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">ALLOWED_ARROW_FILL</span><span class="p">)</span>
+		<span class="p">]</span>
+
+		<span class="k">for</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">allowed_property_values</span> <span class="ow">in</span> <span class="n">node_validity_checklist</span><span class="p">:</span>
+			<span class="n">error</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">validate_property</span><span class="p">(</span><span class="n">style_properties</span><span class="p">,</span> <span class="n">selector</span><span class="p">,</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">allowed_property_values</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+				<span class="n">error_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+		<span class="c1"># If style_properties contains a background_black property, check to make sure they have values [-1, 1]</span>
+		<span class="k">if</span> <span class="s2">&quot;border-blacken&quot;</span> <span class="ow">in</span> <span class="n">style_properties</span> <span class="ow">and</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">style_properties</span><span class="p">[</span><span class="s2">&quot;border-blacken&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">error_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selector</span> <span class="o">+</span> <span class="s2">&quot; contains illegal border-blacken value.  Must be between [-1, 1].&quot;</span><span class="p">)</span>
+
+		<span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">NODE_COLOR_ATTRIBUTES</span> <span class="o">+</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">EDGE_COLOR_ATTRIBUTES</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">style_properties</span><span class="p">:</span>
+				<span class="n">error</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="o">.</span><span class="n">check_color_hex</span><span class="p">(</span><span class="n">style_properties</span><span class="p">[</span><span class="n">attr</span><span class="p">])</span>
+				<span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+					<span class="n">error_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">error_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">error_list</span><span class="p">))</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">None</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.validate_edge_data_properties"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.validate_edge_data_properties">[docs]</a>	<span class="k">def</span> <span class="nf">validate_edge_data_properties</span><span class="p">(</span><span class="n">data_properties</span><span class="p">,</span> <span class="n">nodes_list</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Validates the data properties.</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		data_properties: dict of edge data properties</span>
+<span class="sd">		nodes_list: list of nodes.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		None - if edge_properties are valid</span>
+
+<span class="sd">		Raises</span>
+<span class="sd">		--------</span>
+<span class="sd">		Raises an exception - if properties are not valid.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="c1"># Go through all edge properties to verify if edges contain valid properties recognized by CytoscapeJS</span>
+
+		<span class="c1"># If edge has no source and target nodes, throw error since they are required</span>
+		<span class="k">if</span> <span class="s2">&quot;source&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data_properties</span> <span class="ow">or</span> <span class="s2">&quot;target&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data_properties</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+				<span class="s2">&quot;All edges must have at least a source and target property.  Please verify that all edges meet this requirement.&quot;</span><span class="p">)</span>
+
+		<span class="c1"># Check if source and target node of an edge exist in the node list</span>
+		<span class="k">if</span> <span class="n">data_properties</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nodes_list</span> <span class="ow">or</span> <span class="n">data_properties</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nodes_list</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;For all edges source and target nodes should exist in node list&quot;</span><span class="p">)</span>
+
+		<span class="c1"># Check if source and target nodes are strings, integers or floats</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">data_properties</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">basestring</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+					<span class="n">data_properties</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">],</span>
+					<span class="p">(</span><span class="nb">basestring</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))):</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Source and target nodes of the edge must be strings, integers or floats&quot;</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="s2">&quot;is_directed&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data_properties</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;All edges must have a `is_directed` property.  Please verify that all edges meet this requirement.&quot;</span><span class="p">)</span>
+
+		<span class="c1"># Check the data type of node_properties, should be int</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_properties</span><span class="p">[</span><span class="s2">&quot;is_directed&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">data_properties</span><span class="p">[</span><span class="s2">&quot;is_directed&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;All is_directed properties must be integers. Valid values are 0 or 1.&quot;</span><span class="p">)</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GSGraph.validate_style_json"><a class="viewcode-back" href="../../../graphspace_python.graphs.classes.html#graphspace_python.graphs.classes.gsgraph.GSGraph.validate_style_json">[docs]</a>	<span class="k">def</span> <span class="nf">validate_style_json</span><span class="p">(</span><span class="n">style_json</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">style_json</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">json</span> <span class="ow">in</span> <span class="n">style_json</span><span class="p">:</span>
+				<span class="n">GSGraph</span><span class="o">.</span><span class="n">validate_style_json</span><span class="p">(</span><span class="n">json</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">style_json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+				<span class="k">if</span> <span class="s1">&#39;css&#39;</span> <span class="ow">in</span> <span class="n">elem</span><span class="p">:</span>
+					<span class="n">GSGraph</span><span class="o">.</span><span class="n">validate_style_properties</span><span class="p">(</span><span class="n">elem</span><span class="p">[</span><span class="s1">&#39;selector&#39;</span><span class="p">],</span> <span class="n">elem</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">])</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">GSGraph</span><span class="o">.</span><span class="n">validate_style_properties</span><span class="p">(</span><span class="n">elem</span><span class="p">[</span><span class="s1">&#39;selector&#39;</span><span class="p">],</span> <span class="n">elem</span><span class="p">[</span><span class="s1">&#39;style&#39;</span><span class="p">])</span></div></div>
+
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Aditya Bharadwaj.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

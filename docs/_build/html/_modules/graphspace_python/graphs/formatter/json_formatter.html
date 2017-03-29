@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>graphspace_python.graphs.formatter.json_formatter &mdash; GraphSpace Python Client 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="GraphSpace Python Client 1.0.0 documentation" href="../../../../index.html"/>
+        <link rel="up" title="Module code" href="../../../index.html"/> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> GraphSpace Python Client
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="simple">
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">GraphSpace Python Client</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>graphspace_python.graphs.formatter.json_formatter</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for graphspace_python.graphs.formatter.json_formatter</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">graphspace_python.graphs.classes.gsgraph</span> <span class="kn">import</span> <span class="n">GSGraph</span>
+
+
+<div class="viewcode-block" id="CyJSFormat"><a class="viewcode-back" href="../../../graphspace_python.graphs.formatter.html#graphspace_python.graphs.formatter.json_formatter.CyJSFormat">[docs]</a><span class="k">class</span> <span class="nc">CyJSFormat</span><span class="p">:</span>
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="CyJSFormat.create_gsgraph"><a class="viewcode-back" href="../../../graphspace_python.graphs.formatter.html#graphspace_python.graphs.formatter.json_formatter.CyJSFormat.create_gsgraph">[docs]</a>	<span class="k">def</span> <span class="nf">create_gsgraph</span><span class="p">(</span><span class="n">json_string</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		json_string: json_string to be converted to GSGraph type.</span>
+
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		object: GSGraph</span>
+
+<span class="sd">		Notes</span>
+<span class="sd">		-------</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">graph_json</span> <span class="o">=</span> <span class="n">CyJSFormat</span><span class="o">.</span><span class="n">clean_graph_json</span><span class="p">(</span><span class="n">CyJSFormat</span><span class="o">.</span><span class="n">validate_json</span><span class="p">(</span><span class="n">json_string</span><span class="p">))</span>
+		<span class="n">G</span> <span class="o">=</span> <span class="n">GSGraph</span><span class="p">()</span>
+		<span class="n">G</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">graph_json</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+		<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph_json</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">][</span><span class="s2">&quot;nodes&quot;</span><span class="p">]:</span>
+			<span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">attr_dict</span><span class="o">=</span><span class="n">node</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph_json</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">][</span><span class="s2">&quot;edges&quot;</span><span class="p">]:</span>
+			<span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;source&quot;</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;target&quot;</span><span class="p">],</span> <span class="n">attr_dict</span><span class="o">=</span><span class="n">edge</span><span class="p">)</span>
+
+		<span class="n">G</span><span class="o">.</span><span class="n">set_graph_json</span><span class="p">(</span><span class="n">graph_json</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">G</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="CyJSFormat.clean_graph_json"><a class="viewcode-back" href="../../../graphspace_python.graphs.formatter.html#graphspace_python.graphs.formatter.json_formatter.CyJSFormat.clean_graph_json">[docs]</a>	<span class="k">def</span> <span class="nf">clean_graph_json</span><span class="p">(</span><span class="n">original_json_string</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">			Converts original_json_string in CyJS format such that its compatible with Graphspace&#39;s json format.</span>
+
+<span class="sd">			Changes to node attributes:</span>
+<span class="sd">				1. It will copy id value to the name attribute, even if the name attribute is provided by the user.</span>
+<span class="sd">				2. If label is used in data attributes, it will copy label value to content attribute in style attributes.</span>
+<span class="sd">				3. If content is missing, it will add default value of name of the node</span>
+<span class="sd">				4. Convert all shape values to lower case.</span>
+<span class="sd">				5. Convert shape value to default value of ellipse, if a wrong value is given.</span>
+<span class="sd">			Changes to edge attributes:</span>
+<span class="sd">				1. Add name attributes to edge data attributes.</span>
+<span class="sd">				2. Add default target-arrow-shape value of none if not given by the user.</span>
+<span class="sd">			Changes to graph attributes/metadata:</span>
+<span class="sd">				1. If no name is provided change the name to &quot;graph_{{current timestamp}}&quot;</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="c1"># parse old json data</span>
+		<span class="n">old_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">original_json_string</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="s1">&#39;nodes&#39;</span> <span class="ow">in</span> <span class="n">old_json</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;edges&#39;</span> <span class="ow">in</span> <span class="n">old_json</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">]:</span>
+			<span class="n">old_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">old_json</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">][</span><span class="s1">&#39;nodes&#39;</span><span class="p">]]</span>
+			<span class="n">old_edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">old_json</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">][</span><span class="s1">&#39;edges&#39;</span><span class="p">]]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;JSON of graph must have &#39;nodes&#39; and &#39;edges&#39; property&quot;</span><span class="p">)</span>
+
+		<span class="n">new_nodes</span><span class="p">,</span> <span class="n">new_edges</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+		<span class="c1"># format node and edge data</span>
+		<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">old_nodes</span><span class="p">:</span>
+			<span class="k">if</span> <span class="s1">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="p">:</span>
+				<span class="n">node</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+			<span class="c1"># we do not use user provided id&#39;s anymore. if name is not provided we use ids for name.</span>
+			<span class="k">if</span> <span class="s1">&#39;id&#39;</span> <span class="ow">in</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]:</span>
+				<span class="n">node</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+
+			<span class="k">if</span> <span class="s1">&#39;label&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]:</span>
+				<span class="n">node</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+			<span class="n">new_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+		<span class="n">edge_names</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">old_edges</span><span class="p">:</span>
+			<span class="k">if</span> <span class="s1">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">edge</span><span class="p">:</span>
+				<span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+			<span class="c1"># Assignes names to the edges to be the names of the nodes that they are attached to.</span>
+			<span class="c1"># To make sure int and floats are also accepted as source and target nodes of an edge</span>
+			<span class="n">source_node</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;source&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="s2">&quot;source&quot;</span> <span class="ow">in</span> <span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+			<span class="n">target_node</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;target&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="s2">&quot;target&quot;</span> <span class="ow">in</span> <span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+			<span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">source_node</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">target_node</span>
+
+			<span class="c1"># If the ID has not yet been seen (is unique), simply store the ID</span>
+			<span class="c1"># of that edge as source-target</span>
+			<span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">edge_names</span><span class="p">:</span>
+				<span class="n">edge_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="c1"># Otherwise if there are multiple edges with the same ID,</span>
+				<span class="c1"># append a number to the end of the ID so we can distinguish</span>
+				<span class="c1"># multiple edges having the same source and target.</span>
+				<span class="c1"># This needs to be done because HTML DOM needs unique IDs.</span>
+				<span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+				<span class="k">while</span> <span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">edge_names</span><span class="p">:</span>
+					<span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+					<span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>
+				<span class="n">edge_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+			<span class="k">if</span> <span class="s2">&quot;is_directed&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">edge</span><span class="p">:</span>
+				<span class="n">edge</span><span class="p">[</span><span class="s1">&#39;is_directed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">edge</span><span class="p">[</span><span class="s1">&#39;is_directed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+			<span class="n">new_edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="s1">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">old_json</span><span class="p">:</span>
+			<span class="n">old_json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+		<span class="c1"># If name is not provided, name is data</span>
+		<span class="k">if</span> <span class="s1">&#39;name&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">old_json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]:</span>
+			<span class="n">old_json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;graph_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+		<span class="c1"># build the new json</span>
+		<span class="n">new_json</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+		<span class="n">new_json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+		<span class="n">new_json</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">new_json</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">][</span><span class="s1">&#39;nodes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_nodes</span>
+		<span class="n">new_json</span><span class="p">[</span><span class="s1">&#39;elements&#39;</span><span class="p">][</span><span class="s1">&#39;edges&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_edges</span>
+
+		<span class="k">return</span> <span class="n">new_json</span></div>
+
+	<span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="CyJSFormat.validate_json"><a class="viewcode-back" href="../../../graphspace_python.graphs.formatter.html#graphspace_python.graphs.formatter.json_formatter.CyJSFormat.validate_json">[docs]</a>	<span class="k">def</span> <span class="nf">validate_json</span><span class="p">(</span><span class="n">original_json_string</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Validates JSON string to see if all required properties for a GraphSpace Graph are provided.</span>
+<span class="sd">		Cleans the JSON string to the format required for GraphSpace.</span>
+
+<span class="sd">		@param original_json_string: JSON string representation of the graph</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="n">cleaned_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">original_json_string</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="s2">&quot;elements&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cleaned_json</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;JSON of graph must have &#39;elements&#39; property&quot;</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="s2">&quot;nodes&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cleaned_json</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;JSON of graph must have &#39;nodes&#39; property&quot;</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cleaned_json</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">][</span><span class="s2">&quot;nodes&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Nodes property must contain an array&quot;</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="s2">&quot;edges&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cleaned_json</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;JSON of graph must have &#39;edges&#39; property&quot;</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cleaned_json</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">][</span><span class="s2">&quot;edges&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Edges property must contain an array&quot;</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">cleaned_json</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Aditya Bharadwaj.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

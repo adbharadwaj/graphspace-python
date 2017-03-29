@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>graphspace_python.api.client &mdash; GraphSpace Python Client 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="GraphSpace Python Client 1.0.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> GraphSpace Python Client
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="simple">
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">GraphSpace Python Client</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>graphspace_python.api.client</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for graphspace_python.api.client</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">base64</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+
+
+<div class="viewcode-block" id="GraphSpace"><a class="viewcode-back" href="../../graphspace_python.api.html#graphspace_python.api.client.GraphSpace">[docs]</a><span class="k">class</span> <span class="nc">GraphSpace</span><span class="p">:</span>
+	<span class="n">API_HOST</span> <span class="o">=</span> <span class="s1">&#39;www.graphspace.org&#39;</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">auth_token</span> <span class="o">=</span> <span class="s1">&#39;Basic </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="s1">&#39;{0}:{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">api_host</span> <span class="o">=</span> <span class="n">GraphSpace</span><span class="o">.</span><span class="n">API_HOST</span>
+
+<div class="viewcode-block" id="GraphSpace.set_api_host"><a class="viewcode-back" href="../../graphspace_python.api.html#graphspace_python.api.client.GraphSpace.set_api_host">[docs]</a>	<span class="k">def</span> <span class="nf">set_api_host</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">api_host</span> <span class="o">=</span> <span class="n">host</span></div>
+
+	<span class="k">def</span> <span class="nf">_make_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">url_params</span><span class="o">=</span><span class="p">{},</span> <span class="n">data</span><span class="o">=</span><span class="p">{},</span> <span class="n">headers</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">headers</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+				<span class="s1">&#39;Accept&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+				<span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+				<span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_token</span>
+			<span class="p">}</span>
+
+		<span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;GET&quot;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://{0}{1}?{2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+				<span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span>
+				<span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">url_params</span><span class="p">)</span>
+			<span class="p">),</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://{0}{1}?{2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+				<span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span>
+				<span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">url_params</span><span class="p">)</span>
+			<span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;PUT&quot;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s1">&#39;http://{0}{1}?{2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+				<span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span>
+				<span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">url_params</span><span class="p">)</span>
+			<span class="p">),</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;DELETE&quot;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s1">&#39;http://{0}{1}?{2}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span>
+				<span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span>
+				<span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">url_params</span><span class="p">)</span>
+			<span class="p">),</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GraphSpace.post_graph"><a class="viewcode-back" href="../../graphspace_python.api.html#graphspace_python.api.client.GraphSpace.post_graph">[docs]</a>	<span class="k">def</span> <span class="nf">post_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">is_public</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Posts NetworkX graph to the requesting users account on GraphSpace.</span>
+
+<span class="sd">		:param graph: GSGraph object.</span>
+<span class="sd">		:param is_public: 1 if graph is public else 0</span>
+<span class="sd">		:return: Graph Object</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s1">&#39;/api/v1/graphs/&#39;</span><span class="p">,</span>
+		                          <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+			                          <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">graph</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
+			                          <span class="s1">&#39;is_public&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">is_public</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">is_public</span><span class="p">,</span>
+			                          <span class="s1">&#39;owner_email&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
+			                          <span class="s1">&#39;graph_json&#39;</span><span class="p">:</span> <span class="n">graph</span><span class="o">.</span><span class="n">compute_graph_json</span><span class="p">(),</span>
+			                          <span class="s1">&#39;style_json&#39;</span><span class="p">:</span> <span class="n">graph</span><span class="o">.</span><span class="n">get_style_json</span><span class="p">()</span>
+		                          <span class="p">})</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GraphSpace.get_graph"><a class="viewcode-back" href="../../graphspace_python.api.html#graphspace_python.api.client.GraphSpace.get_graph">[docs]</a>	<span class="k">def</span> <span class="nf">get_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Get a graph owned by requesting user with the given name.</span>
+
+<span class="sd">		:return: Graph Object if a graph with given name exists otherwise None.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s1">&#39;/api/v1/graphs/&#39;</span><span class="p">,</span> <span class="n">url_params</span><span class="o">=</span><span class="p">{</span>
+			<span class="s1">&#39;owner_email&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
+			<span class="s1">&#39;names[]&#39;</span><span class="p">:</span> <span class="n">name</span>
+		<span class="p">})</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+		<span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;total&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;graphs&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">None</span></div>
+
+<div class="viewcode-block" id="GraphSpace.get_all_public_graphs"><a class="viewcode-back" href="../../graphspace_python.api.html#graphspace_python.api.client.GraphSpace.get_all_public_graphs">[docs]</a>	<span class="k">def</span> <span class="nf">get_all_public_graphs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Get all public graphs.</span>
+
+<span class="sd">		:param offset: Offset the list of returned entities by this number. Default value is 0.</span>
+<span class="sd">		:param limit: Number of entities to return. Default value is 20.</span>
+<span class="sd">		:return: List of Graphs</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s1">&#39;/api/v1/graphs/&#39;</span><span class="p">,</span> <span class="n">url_params</span><span class="o">=</span><span class="p">{</span>
+			<span class="s1">&#39;is_public&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s1">&#39;limit&#39;</span><span class="p">:</span> <span class="n">limit</span><span class="p">,</span>
+			<span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="n">offset</span>
+		<span class="p">})</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GraphSpace.delete_graph"><a class="viewcode-back" href="../../graphspace_python.api.html#graphspace_python.api.client.GraphSpace.delete_graph">[docs]</a>	<span class="k">def</span> <span class="nf">delete_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Delete a graph with given name.</span>
+
+<span class="sd">		:param name: Name of the graph</span>
+
+<span class="sd">		:return: Success Message from GraphSpace</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_graph</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">graph</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="s1">&#39;id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Graph with name `</span><span class="si">%s</span><span class="s1">` doesnt exist for user `</span><span class="si">%s</span><span class="s1">`!&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">))</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span><span class="s2">&quot;DELETE&quot;</span><span class="p">,</span> <span class="s1">&#39;/api/v1/graphs/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GraphSpace.update_graph"><a class="viewcode-back" href="../../graphspace_python.api.html#graphspace_python.api.client.GraphSpace.update_graph">[docs]</a>	<span class="k">def</span> <span class="nf">update_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">is_public</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Update a graph with given name.</span>
+
+<span class="sd">		:param name: Name of the graph</span>
+<span class="sd">		:param graph: GSGraph object.</span>
+<span class="sd">		:param is_public: 1 if graph is public else 0</span>
+
+<span class="sd">		:return: Graph</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">graph</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+				<span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">graph</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span>
+				<span class="s1">&#39;is_public&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">is_public</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">is_public</span><span class="p">,</span>
+				<span class="s1">&#39;graph_json&#39;</span><span class="p">:</span> <span class="n">graph</span><span class="o">.</span><span class="n">compute_graph_json</span><span class="p">(),</span>
+				<span class="s1">&#39;style_json&#39;</span><span class="p">:</span> <span class="n">graph</span><span class="o">.</span><span class="n">get_style_json</span><span class="p">()</span>
+			<span class="p">}</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+				<span class="s1">&#39;is_public&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">is_public</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">is_public</span><span class="p">,</span>
+			<span class="p">}</span>
+
+		<span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_graph</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">graph</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="s1">&#39;id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Graph with name `</span><span class="si">%s</span><span class="s1">` doesnt exist for user `</span><span class="si">%s</span><span class="s1">`!&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">))</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span><span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s1">&#39;/api/v1/graphs/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]),</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GraphSpace.make_graph_public"><a class="viewcode-back" href="../../graphspace_python.api.html#graphspace_python.api.client.GraphSpace.make_graph_public">[docs]</a>	<span class="k">def</span> <span class="nf">make_graph_public</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Makes a graph publicly viewable.</span>
+
+<span class="sd">		:param name: Name of the graph.</span>
+<span class="sd">		:return: Graph</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_graph</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">is_public</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphSpace.make_graph_private"><a class="viewcode-back" href="../../graphspace_python.api.html#graphspace_python.api.client.GraphSpace.make_graph_private">[docs]</a>	<span class="k">def</span> <span class="nf">make_graph_private</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Makes a graph privately viewable.</span>
+
+<span class="sd">		:param name: Name of the graph.</span>
+<span class="sd">		:return: Graph</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_graph</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">is_public</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Aditya Bharadwaj.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

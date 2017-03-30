@@ -1,4 +1,4 @@
-```
+
 (venv) adb ../graphspace-python (git)-[master] % sphinx-quickstart                
 Welcome to the Sphinx 1.4.4 quickstart utility.
 
@@ -80,4 +80,3 @@ You should now populate your master file docs/index.rst and create other documen
 source files. Use the Makefile to build the docs, like so:
    make builder
 where "builder" is one of the supported builders, e.g. html, latex or linkcheck.
-```

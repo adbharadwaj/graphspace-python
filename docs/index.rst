@@ -3,14 +3,23 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. _contents:
+
 Welcome to GraphSpace Python Client's documentation!
-====================================================
+============================================
+
+.. only:: html
+
+    :Release: |version|
+    :Date: |today|
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
+   Overview
+   tutorial/index
 
 
 Indices and tables

@@ -4,6 +4,9 @@ import re
 
 
 class GSGraph(nx.DiGraph):
+	"""GSGraph Class
+
+	"""
 	ALLOWED_NODE_SHAPES = ['rectangle', 'roundrectangle', 'ellipse', 'triangle',
 	                       'pentagon', 'hexagon', 'heptagon', 'octagon', 'star',
 	                       'diamond', 'vee', 'rhomboid']
@@ -186,8 +189,7 @@ class GSGraph(nx.DiGraph):
 
 	def add_edge_style(self, source, target, attr_dict=None, directed=False, color='#000000', width=1.0, arrow_shape='triangle',
 	                   edge_style='solid', arrow_fill='filled'):
-		"""
-		Add the style for the given edge in the style json.
+		"""Add the style for the given edge in the style json.
 
 		source: string -- unique ID of the source node
 		target: string -- unique ID of the target node

@@ -20,6 +20,7 @@ Contents:
 
    Overview
    tutorial/index
+   reference/index
 
 
 Indices and tables

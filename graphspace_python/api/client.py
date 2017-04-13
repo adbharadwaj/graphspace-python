@@ -28,7 +28,7 @@ class GraphSpace:
 			return requests.get('http://{0}{1}?{2}'.format(
 				self.api_host,
 				six.moves.urllib.parse.quote(path.encode('utf-8')),
-				urllib.urlencode(url_params)
+				urllib.urlencode(url_params, doseq=True)
 			), headers=headers)
 		elif method == "POST":
 			return requests.post('http://{0}{1}?{2}'.format(
@@ -67,14 +67,14 @@ class GraphSpace:
 			                          'style_json': graph.get_style_json()
 		                          }).json()
 
-	def get_graph(self, name):
+	def get_graph(self, name, owner_email=None):
 		"""
 		Get a graph owned by requesting user with the given name.
 
 		:return: Graph Object if a graph with given name exists otherwise None.
 		"""
 		response = self._make_request("GET", '/api/v1/graphs/', url_params={
-			'owner_email': self.username,
+			'owner_email': self.username if owner_email is None else owner_email,
 			'names[]': name
 		}).json()
 
@@ -83,19 +83,65 @@ class GraphSpace:
 		else:
 			return None
 
-	def get_all_public_graphs(self, limit=20, offset=0):
+	def get_public_graphs(self, tags=None, limit=20, offset=0):
 		"""
-		Get all public graphs.
+		Get public graphs.
 
+		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
 		:return: List of Graphs
 		"""
-		return self._make_request("GET", '/api/v1/graphs/', url_params={
+		query = {
 			'is_public': 1,
 			'limit': limit,
 			'offset': offset
-		}).json()
+		}
+
+		if tags is not None:
+			query.update({'tags[]': tags})
+
+		return self._make_request("GET", '/api/v1/graphs/', url_params=query).json()
+
+	def get_shared_graphs(self, tags=None, limit=20, offset=0):
+		"""
+		Get shared graphs.
+
+		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
+		:param offset: Offset the list of returned entities by this number. Default value is 0.
+		:param limit: Number of entities to return. Default value is 20.
+		:return: List of Graphs
+		"""
+		query = {
+			'member_email': self.username,
+			'limit': limit,
+			'offset': offset
+		}
+
+		if tags is not None:
+			query.update({'tags[]': tags})
+
+		return self._make_request("GET", '/api/v1/graphs/', url_params=query).json()
+
+	def get_my_graphs(self, tags=None, limit=20, offset=0):
+		"""
+		Get my graphs.
+
+		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
+		:param offset: Offset the list of returned entities by this number. Default value is 0.
+		:param limit: Number of entities to return. Default value is 20.
+		:return: List of Graphs
+		"""
+		query = {
+			'owner_email': self.username,
+			'limit': limit,
+			'offset': offset
+		}
+
+		if tags is not None:
+			query.update({'tags[]': tags})
+
+		return self._make_request("GET", '/api/v1/graphs/', url_params=query).json()
 
 	def delete_graph(self, name):
 		"""
@@ -111,7 +157,7 @@ class GraphSpace:
 		else:
 			return self._make_request("DELETE", '/api/v1/graphs/' + str(graph['id'])).json()
 
-	def update_graph(self, name, graph=None, is_public=0):
+	def update_graph(self, name, owner_email=None, graph=None, is_public=None):
 		"""
 		Update a graph with given name.
 
@@ -133,7 +179,7 @@ class GraphSpace:
 				'is_public': 0 if is_public is None else is_public,
 			}
 
-		graph = self.get_graph(name)
+		graph = self.get_graph(name, owner_email=owner_email)
 		if graph is None or 'id' not in graph:
 			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.username))
 		else:

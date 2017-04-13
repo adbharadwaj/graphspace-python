@@ -73,4 +73,31 @@ def test_get_graph(name):
 	assert graph is not None and graph['name'] == name
 
 
+def test_get_public_graphs():
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	response = graphspace.get_public_graphs(tags=['Kegg-networks'])
+	# response = graphspace.get_public_graphs()
+	print response['graphs'][0]['graph_json']
+	assert response is not None and len(response['graphs']) > 0
+
+
+def test_get_shared_graphs():
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	# response = graphspace.get_public_graphs(tags=['2015-bioinformatics-xtalk', 'kegg-curated-top-rank-FPs'])
+	response = graphspace.get_shared_graphs()
+	print response['total']
+	assert response is not None and len(response['graphs']) > 0
+
+
+def test_get_my_graphs():
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	# response = graphspace.get_public_graphs(tags=['2015-bioinformatics-xtalk', 'kegg-curated-top-rank-FPs'])
+	response = graphspace.get_my_graphs()
+	print response['total']
+	assert response is not None and len(response['graphs']) > 0
+
+test_get_public_graphs()
 # test_graph_crud()

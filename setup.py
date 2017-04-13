@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 install_requires = [i.strip() for i in open("requirements.txt").readlines()]
 
 setup(name='graphspace_python',
-      version='0.01',
+      version='0.02',
       description='Python client for GraphSpace REST API',
       url='http://github.com/adbharadwaj/graphspace-python',
       author='Aditya Bharadwaj',

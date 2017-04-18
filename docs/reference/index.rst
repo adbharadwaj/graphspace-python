@@ -1,7 +1,7 @@
-graphspace_python.api package
+API Reference
 =============================
 
-graphspace_python.api.client module
+GraphSpace Client
 -----------------------------------
 
 .. automodule:: graphspace_python.api.client

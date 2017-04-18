@@ -97,4 +97,4 @@ def test_get_my_graphs():
 	assert response is not None and len(response['graphs']) > 0
 
 # test_get_public_graphs()
-test_graph_crud()
+# test_graph_crud()

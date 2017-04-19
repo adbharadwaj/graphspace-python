@@ -2,13 +2,20 @@ from graphspace_python.graphs.classes.gsgraph import GSGraph
 from graphspace_python.api.client import GraphSpace
 
 
-def test_graph_crud():
+def test_graphspace_python():
 	test_post_graph(name='MyTestGraph')
-	test_get_graph(name='MyTestGraph')
+	graph = test_get_graph(name='MyTestGraph')
 	test_make_graph_public(name='MyTestGraph')
 	test_update_graph(name='MyTestGraph')
-	test_delete_graph(name='MyTestGraph')
 	test_get_public_graphs()
+	test_get_shared_graphs()
+	test_get_my_graphs()
+	layout = test_post_graph_layout(graph_id=graph['id'])
+	test_get_my_graph_layouts(graph_id=graph['id'])
+	test_update_graph_layout(graph_id=graph['id'], layout_id=layout['id'])
+	test_get_shared_graph_layouts(graph_id=graph['id'])
+	test_delete_graph_layout(graph_id=graph['id'], layout_id=layout['id'])
+	test_delete_graph(name='MyTestGraph')
 
 
 def test_make_graph_public(name):
@@ -72,6 +79,7 @@ def test_get_graph(name):
 	graphspace.set_api_host('localhost:8000')
 	graph = graphspace.get_graph(name)
 	assert graph is not None and graph['name'] == name
+	return graph
 
 
 def test_get_public_graphs():
@@ -96,5 +104,41 @@ def test_get_my_graphs():
 	response = graphspace.get_my_graphs()
 	assert response is not None and len(response['graphs']) > 0
 
-# test_get_public_graphs()
-# test_graph_crud()
+
+def test_get_my_graph_layouts(graph_id):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	response = graphspace.get_my_graph_layouts(graph_id=graph_id)
+	assert response is not None and len(response['layouts']) >= 0
+
+
+def test_get_shared_graph_layouts(graph_id):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	response = graphspace.get_shared_graph_layouts(graph_id=graph_id)
+	assert response is not None and len(response['layouts']) >= 0
+
+
+def test_post_graph_layout(graph_id):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	response = graphspace.post_graph_layout(graph_id=graph_id, layout_name='test layout')
+	assert response is not None and response['is_shared'] == 0
+	return response
+
+
+def test_update_graph_layout(graph_id, layout_id):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	response = graphspace.update_graph_layout(graph_id=graph_id, layout_id=layout_id, layout_name='updated test layout', is_shared=1)
+	assert response is not None and response['is_shared'] == 1 and response['name'] == 'updated test layout'
+
+
+def test_delete_graph_layout(graph_id, layout_id):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	graphspace.delete_graph_layout(graph_id=graph_id, layout_id=layout_id)
+	assert graphspace.get_graph_layout(graph_id=graph_id, layout_id=layout_id) is None
+
+
+# test_graphspace_python()

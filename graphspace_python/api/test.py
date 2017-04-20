@@ -79,7 +79,14 @@ def test_get_graph(name):
 	graphspace.set_api_host('localhost:8000')
 	graph = graphspace.get_graph(name)
 	assert graph is not None and graph['name'] == name
-	return graph
+	return
+
+
+def test_get_graph_by_id():
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	# graphspace.set_api_host('localhost:8000')
+	graph = graphspace.get_graph_by_id(20047)
+	assert graph is not None and 'id' in graph
 
 
 def test_get_public_graphs():
@@ -140,5 +147,5 @@ def test_delete_graph_layout(graph_id, layout_id):
 	graphspace.delete_graph_layout(graph_id=graph_id, layout_id=layout_id)
 	assert graphspace.get_graph_layout(graph_id=graph_id, layout_id=layout_id) is None
 
-
+# test_get_graph_by_id()
 # test_graphspace_python()

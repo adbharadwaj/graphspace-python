@@ -1,15 +1,16 @@
 import base64
-
 import requests
 import six
-import urllib
+from future.standard_library import install_aliases
+install_aliases()
 
 
 class GraphSpace:
 	API_HOST = 'www.graphspace.org'
 
 	def __init__(self, username, password):
-		self.auth_token = 'Basic %s' % base64.b64encode('{0}:{1}'.format(username, password))
+		# self.auth_token = 'Basic %s' % base64.b64encode('{0}:{1}'.format(username, password))
+		self.auth_token = requests.auth.HTTPBasicAuth(username, password)
 		self.username = username
 		self.api_host = GraphSpace.API_HOST
 
@@ -20,34 +21,33 @@ class GraphSpace:
 		if headers is None:
 			headers = {
 				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-				'Authorization': self.auth_token
+				'Content-Type': 'application/json'
 			}
 
 		if method == "GET":
 			return requests.get('http://{0}{1}?{2}'.format(
 				self.api_host,
 				six.moves.urllib.parse.quote(path.encode('utf-8')),
-				urllib.urlencode(url_params, doseq=True)
-			), headers=headers)
+				six.moves.urllib.parse.urlencode(url_params, doseq=True)
+			), headers=headers, auth=self.auth_token)
 		elif method == "POST":
 			return requests.post('http://{0}{1}?{2}'.format(
 				self.api_host,
 				six.moves.urllib.parse.quote(path.encode('utf-8')),
-				urllib.urlencode(url_params)
-			), json=data, headers=headers)
+				six.moves.urllib.parse.urlencode(url_params)
+			), json=data, headers=headers, auth=self.auth_token)
 		elif method == "PUT":
 			return requests.put('http://{0}{1}?{2}'.format(
 				self.api_host,
 				six.moves.urllib.parse.quote(path.encode('utf-8')),
-				urllib.urlencode(url_params)
-			), json=data, headers=headers)
+				six.moves.urllib.parse.urlencode(url_params)
+			), json=data, headers=headers, auth=self.auth_token)
 		elif method == "DELETE":
 			return requests.delete('http://{0}{1}?{2}'.format(
 				self.api_host,
 				six.moves.urllib.parse.quote(path.encode('utf-8')),
-				urllib.urlencode(url_params)
-			), headers=headers)
+				six.moves.urllib.parse.urlencode(url_params)
+			), headers=headers, auth=self.auth_token)
 
 	def post_graph(self, graph, is_public=0):
 		"""Posts NetworkX graph to the requesting users account on GraphSpace.

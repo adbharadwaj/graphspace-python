@@ -1,6 +1,7 @@
 import datetime
 import networkx as nx
 import re
+from six import string_types
 
 
 class GSGraph(nx.DiGraph):
@@ -712,7 +713,7 @@ class GSGraph(nx.DiGraph):
 			raise Exception("All nodes must have a unique name.  Please verify that all nodes meet this requirement.")
 
 		# Check the data type of node_properties, should be int, float or string
-		if not isinstance(data_properties["name"], (basestring, int, float)):
+		if not (isinstance(data_properties["name"], (int, float)) or isinstance(data_properties["name"], string_types)):
 			raise Exception("All nodes must be strings, integers or floats")
 
 		if data_properties["name"] in nodes_list:
@@ -821,9 +822,7 @@ class GSGraph(nx.DiGraph):
 			raise Exception("For all edges source and target nodes should exist in node list")
 
 		# Check if source and target nodes are strings, integers or floats
-		if not (isinstance(data_properties["source"], (basestring, int, float)) and isinstance(
-					data_properties["target"],
-					(basestring, int, float))):
+		if not ((isinstance(data_properties["source"], (int, float)) or isinstance(data_properties["source"], string_types)) and (isinstance(data_properties["target"], (int, float)) or isinstance(data_properties["target"], string_types))):
 			raise Exception("Source and target nodes of the edge must be strings, integers or floats")
 
 		if "is_directed" not in data_properties:

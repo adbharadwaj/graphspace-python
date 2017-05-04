@@ -90,7 +90,7 @@ You can also update your graph anytime using the **update_graph** method.
 Here is an another example.
 
 >>>	# Retrieving graph
->>>	graph = graphspace.get_graph(name) # You can retrieve a graph by id as well - graphspace.get_graph(id)
+>>>	graph = graphspace.get_graph(name) # You can retrieve a graph by id as well - graphspace.get_graph_by_id(id)
 >>>	# Creating updated graph object
 >>>	G = GSGraph()
 >>>	G.set_graph_json(graph.get('graph_json'))

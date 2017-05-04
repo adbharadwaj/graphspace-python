@@ -65,34 +65,88 @@ class GSGraph(nx.DiGraph):
 		return self.graph_json
 
 	def get_graph_json(self):
+		"""
+		Get the json representation for the graph structure.
+
+		:return: dict
+		"""
 		return self.graph_json
 
 	def get_style_json(self):
+		"""
+		Get the json representation for the graph style.
+
+		:return: dict
+		"""
 		return self.style_json
 
 	def set_graph_json(self, graph_json):
+		"""
+		Set the json representation for the graph structure.
+
+		:param graph_json: dict - json representation for the graph structure
+
+		"""
 		self.graph_json = graph_json
 
 	def set_style_json(self, style_json):
+		"""
+		Set the json representation for the graph style.
+
+		:param style_json: dict - json representation for the graph style
+
+		"""
 		GSGraph.validate_style_json(style_json)
 		self.style_json = style_json
 
 	def get_name(self):
+		"""
+		Get the name of graph.
+
+		:return: string
+		"""
 		return self.graph.get("name", None)
 
 	def set_name(self, name):
+		"""
+		Set the name of the graph.
+
+		:param name: name of the graph.
+		"""
 		return self.graph.update({"name": name})
 
 	def get_data(self):
+		"""
+		Get the metadata of the graph.
+
+		:return: dict
+		"""
 		return self.graph
 
 	def set_data(self, data=dict()):
+		"""
+		Set the metadata of the graph.
+
+		:param data: dict - key-value pairs describing the graph.
+
+		"""
 		self.graph.update(data)
 
 	def get_tags(self):
+		"""
+		Get the tags for the graph.
+
+		:return: list of strings
+		"""
 		return self.graph.get("tags", [])
 
 	def set_tags(self, tags):
+		"""
+		Set the tags for the graph.
+
+		:param tags: list of strings
+
+		"""
 		return self.graph.update({"tags": tags})
 
 	def add_edge(self, source, target, attr_dict=None, directed=False, popup=None, k=None, **attr):

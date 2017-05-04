@@ -7,6 +7,7 @@ def test_graphspace_python():
 	graph = test_get_graph(name='MyTestGraph')
 	test_make_graph_public(name='MyTestGraph')
 	test_update_graph(name='MyTestGraph')
+	test_update_graph2(name='MyTestGraph')
 	test_get_public_graphs()
 	test_get_shared_graphs()
 	test_get_my_graphs()
@@ -44,6 +45,23 @@ def test_update_graph(name):
 	assert response['is_public'] == 1
 	assert len(response['graph_json']['elements']['edges']) == 0
 	assert len(response['graph_json']['elements']['nodes']) == 2
+
+
+def test_update_graph2(name):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	# Retrieving graph
+	graph = graphspace.get_graph(name)
+	# Creating updated graph object
+	G = GSGraph()
+	G.set_graph_json(graph.get('graph_json'))
+	G.set_style_json(graph.get('style_json'))
+	G.set_name(graph.get('name'))
+	G.set_tags(graph.get('name'))
+	# Updating graph
+	response = graphspace.update_graph(name, graph=G, is_public=1)
+	assert 'name' in response and response['name'] == G.get_name()
+	assert response['is_public'] == 1
 
 
 def test_delete_graph(name):

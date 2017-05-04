@@ -69,7 +69,7 @@ class GraphSpace:
 	def get_graph(self, name, owner_email=None):
 		"""Get a graph owned by requesting user with the given name.
 
-		:return: Graph Object if a graph with given name exists otherwise None.
+		:return: Dict with graph details if a graph with given name exists otherwise None.
 		"""
 		response = self._make_request("GET", '/api/v1/graphs/', url_params={
 			'owner_email': self.username if owner_email is None else owner_email,
@@ -84,7 +84,7 @@ class GraphSpace:
 	def get_graph_by_id(self, graph_id):
 		"""Get a graph by id.
 
-		:return: Graph Object if a graph with given id exists otherwise None.
+		:return: Dict with graph details if a graph with given id exists otherwise None.
 		"""
 		return self._make_request("GET", '/api/v1/graphs/%s'% graph_id).json()
 

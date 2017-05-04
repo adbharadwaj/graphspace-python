@@ -87,6 +87,17 @@ You can also update your graph anytime using the **update_graph** method.
 ... })
 >>> graphspace.update_graph('My Sample Graph', graph=graph1, is_public=1)
 
+Here is an another example.
+
+>>>	# Retrieving graph
+>>>	graph = graphspace.get_graph(name) # You can retrieve a graph by id as well - graphspace.get_graph(id)
+>>>	# Creating updated graph object
+>>>	G = GSGraph()
+>>>	G.set_graph_json(graph.get('graph_json'))
+>>>	G.set_style_json(graph.get('style_json'))
+>>>	G.set_name(graph.get('name'))
+>>>	# Updating graph
+>>>	response = graphspace.update_graph(name, graph=G)
 
 Making a graph public on GraphSpace
 -----------------------------------

@@ -8,7 +8,6 @@ MANIFEST
 __pycache__
 build/
 dist/
-tests/*
 venv-*
 .idea
 _build

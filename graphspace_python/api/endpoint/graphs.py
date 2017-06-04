@@ -1,4 +1,6 @@
 from graphspace_python.api.config import GRAPHS_PATH
+from graphspace_python.api.obj.single_graph_response import SingleGraphResponse
+from graphspace_python.api.obj.multiple_graph_response import MultipleGraphResponse
 
 class Graphs(object):
 
@@ -13,14 +15,16 @@ class Graphs(object):
 		:return: Graph Object
 		"""
 
-		return self.client._make_request("POST", GRAPHS_PATH,
-		                          data={
-			                          'name': graph.get_name(),
-			                          'is_public': 0 if is_public is None else is_public,
-			                          'owner_email': self.client.username,
-			                          'graph_json': graph.compute_graph_json(),
-			                          'style_json': graph.get_style_json()
-		                          }).json()
+		return SingleGraphResponse(
+			self.client._make_request("POST", GRAPHS_PATH,
+			                          data={
+				                          'name': graph.get_name(),
+				                          'is_public': 0 if is_public is None else is_public,
+				                          'owner_email': self.client.username,
+				                          'graph_json': graph.compute_graph_json(),
+				                          'style_json': graph.get_style_json()
+			                          }).json()
+		)
 
 	def get_graph(self, name, owner_email=None):
 		"""Get a graph owned by requesting user with the given name.
@@ -33,7 +37,9 @@ class Graphs(object):
 		}).json()
 
 		if response.get('total', 0) > 0:
-			return response.get('graphs')[0]
+			return SingleGraphResponse(
+				response.get('graphs')[0]
+			)
 		else:
 			return None
 
@@ -43,7 +49,9 @@ class Graphs(object):
 		:return: Dict with graph details if a graph with given id exists otherwise None.
 		"""
 		graph_by_id_path = GRAPHS_PATH + str(graph_id)
-		return self.client._make_request("GET", graph_by_id_path).json()
+		return SingleGraphResponse(
+			self.client._make_request("GET", graph_by_id_path).json()
+		)
 
 	def get_public_graphs(self, tags=None, limit=20, offset=0):
 		"""Get public graphs.
@@ -62,7 +70,9 @@ class Graphs(object):
 		if tags is not None:
 			query.update({'tags[]': tags})
 
-		return self.client._make_request("GET", GRAPHS_PATH, url_params=query).json()
+		return MultipleGraphResponse(
+			self.client._make_request("GET", GRAPHS_PATH, url_params=query).json()
+		)
 
 	def get_shared_graphs(self, tags=None, limit=20, offset=0):
 		"""Get graphs shared with the groups where requesting user is a member.
@@ -81,7 +91,9 @@ class Graphs(object):
 		if tags is not None:
 			query.update({'tags[]': tags})
 
-		return self.client._make_request("GET", GRAPHS_PATH, url_params=query).json()
+		return MultipleGraphResponse(
+			self.client._make_request("GET", GRAPHS_PATH, url_params=query).json()
+		)
 
 	def get_my_graphs(self, tags=None, limit=20, offset=0):
 		"""Get graphs created by the requesting user.
@@ -100,7 +112,9 @@ class Graphs(object):
 		if tags is not None:
 			query.update({'tags[]': tags})
 
-		return self.client._make_request("GET", GRAPHS_PATH, url_params=query).json()
+		return MultipleGraphResponse(
+			self.client._make_request("GET", GRAPHS_PATH, url_params=query).json()
+		)
 
 	def delete_graph(self, name):
 		"""Delete graph with the given name.
@@ -109,11 +123,11 @@ class Graphs(object):
 
 		:return: Success/Error Message from GraphSpace
 		"""
-		graph = self.get_graph(name)
-		if graph is None or 'id' not in graph:
+		response = self.get_graph(name)
+		if response is None or response.graph.id is None:
 			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 		else:
-			graph_by_id_path = GRAPHS_PATH + str(graph['id'])
+			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
 			return self.client._make_request("DELETE", graph_by_id_path).json()
 
 	def update_graph(self, name, owner_email=None, graph=None, is_public=None):
@@ -138,12 +152,14 @@ class Graphs(object):
 				'is_public': 0 if is_public is None else is_public,
 			}
 
-		graph = self.get_graph(name, owner_email=owner_email)
-		if graph is None or 'id' not in graph:
+		response = self.get_graph(name, owner_email=owner_email)
+		if response is None or response.graph.id is None:
 			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 		else:
-			graph_by_id_path = GRAPHS_PATH + str(graph['id'])
-			return self.client._make_request("PUT", graph_by_id_path, data=data).json()
+			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+			return SingleGraphResponse(
+				self.client._make_request("PUT", graph_by_id_path, data=data).json()
+			)
 
 	def make_graph_public(self, name):
 		"""Makes a graph publicly viewable.

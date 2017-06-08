@@ -4,7 +4,8 @@ from graphspace_python.api.obj.response_object import ResponseObject
 class GraphResponse(ResponseObject):
 
     _fields = [
-        'total'
+        'total',
+        'message'
     ]
 
     def __init__(self, response):

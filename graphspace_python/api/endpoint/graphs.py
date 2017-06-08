@@ -127,7 +127,9 @@ class Graphs(object):
 			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 		else:
 			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
-			return self.client._make_request("DELETE", graph_by_id_path).json()
+			return GraphResponse(
+				self.client._make_request("DELETE", graph_by_id_path).json()
+			)
 
 	def update_graph(self, name, owner_email=None, graph=None, is_public=None):
 		"""Update graph with the given name with given details.

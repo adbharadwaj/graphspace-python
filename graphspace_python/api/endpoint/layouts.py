@@ -1,4 +1,5 @@
 from graphspace_python.api.config import LAYOUTS_PATH
+from graphspace_python.api.obj.layout_response import LayoutResponse
 
 class Layouts(object):
 
@@ -98,7 +99,9 @@ class Layouts(object):
 			data.update({'style_json': {'style': []}})
 
 		layouts_path = LAYOUTS_PATH.format(graph_id)
-		return self.client._make_request("POST", layouts_path, data=data).json()
+		return LayoutResponse(
+			self.client._make_request("POST", layouts_path, data=data).json()
+		)
 
 	def update_graph_layout(self, graph_id, layout_id, layout_name=None, positions_json=None, style_json=None, is_shared=None):
 		"""Update layout with given layout_id for the graph with given graph_id.
@@ -188,7 +191,9 @@ class Layouts(object):
 			data.update({'style_json': style_json})
 
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
-		return self.client._make_request("PUT", layout_by_id_path, data=data).json()
+		return LayoutResponse(
+			self.client._make_request("PUT", layout_by_id_path, data=data).json()
+		)
 
 	def delete_graph_layout(self, graph_id, layout_id):
 		"""Delete the given layout for the graph.
@@ -199,7 +204,9 @@ class Layouts(object):
 		"""
 
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
-		return self.client._make_request("DELETE", layout_by_id_path).json()
+		return LayoutResponse(
+			self.client._make_request("DELETE", layout_by_id_path).json()
+		)
 
 	def get_graph_layout(self, graph_id, layout_id):
 		"""Get the given layout for the graph.
@@ -210,8 +217,9 @@ class Layouts(object):
 		"""
 
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
-		response = self.client._make_request("GET", layout_by_id_path).json()
-		return None if 'id' not in response else response
+		return LayoutResponse(
+			self.client._make_request("GET", layout_by_id_path).json()
+		)
 
 	def get_my_graph_layouts(self, graph_id, limit=20, offset=0):
 		"""Get layouts created by the requesting user for the graph with given graph_id
@@ -228,7 +236,9 @@ class Layouts(object):
 		}
 
 		layouts_path = LAYOUTS_PATH.format(graph_id)
-		return self.client._make_request("GET", layouts_path, url_params=query).json()
+		return LayoutResponse(
+			self.client._make_request("GET", layouts_path, url_params=query).json()
+		)
 
 	def get_shared_graph_layouts(self, graph_id, limit=20, offset=0):
 		"""Get layouts shared with the requesting user for the graph with given graph_id .
@@ -245,4 +255,6 @@ class Layouts(object):
 		}
 
 		layouts_path = LAYOUTS_PATH.format(graph_id)
-		return self.client._make_request("GET", layouts_path, url_params=query).json()
+		return LayoutResponse(
+			self.client._make_request("GET", layouts_path, url_params=query).json()
+		)

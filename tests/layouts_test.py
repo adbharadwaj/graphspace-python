@@ -14,6 +14,7 @@ def test_get_my_graph_layouts(graph_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	response = graphspace.get_my_graph_layouts(graph_id=graph_id)
+    assert type(response) is LayoutResponse
 	assert hasattr(response, 'layouts') and len(response.layouts) >= 0
 
 
@@ -21,6 +22,7 @@ def test_get_shared_graph_layouts(graph_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	response = graphspace.get_shared_graph_layouts(graph_id=graph_id)
+    assert type(response) is LayoutResponse
 	assert hasattr(response, 'layouts') and len(response.layouts) >= 0
 
 
@@ -28,6 +30,7 @@ def test_post_graph_layout(graph_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	response = graphspace.post_graph_layout(graph_id=graph_id, layout_name='test layout')
+    assert type(response) is LayoutResponse
 	assert hasattr(response, 'layout') and response.layout.is_shared == 0
 	return response
 
@@ -36,6 +39,7 @@ def test_update_graph_layout(graph_id, layout_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	response = graphspace.update_graph_layout(graph_id=graph_id, layout_id=layout_id, layout_name='updated test layout', is_shared=1)
+    assert type(response) is LayoutResponse
 	assert hasattr(response, 'layout') and response.layout.is_shared == 1 and response.layout.name == 'updated test layout'
 
 

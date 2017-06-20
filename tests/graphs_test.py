@@ -19,7 +19,8 @@ def test_graphs_endpoint():
 def test_make_graph_public(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
-	assert graphspace.make_graph_public(name).graph.is_public == 1
+	response = graphspace.make_graph_public(name)
+	assert type(response) is GraphResponse and response.graph.is_public == 1
 
 
 def test_update_graph(name):
@@ -38,6 +39,7 @@ def test_update_graph(name):
 		'description': 'my sample graph'
 	})
 	response = graphspace.update_graph(name, graph=graph1, is_public=1)
+	assert type(response) is GraphResponse
 	assert hasattr(response, 'graph') and response.graph.name == graph1.get_name()
 	assert response.graph.is_public == 1
 	assert len(response.graph.graph_json['elements']['edges']) == 0
@@ -57,6 +59,7 @@ def test_update_graph2(name):
 	G.set_tags(graph.name)
 	# Updating graph
 	response = graphspace.update_graph(name, graph=G, is_public=1)
+	assert type(response) is GraphResponse
 	assert hasattr(response, 'graph') and response.graph.name == G.get_name()
 	assert response.graph.is_public == 1
 
@@ -86,6 +89,7 @@ def test_post_graph(name=None):
 	})
 	graph1.set_tags(['sample'])
 	response = graphspace.post_graph(graph1)
+	assert type(response) is GraphResponse
 	assert hasattr(response, 'graph') and response.graph.name == graph1.get_name()
 
 
@@ -93,6 +97,7 @@ def test_get_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	response = graphspace.get_graph(name)
+	assert type(response) is GraphResponse
 	assert hasattr(response, 'graph') and response.graph.name == name
 	return graph
 
@@ -101,6 +106,7 @@ def test_get_graph_by_id():
 	graphspace = GraphSpace('flud', 'Muraliistheman!')
 	# graphspace.set_api_host('localhost:8000')
 	response = graphspace.get_graph_by_id(20047)
+	assert type(response) is GraphResponse
 	assert hasattr(response, 'graph') and response.graph.id == 20047
 
 
@@ -108,6 +114,7 @@ def test_get_public_graphs():
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	response = graphspace.get_public_graphs(tags=['Kegg-networks'])
+	assert type(response) is GraphResponse
 	assert hasattr(response, 'graphs') and len(response.graphs) > 0
 
 
@@ -116,6 +123,7 @@ def test_get_shared_graphs():
 	graphspace.set_api_host('localhost:8000')
 	# response = graphspace.get_public_graphs(tags=['2015-bioinformatics-xtalk', 'kegg-curated-top-rank-FPs'])
 	response = graphspace.get_shared_graphs()
+	assert type(response) is GraphResponse
 	assert hasattr(response, 'graphs') and len(response.graphs) > 0
 
 
@@ -124,4 +132,5 @@ def test_get_my_graphs():
 	graphspace.set_api_host('localhost:8000')
 	# response = graphspace.get_public_graphs(tags=['2015-bioinformatics-xtalk', 'kegg-curated-top-rank-FPs'])
 	response = graphspace.get_my_graphs()
+	assert type(response) is GraphResponse
 	assert hasattr(response, 'graphs') and len(response.graphs) > 0

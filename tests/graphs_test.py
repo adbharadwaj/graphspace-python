@@ -51,16 +51,12 @@ def test_update_graph2(name):
 	graphspace.set_api_host('localhost:8000')
 	# Retrieving graph
 	graph = graphspace.get_graph(name).graph
-	# Creating updated graph object
-	G = GSGraph()
-	G.set_graph_json(graph.graph_json)
-	G.set_style_json(graph.style_json)
-	G.set_name(graph.name)
-	G.set_tags(graph.name)
+	# Modifying the retrieved graph
+	graph.add_node('z', popup='sample node popup text', label='Z')
 	# Updating graph
-	response = graphspace.update_graph(name, graph=G, is_public=1)
+	response = graphspace.update_graph(name, graph=graph, is_public=1)
 	assert type(response) is GraphResponse
-	assert hasattr(response, 'graph') and response.graph.name == G.get_name()
+	assert hasattr(response, 'graph') and 'z' in response.graph.node.keys()
 	assert response.graph.is_public == 1
 
 

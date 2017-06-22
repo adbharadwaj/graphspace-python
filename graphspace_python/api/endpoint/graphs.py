@@ -21,7 +21,8 @@ class Graphs(object):
 				                          'is_public': 0 if is_public is None else is_public,
 				                          'owner_email': self.client.username,
 				                          'graph_json': graph.compute_graph_json(),
-				                          'style_json': graph.get_style_json()
+				                          'style_json': graph.get_style_json(),
+										  'tags': graph.get_tags()
 			                          }).json()
 		)
 
@@ -146,7 +147,8 @@ class Graphs(object):
 				'name': graph.get_name(),
 				'is_public': 0 if is_public is None else is_public,
 				'graph_json': graph.compute_graph_json(),
-				'style_json': graph.get_style_json()
+				'style_json': graph.get_style_json(),
+				'tags': graph.get_tags()
 			}
 		else:
 			data = {

@@ -5,7 +5,7 @@ from graphspace_python.api.obj.graph_response import GraphResponse
 
 def test_graphs_endpoint():
 	test_post_graph(name='MyTestGraph')
-	graph = test_get_graph(name='MyTestGraph')
+	test_get_graph(name='MyTestGraph')
 	test_make_graph_public(name='MyTestGraph')
 	test_update_graph(name='MyTestGraph')
 	test_update_graph2(name='MyTestGraph')
@@ -52,11 +52,13 @@ def test_update_graph2(name):
 	# Retrieving graph
 	graph = graphspace.get_graph(name).graph
 	# Modifying the retrieved graph
+	graph.set_name('Updated test graph')
 	graph.add_node('z', popup='sample node popup text', label='Z')
 	# Updating graph
 	response = graphspace.update_graph(name, graph=graph, is_public=1)
 	assert type(response) is GraphResponse
-	assert hasattr(response, 'graph') and 'z' in response.graph.node.keys()
+	assert hasattr(response, 'graph') and response.graph.name == graph.get_name()
+	assert 'z' in response.graph.node.keys()
 	assert response.graph.is_public == 1
 
 
@@ -95,7 +97,6 @@ def test_get_graph(name):
 	response = graphspace.get_graph(name)
 	assert type(response) is GraphResponse
 	assert hasattr(response, 'graph') and response.graph.name == name
-	return graph
 
 
 def test_get_graph_by_id():

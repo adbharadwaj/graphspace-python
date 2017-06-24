@@ -25,7 +25,7 @@ class Layouts(object):
 
 		layouts_path = LAYOUTS_PATH.format(graph_id)
 		return LayoutResponse(
-			self.client._make_request("POST", layouts_path, data=data).json()
+			self.client._make_request("POST", layouts_path, data=data)
 		)
 
 	def update_graph_layout(self, graph_id, layout_id, layout=None, is_shared=None):
@@ -51,7 +51,7 @@ class Layouts(object):
 
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
 		return LayoutResponse(
-			self.client._make_request("PUT", layout_by_id_path, data=data).json()
+			self.client._make_request("PUT", layout_by_id_path, data=data)
 		)
 
 	def delete_graph_layout(self, graph_id, layout_id):
@@ -64,7 +64,7 @@ class Layouts(object):
 
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
 		return LayoutResponse(
-			self.client._make_request("DELETE", layout_by_id_path).json()
+			self.client._make_request("DELETE", layout_by_id_path)
 		)
 
 	def get_graph_layout(self, graph_id, layout_id):
@@ -76,7 +76,7 @@ class Layouts(object):
 		"""
 
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
-		response = self.client._make_request("GET", layout_by_id_path).json()
+		response = self.client._make_request("GET", layout_by_id_path)
 		return None if 'id' not in response else LayoutResponse(response)
 
 	def get_my_graph_layouts(self, graph_id, limit=20, offset=0):
@@ -95,7 +95,7 @@ class Layouts(object):
 
 		layouts_path = LAYOUTS_PATH.format(graph_id)
 		return LayoutResponse(
-			self.client._make_request("GET", layouts_path, url_params=query).json()
+			self.client._make_request("GET", layouts_path, url_params=query)
 		)
 
 	def get_shared_graph_layouts(self, graph_id, limit=20, offset=0):
@@ -114,5 +114,5 @@ class Layouts(object):
 
 		layouts_path = LAYOUTS_PATH.format(graph_id)
 		return LayoutResponse(
-			self.client._make_request("GET", layouts_path, url_params=query).json()
+			self.client._make_request("GET", layouts_path, url_params=query)
 		)

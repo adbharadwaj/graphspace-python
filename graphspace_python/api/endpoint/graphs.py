@@ -23,7 +23,7 @@ class Graphs(object):
 				                          'graph_json': graph.compute_graph_json(),
 				                          'style_json': graph.get_style_json(),
 										  'tags': graph.get_tags()
-			                          }).json()
+			                          })
 		)
 
 	def get_graph(self, name, owner_email=None):
@@ -34,7 +34,7 @@ class Graphs(object):
 		response = self.client._make_request("GET", GRAPHS_PATH, url_params={
 			'owner_email': self.client.username if owner_email is None else owner_email,
 			'names[]': name
-		}).json()
+		})
 
 		if response.get('total', 0) > 0:
 			return GraphResponse(
@@ -50,7 +50,7 @@ class Graphs(object):
 		"""
 		graph_by_id_path = GRAPHS_PATH + str(graph_id)
 		return GraphResponse(
-			self.client._make_request("GET", graph_by_id_path).json()
+			self.client._make_request("GET", graph_by_id_path)
 		)
 
 	def get_public_graphs(self, tags=None, limit=20, offset=0):
@@ -71,7 +71,7 @@ class Graphs(object):
 			query.update({'tags[]': tags})
 
 		return GraphResponse(
-			self.client._make_request("GET", GRAPHS_PATH, url_params=query).json()
+			self.client._make_request("GET", GRAPHS_PATH, url_params=query)
 		)
 
 	def get_shared_graphs(self, tags=None, limit=20, offset=0):
@@ -92,7 +92,7 @@ class Graphs(object):
 			query.update({'tags[]': tags})
 
 		return GraphResponse(
-			self.client._make_request("GET", GRAPHS_PATH, url_params=query).json()
+			self.client._make_request("GET", GRAPHS_PATH, url_params=query)
 		)
 
 	def get_my_graphs(self, tags=None, limit=20, offset=0):
@@ -113,7 +113,7 @@ class Graphs(object):
 			query.update({'tags[]': tags})
 
 		return GraphResponse(
-			self.client._make_request("GET", GRAPHS_PATH, url_params=query).json()
+			self.client._make_request("GET", GRAPHS_PATH, url_params=query)
 		)
 
 	def delete_graph(self, name):
@@ -129,7 +129,7 @@ class Graphs(object):
 		else:
 			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
 			return GraphResponse(
-				self.client._make_request("DELETE", graph_by_id_path).json()
+				self.client._make_request("DELETE", graph_by_id_path)
 			)
 
 	def update_graph(self, name, owner_email=None, graph=None, is_public=None):
@@ -161,7 +161,7 @@ class Graphs(object):
 		else:
 			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
 			return GraphResponse(
-				self.client._make_request("PUT", graph_by_id_path, data=data).json()
+				self.client._make_request("PUT", graph_by_id_path, data=data)
 			)
 
 	def make_graph_public(self, name):

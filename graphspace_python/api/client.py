@@ -45,6 +45,16 @@ class GraphSpace(object):
 	def set_api_host(self, host):
 		self.api_host = host
 
+	def _check_error(self, response):
+		# Check if the response has any HTTPError and raise exception
+		# else return the response json data
+		try:
+			response.raise_for_status()
+		except requests.exceptions.HTTPError as error:
+			self._error_handler.raise_error(error, response.json())
+		else:
+			return response.json()
+
 	def _make_request(self, method, path, url_params={}, data={}, headers=None):
 		if headers is None:
 			headers = {
@@ -53,26 +63,34 @@ class GraphSpace(object):
 			}
 
 		if method == "GET":
-			return requests.get('http://{0}{1}?{2}'.format(
-				self.api_host,
-				six.moves.urllib.parse.quote(path.encode('utf-8')),
-				six.moves.urllib.parse.urlencode(url_params, doseq=True)
-			), headers=headers, auth=self.auth_token)
+			return self._check_error(
+				requests.get('http://{0}{1}?{2}'.format(
+					self.api_host,
+					six.moves.urllib.parse.quote(path.encode('utf-8')),
+					six.moves.urllib.parse.urlencode(url_params, doseq=True)
+				), headers=headers, auth=self.auth_token)
+			)
 		elif method == "POST":
-			return requests.post('http://{0}{1}?{2}'.format(
-				self.api_host,
-				six.moves.urllib.parse.quote(path.encode('utf-8')),
-				six.moves.urllib.parse.urlencode(url_params)
-			), json=data, headers=headers, auth=self.auth_token)
+			return self._check_error(
+				requests.post('http://{0}{1}?{2}'.format(
+					self.api_host,
+					six.moves.urllib.parse.quote(path.encode('utf-8')),
+					six.moves.urllib.parse.urlencode(url_params)
+				), json=data, headers=headers, auth=self.auth_token)
+			)
 		elif method == "PUT":
-			return requests.put('http://{0}{1}?{2}'.format(
-				self.api_host,
-				six.moves.urllib.parse.quote(path.encode('utf-8')),
-				six.moves.urllib.parse.urlencode(url_params)
-			), json=data, headers=headers, auth=self.auth_token)
+			return self._check_error(
+				requests.put('http://{0}{1}?{2}'.format(
+					self.api_host,
+					six.moves.urllib.parse.quote(path.encode('utf-8')),
+					six.moves.urllib.parse.urlencode(url_params)
+				), json=data, headers=headers, auth=self.auth_token)
+			)
 		elif method == "DELETE":
-			return requests.delete('http://{0}{1}?{2}'.format(
-				self.api_host,
-				six.moves.urllib.parse.quote(path.encode('utf-8')),
-				six.moves.urllib.parse.urlencode(url_params)
-			), headers=headers, auth=self.auth_token)
+			return self._check_error(
+				requests.delete('http://{0}{1}?{2}'.format(
+					self.api_host,
+					six.moves.urllib.parse.quote(path.encode('utf-8')),
+					six.moves.urllib.parse.urlencode(url_params)
+				), headers=headers, auth=self.auth_token)
+			)

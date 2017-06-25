@@ -1,10 +1,12 @@
 from graphspace_python.graphs.classes.gsgraph import GSGraph
 from graphspace_python.api.client import GraphSpace
 from graphspace_python.api.obj.graph_response import GraphResponse
+from layouts_test import test_layouts_endpoint
 
 
 def test_graphs_endpoint():
-	test_post_graph(name='MyTestGraph')
+	graph = test_post_graph(name='MyTestGraph')
+	test_layouts_endpoint(graph.id)
 	test_get_graph(name='MyTestGraph')
 	test_make_graph_public(name='MyTestGraph')
 	test_update_graph(name='MyTestGraph')
@@ -89,6 +91,7 @@ def test_post_graph(name=None):
 	response = graphspace.post_graph(graph1)
 	assert type(response) is GraphResponse
 	assert hasattr(response, 'graph') and response.graph.name == graph1.get_name()
+	return response.graph
 
 
 def test_get_graph(name):

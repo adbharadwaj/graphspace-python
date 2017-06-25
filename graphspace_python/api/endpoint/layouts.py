@@ -76,8 +76,9 @@ class Layouts(object):
 		"""
 
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
-		response = self.client._make_request("GET", layout_by_id_path)
-		return None if 'id' not in response else LayoutResponse(response)
+		return LayoutResponse(
+			self.client._make_request("GET", layout_by_id_path)
+		)
 
 	def get_my_graph_layouts(self, graph_id, limit=20, offset=0):
 		"""Get layouts created by the requesting user for the graph with given graph_id

@@ -11,7 +11,7 @@ class Graphs(object):
 
 		:param graph: GSGraph object.
 		:param is_public: 1 if graph is public else 0
-		:return: Graph Object
+		:return: GraphResponse object that wraps the response.
 		"""
 
 		return GraphResponse(
@@ -29,7 +29,9 @@ class Graphs(object):
 	def get_graph(self, name, owner_email=None):
 		"""Get a graph owned by requesting user with the given name.
 
-		:return: Dict with graph details if a graph with given name exists otherwise None.
+		:param name: Name of the graph to be fetched.
+		:owner_email: Email of the owner of the graph.
+		:return: GraphResponse object if a graph with given name exists otherwise None.
 		"""
 		response = self.client._make_request("GET", GRAPHS_PATH, url_params={
 			'owner_email': self.client.username if owner_email is None else owner_email,
@@ -46,7 +48,8 @@ class Graphs(object):
 	def get_graph_by_id(self, graph_id):
 		"""Get a graph by id.
 
-		:return: Dict with graph details if a graph with given id exists otherwise None.
+		:param graph_id: ID of the graph to be fetched.
+		:return: GraphResponse object that wraps the response.
 		"""
 		graph_by_id_path = GRAPHS_PATH + str(graph_id)
 		return GraphResponse(
@@ -59,7 +62,7 @@ class Graphs(object):
 		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: List of Graphs
+		:return: GraphResponse object that wraps the response.
 		"""
 		query = {
 			'is_public': 1,
@@ -80,7 +83,7 @@ class Graphs(object):
 		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: List of Graphs
+		:return: GraphResponse object that wraps the response.
 		"""
 		query = {
 			'member_email': self.client.username,
@@ -101,7 +104,7 @@ class Graphs(object):
 		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: List of Graphs
+		:return: GraphResponse object that wraps the response.
 		"""
 		query = {
 			'owner_email': self.client.username,
@@ -128,9 +131,8 @@ class Graphs(object):
 			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 		else:
 			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
-			return GraphResponse(
-				self.client._make_request("DELETE", graph_by_id_path)
-			)
+			response = self.client._make_request("DELETE", graph_by_id_path)
+			return response['message']
 
 	def update_graph(self, name, owner_email=None, graph=None, is_public=None):
 		"""Update graph with the given name with given details.
@@ -140,7 +142,7 @@ class Graphs(object):
 		:param graph: GSGraph object.
 		:param is_public: 1 if graph is public else 0
 
-		:return: Graph
+		:return: GraphResponse object that wraps the response.
 		"""
 		if graph is not None:
 			data = {
@@ -168,7 +170,7 @@ class Graphs(object):
 		"""Makes a graph publicly viewable.
 
 		:param name: Name of the graph.
-		:return: Graph
+		:return: GraphResponse object that wraps the response.
 		"""
 
 		return self.update_graph(name, is_public=1)
@@ -177,6 +179,6 @@ class Graphs(object):
 		"""Makes a graph privately viewable.
 
 		:param name: Name of the graph.
-		:return: Graph
+		:return: GraphResponse object that wraps the response.
 		"""
 		return self.update_graph(name, is_public=0)

@@ -75,10 +75,10 @@ class GSLayout(object):
 
 		:param node_name: name of the node.
 		"""
-		try:
+		if node_name not in self.positions_json.keys():
+			raise Exception("Positions of node '%s' is undefined." % (node_name))
+		else:
 			del self.positions_json[node_name]
-		except KeyError:
-			print "Positions of node '%s' not defined." % node_name
 
 	def get_style_json(self):
 		"""

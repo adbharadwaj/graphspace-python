@@ -60,5 +60,4 @@ def test_delete_graph_layout(graph_id, layout_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	response = graphspace.delete_graph_layout(graph_id=graph_id, layout_id=layout_id)
-	assert type(response) is LayoutResponse
-	assert hasattr(response, 'message') and response.message == "Successfully deleted layout with id=" + str(layout_id)
+	assert response == "Successfully deleted layout with id=" + str(layout_id)

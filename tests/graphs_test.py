@@ -54,7 +54,7 @@ def test_update_graph2(name):
 	# Retrieving graph
 	graph = graphspace.get_graph(name).graph
 	# Modifying the retrieved graph
-	graph.set_name('Updated test graph')
+	graph.set_name(name)
 	graph.add_node('z', popup='sample node popup text', label='Z')
 	# Updating graph
 	response = graphspace.update_graph(name, graph=graph, is_public=1)

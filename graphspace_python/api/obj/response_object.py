@@ -23,19 +23,16 @@ class ResponseObject(object):
         """
         if response:
             # Check if there is a 'total' field in the response which will
-            # depict that the response is a multiple entity Dict
+            # depict that the response has multiple entities else single entity
             if 'total' in response:
                 field_name += 's'
-                # Set a attribute by the plural of field_name (multiple entities)
-                # and assign an array of objects of the class type (passed as param cls_name)
-                # to the attribute.
+                # Set an attribute by the plural of field_name (multiple entities) and
+                # assign it an array of objects of the class passed as param cls_name
                 self.__setattr__(
                     field_name,
                     [cls_name(field) for field in response[field_name]]
                 )
-            # If there is no 'total' and 'message' field in the response then its
-            # a single entity response Dict
-            elif 'message' not in response:
-                # Set a attribute by the field_name and assign an object of the class type
+            else:
+                # Set an attribute by the field_name and assign an object of the class type
                 # (cls_name) to the attribute.
                 self.__setattr__(field_name, cls_name(response))

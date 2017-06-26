@@ -12,7 +12,7 @@ class Layouts(object):
 		:param graph_id: ID of the graph.
 		:param layout: GSLayout object.
 		:param is_shared: 1 if layout is shared else 0
-		:return: Layout Object
+		:return: LayoutResponse object that wraps the response.
 		"""
 		data = {
 			'name': layout.get_name(),
@@ -35,7 +35,7 @@ class Layouts(object):
 		:param graph_id: ID of the graph.
 		:param layout: GSLayout object.
 		:param is_shared: 1 if layout is shared else 0
-		:return: Layout Object
+		:return: LayoutResponse object that wraps the response.
 		"""
 		if layout is not None:
 			data = {
@@ -59,20 +59,19 @@ class Layouts(object):
 
 		:param graph_id: ID of the graph.
 		:param layout_id: ID of the layout.
-		:return: Response
+		:return: Success/Error Message from GraphSpace
 		"""
 
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
-		return LayoutResponse(
-			self.client._make_request("DELETE", layout_by_id_path)
-		)
+		response = self.client._make_request("DELETE", layout_by_id_path)
+		return response['message']
 
 	def get_graph_layout(self, graph_id, layout_id):
 		"""Get the given layout for the graph.
 
 		:param graph_id: ID of the graph.
 		:param layout_id: ID of the layout.
-		:return: Layout object
+		:return: LayoutResponse object that wraps the response.
 		"""
 
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
@@ -83,10 +82,10 @@ class Layouts(object):
 	def get_my_graph_layouts(self, graph_id, limit=20, offset=0):
 		"""Get layouts created by the requesting user for the graph with given graph_id
 
-		:param graph_id: Id of the graph.
+		:param graph_id: ID of the graph.
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: List of layouts
+		:return: LayoutResponse object that wraps the response.
 		"""
 		query = {
 			'limit': limit,
@@ -102,10 +101,10 @@ class Layouts(object):
 	def get_shared_graph_layouts(self, graph_id, limit=20, offset=0):
 		"""Get layouts shared with the requesting user for the graph with given graph_id .
 
-		:param graph_id: Id of the graph.
+		:param graph_id: ID of the graph.
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: List of layouts
+		:return: LayoutResponse object that wraps the response.
 		"""
 		query = {
 			'limit': limit,

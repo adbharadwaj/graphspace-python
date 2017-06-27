@@ -1,11 +1,11 @@
-graphspace_python.graphs.formatter package
-==========================================
+graphspace\_python\.graphs\.formatter package
+=============================================
 
 Submodules
 ----------
 
-graphspace_python.graphs.formatter.json_formatter module
---------------------------------------------------------
+graphspace\_python\.graphs\.formatter\.json\_formatter module
+-------------------------------------------------------------
 
 .. automodule:: graphspace_python.graphs.formatter.json_formatter
     :members:

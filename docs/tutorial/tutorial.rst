@@ -60,7 +60,7 @@ Saving a graph on GraphSpace
 ----------------------------
 You can save your graph online using the **post_graph** method.
 
->>> print graphspace.post_graph(G)
+>>> graphspace.post_graph(G)
 
 
 Fetching a graph from GraphSpace
@@ -68,7 +68,8 @@ Fetching a graph from GraphSpace
 
 You can retrieve your saved graph anytime from GraphSpace using the **get_graph** method.
 
->>> print graphspace.get_graph('My Sample Graph')
+>>> response = graphspace.get_graph('My Sample Graph')
+>>> graph = response.graph
 
 
 Updating a graph on GraphSpace
@@ -85,19 +86,18 @@ You can also update your graph anytime using the **update_graph** method.
 >>> G.set_data(data={
 ...    'description': 'my sample graph'
 ... })
->>> graphspace.update_graph('My Sample Graph', graph=graph1, is_public=1)
+>>> graphspace.update_graph('My Sample Graph', graph=G, is_public=1)
 
 Here is an another example.
 
->>>	# Retrieving graph
->>>	graph = graphspace.get_graph(name) # You can retrieve a graph by id as well - graphspace.get_graph_by_id(id)
->>>	# Creating updated graph object
->>>	G = GSGraph()
->>>	G.set_graph_json(graph.get('graph_json'))
->>>	G.set_style_json(graph.get('style_json'))
->>>	G.set_name(graph.get('name'))
->>>	# Updating graph
->>>	response = graphspace.update_graph(name, graph=G)
+>>> # Retrieving graph
+>>> response = graphspace.get_graph(name) # You can retrieve a graph by id as well - graphspace.get_graph_by_id(id)
+>>> graph = response.graph
+>>> # Modifying the retrieved graph object
+>>> graph.add_node('z', popup='sample node popup text', label='Z')
+>>> graph.add_node_style('z', shape='ellipse', color='green', width=90, height=90)
+>>> # Updating graph
+>>> graphspace.update_graph('My Sample Graph', graph=graph)
 
 Making a graph public on GraphSpace
 -----------------------------------
@@ -105,7 +105,7 @@ Making a graph public on GraphSpace
 You can also make a graph public using the **make_graph_public** method.
 
 >>> graphspace.make_graph_public('My Sample Graph')
->>> assert graphspace.get_graph('My Sample Graph')['is_public'] == 1
+>>> assert graphspace.get_graph('My Sample Graph').graph.is_public == 1
 
 
 Making a graph private on GraphSpace
@@ -114,7 +114,7 @@ Making a graph private on GraphSpace
 You can also make a graph private using the **make_graph_private** method.
 
 >>> graphspace.make_graph_private('My Sample Graph')
->>> assert graphspace.get_graph('My Sample Graph')['is_public'] == 0
+>>> assert graphspace.get_graph('My Sample Graph').graph.is_public == 0
 
 
 Deleting a graph on GraphSpace
@@ -123,5 +123,29 @@ Deleting a graph on GraphSpace
 You can also delete your graph anytime using the **update_graph** method.
 
 >>> print graphspace.delete_graph('My Sample Graph')
+Successfully deleted graph with id=39076
 >>> assert graphspace.get_graph('My Sample Graph') is None
 
+
+Responses
+---------
+
+Responses from the API are parsed into Python objects.
+
+Graphs endpoint responses are parsed into **GraphResponse** objects.
+
+When response has a single graph object:
+
+>>> response = graphspace.get_graph('My Sample Graph')
+>>> response.graph.name
+u'My Sample Graph'
+
+When response has multiple graph objects:
+
+>>> response = graphspace.get_my_graphs()
+>>> response.graphs
+[<Graph 1>, <Graph 2>, ...]
+>>> response.total
+32
+>>> response.graphs[0].name
+u'My Sample Graph'

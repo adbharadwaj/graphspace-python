@@ -1,8 +1,13 @@
 class ResponseObject(object):
+    """ResponseObject Class
+    """
+
     _fields = []
 
     def __init__(self, response):
-        """Creates certain attributes of the class object and assigns them value
+        """Construct a new 'ResponseObject' object.
+
+        Creates certain attributes of the object and assigns them value
         if that attribute is present in response Dict.
 
         :param response: Response Dict obtained from API call.

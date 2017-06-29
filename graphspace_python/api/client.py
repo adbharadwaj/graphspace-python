@@ -12,6 +12,8 @@ from graphspace_python.api.endpoint.groups import Groups
 from graphspace_python.api.errors import ErrorHandler
 
 class GraphSpace(object):
+	"""GraphSpace Client Class
+	"""
 
 	_endpoints = [
 		Graphs,
@@ -20,6 +22,11 @@ class GraphSpace(object):
 	]
 
 	def __init__(self, username, password):
+		"""Construct a new 'GraphSpace' client object.
+
+		:param username: Username of the user.
+		:param password: Password of the user.
+		"""
 		# self.auth_token = 'Basic %s' % base64.b64encode('{0}:{1}'.format(username, password))
 		self.auth_token = requests.auth.HTTPBasicAuth(username, password)
 		self.username = username
@@ -27,27 +34,40 @@ class GraphSpace(object):
 		self._error_handler = ErrorHandler()
 		self._define_request_methods()
 
-	# Creates an instance of each endpoint and adds the public methods of each
-	# instance to the GraphSpace Client. It promotes modularity.
 	def _define_request_methods(self):
+		"""Creates an instance of each endpoint and adds the public methods of each
+		instance to the GraphSpace Client. It promotes modularity.
+		"""
 		endpoint_instances = [end(self) for end in self._endpoints]
 		for endpoint in endpoint_instances:
 			instance_methods = inspect.getmembers(endpoint, inspect.ismethod)
 			self._add_instance_methods(instance_methods)
 
 	def _add_instance_methods(self, instance_methods):
-        # instance_methods is a list of (name, value) tuples where value is the
-        # instance of the bound method
+		"""Adds the instance methods to GraphSpace client.
+
+		:param instance_methods: List of (name, value) tuples where value is the
+		 instance of the bound method.
+		"""
 		for method in instance_methods:
 			if method[0][0] is not '_':
 				self.__setattr__(method[0], method[1])
 
 	def set_api_host(self, host):
+		"""Manually set host address of GraphSpace REST APIs.
+
+		:param host: String - Host address of GraphSpace APIs.
+		"""
 		self.api_host = host
 
 	def _check_error(self, response):
-		# Check if the response has any HTTPError and raise exception
-		# else return the response json data
+		"""Checks if the response has any HTTPError and raise exception else
+		returns the response json data.
+
+		:param response: Response object from API call.
+		:raises GraphSpaceError: Raises error according to the error code.
+		:return: Response Dict.
+		"""
 		try:
 			response.raise_for_status()
 		except requests.exceptions.HTTPError as error:
@@ -56,6 +76,17 @@ class GraphSpace(object):
 			return response.json()
 
 	def _make_request(self, method, path, url_params={}, data={}, headers=None):
+		"""Calls the GraphSpace REST API in the given endpoint, in the given method,
+		with the given data, url params and headers.
+
+		:param method: String - Method of request.
+		:param path: String - Path of request.
+		:param url_params: Dict - URL parameters for request.
+		:param data: Dict - Payload.
+		:param headers: Dict - Headers for the request.
+
+		:return: Response Dict.
+		"""
 		if headers is None:
 			headers = {
 				'Accept': 'application/json',

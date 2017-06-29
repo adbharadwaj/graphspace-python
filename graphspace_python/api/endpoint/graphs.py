@@ -2,6 +2,8 @@ from graphspace_python.api.config import GRAPHS_PATH
 from graphspace_python.api.obj.graph_response import GraphResponse
 
 class Graphs(object):
+	"""Graphs endpoint Class
+	"""
 
 	def __init__(self, client):
 		self.client = client

@@ -2,6 +2,8 @@ from graphspace_python.api.config import LAYOUTS_PATH
 from graphspace_python.api.obj.layout_response import LayoutResponse
 
 class Layouts(object):
+	"""Layouts endpoint Class
+	"""
 
 	def __init__(self, client):
 		self.client = client

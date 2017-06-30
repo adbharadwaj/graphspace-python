@@ -36,11 +36,12 @@ def test_update_graph(name):
 	graph1.add_node_style('a', shape='ellipse', color='green', width=90, height=90)
 	graph1.add_node('b', popup='sample node popup text', label='B updated')
 	graph1.add_node_style('b', shape='ellipse', color='yellow', width=40, height=40)
-
+	graph1.set_is_public()
 	graph1.set_data(data={
 		'description': 'my sample graph'
 	})
-	response = graphspace.update_graph(name, graph=graph1, is_public=1)
+
+	response = graphspace.update_graph(name, graph=graph1)
 	assert type(response) is GraphResponse
 	assert hasattr(response, 'graph') and response.graph.name == graph1.get_name()
 	assert response.graph.is_public == 1
@@ -56,8 +57,9 @@ def test_update_graph2(name):
 	# Modifying the retrieved graph
 	graph.set_name(name)
 	graph.add_node('z', popup='sample node popup text', label='Z')
+	graph.set_is_public()
 	# Updating graph
-	response = graphspace.update_graph(name, graph=graph, is_public=1)
+	response = graphspace.update_graph(name, graph=graph)
 	assert type(response) is GraphResponse
 	assert hasattr(response, 'graph') and response.graph.name == graph.get_name()
 	assert 'z' in response.graph.node.keys()

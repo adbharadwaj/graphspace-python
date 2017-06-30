@@ -50,10 +50,16 @@ class GSGraph(nx.DiGraph):
 		super(GSGraph, self).__init__(*args, **kwargs)
 		self.graph_json = self.compute_graph_json()
 		self.style_json = {'style': []}
+		self.is_public = 0
 		self.set_name('Graph ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
 
 	def compute_graph_json(self):
+		"""
+		Computes the json representation for the graph structure from the graph
+		nodes and edges.
 
+		:return: dict
+		"""
 		self.graph_json = {
 			'data': self.graph,
 			'elements': {
@@ -114,6 +120,25 @@ class GSGraph(nx.DiGraph):
 		:param name: name of the graph.
 		"""
 		return self.graph.update({"name": name})
+
+	def get_is_public(self):
+		"""
+		Get 'is_public' status of the graph.
+
+		:return: 0 or 1
+		"""
+		return self.is_public
+
+	def set_is_public(self, is_public=1):
+		"""
+		Set 'is_public' status of the graph.
+
+		:param is_public: 0 or 1 (default=1)
+		"""
+		if is_public not in [0,1]:
+			raise Exception("is_public should have value either 0 or 1.")
+		else:
+			self.is_public = is_public
 
 	def get_data(self):
 		"""
@@ -897,4 +922,3 @@ class GSGraph(nx.DiGraph):
 					GSGraph.validate_style_properties(elem['selector'], elem['css'])
 				else:
 					GSGraph.validate_style_properties(elem['selector'], elem['style'])
-

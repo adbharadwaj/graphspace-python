@@ -8,11 +8,10 @@ class Graphs(object):
 	def __init__(self, client):
 		self.client = client
 
-	def post_graph(self, graph, is_public=0):
+	def post_graph(self, graph):
 		"""Posts NetworkX graph to the requesting users account on GraphSpace.
 
 		:param graph: GSGraph object.
-		:param is_public: 1 if graph is public else 0
 		:return: GraphResponse object that wraps the response.
 		"""
 
@@ -20,7 +19,7 @@ class Graphs(object):
 			self.client._make_request("POST", GRAPHS_PATH,
 			                          data={
 				                          'name': graph.get_name(),
-				                          'is_public': 0 if is_public is None else is_public,
+				                          'is_public': graph.get_is_public(),
 				                          'owner_email': self.client.username,
 				                          'graph_json': graph.compute_graph_json(),
 				                          'style_json': graph.get_style_json(),
@@ -136,28 +135,22 @@ class Graphs(object):
 			response = self.client._make_request("DELETE", graph_by_id_path)
 			return response['message']
 
-	def update_graph(self, name, owner_email=None, graph=None, is_public=None):
+	def update_graph(self, name, graph, owner_email=None):
 		"""Update graph with the given name with given details.
 
 		:param name: Name of the graph
-		:param owner_email: Email of owner of the graph.
 		:param graph: GSGraph object.
-		:param is_public: 1 if graph is public else 0
+		:param owner_email: Email of owner of the graph.
 
 		:return: GraphResponse object that wraps the response.
 		"""
-		if graph is not None:
-			data = {
-				'name': graph.get_name(),
-				'is_public': 0 if is_public is None else is_public,
-				'graph_json': graph.compute_graph_json(),
-				'style_json': graph.get_style_json(),
-				'tags': graph.get_tags()
-			}
-		else:
-			data = {
-				'is_public': 0 if is_public is None else is_public,
-			}
+		data = {
+			'name': graph.get_name(),
+			'is_public': graph.get_is_public(),
+			'graph_json': graph.compute_graph_json(),
+			'style_json': graph.get_style_json(),
+			'tags': graph.get_tags()
+		}
 
 		response = self.get_graph(name, owner_email=owner_email)
 		if response is None or response.graph.id is None:
@@ -174,8 +167,14 @@ class Graphs(object):
 		:param name: Name of the graph.
 		:return: GraphResponse object that wraps the response.
 		"""
-
-		return self.update_graph(name, is_public=1)
+		response = self.get_graph(name)
+		if response is None or response.graph.id is None:
+			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+		else:
+			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+			return GraphResponse(
+				self.client._make_request("PUT", graph_by_id_path, data={'is_public': 1})
+			)
 
 	def make_graph_private(self, name):
 		"""Makes a graph privately viewable.
@@ -183,4 +182,11 @@ class Graphs(object):
 		:param name: Name of the graph.
 		:return: GraphResponse object that wraps the response.
 		"""
-		return self.update_graph(name, is_public=0)
+		response = self.get_graph(name)
+		if response is None or response.graph.id is None:
+			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+		else:
+			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+			return GraphResponse(
+				self.client._make_request("PUT", graph_by_id_path, data={'is_public': 0})
+			)

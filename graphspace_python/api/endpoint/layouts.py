@@ -8,21 +8,20 @@ class Layouts(object):
 	def __init__(self, client):
 		self.client = client
 
-	def post_graph_layout(self, graph_id, layout, is_shared=None):
+	def post_graph_layout(self, graph_id, layout):
 		"""Create a layout for the graph with given graph_id.
 
 		:param graph_id: ID of the graph.
 		:param layout: GSLayout object.
-		:param is_shared: 1 if layout is shared else 0
 		:return: LayoutResponse object that wraps the response.
 		"""
 		data = {
 			'name': layout.get_name(),
 			'graph_id': graph_id,
-			'is_shared': 0 if is_shared is None else is_shared,
+			'is_shared': layout.get_is_shared(),
 			'owner_email': self.client.username,
 			'style_json': layout.get_style_json(),
-			'positions_json': layout.get_positions_json
+			'positions_json': layout.get_positions_json()
 		}
 
 		layouts_path = LAYOUTS_PATH.format(graph_id)
@@ -30,26 +29,20 @@ class Layouts(object):
 			self.client._make_request("POST", layouts_path, data=data)
 		)
 
-	def update_graph_layout(self, graph_id, layout_id, layout=None, is_shared=None):
+	def update_graph_layout(self, graph_id, layout_id, layout):
 		"""Update layout with given layout_id for the graph with given graph_id.
 
 		:param layout_id: ID of the layout.
 		:param graph_id: ID of the graph.
 		:param layout: GSLayout object.
-		:param is_shared: 1 if layout is shared else 0
 		:return: LayoutResponse object that wraps the response.
 		"""
-		if layout is not None:
-			data = {
-				'name': layout.get_name(),
-				'is_shared': 0 if is_shared is None else is_shared,
-				'positions_json': layout.get_positions_json(),
-				'style_json': layout.get_style_json()
-			}
-		else:
-			data = {
-				'is_shared': 0 if is_shared is None else is_shared
-			}
+		data = {
+			'name': layout.get_name(),
+			'is_shared': layout.get_is_shared(),
+			'positions_json': layout.get_positions_json(),
+			'style_json': layout.get_style_json()
+		}
 
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
 		return LayoutResponse(

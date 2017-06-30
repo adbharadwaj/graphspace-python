@@ -10,6 +10,7 @@ class GSLayout(object):
 	def __init__(self):
 		self.style_json = {'style': []}
 		self.positions_json = {}
+		self.is_shared = 0
 		self.set_name('Layout ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
 
 	def get_name(self):
@@ -27,6 +28,25 @@ class GSLayout(object):
 		:param name: name of the layout.
 		"""
 		self.name = name
+
+	def get_is_shared(self):
+		"""
+		Get 'is_shared' status of the layout.
+
+		:return: 0 or 1
+		"""
+		return self.is_shared
+
+	def set_is_shared(self, is_shared=1):
+		"""
+		Set 'is_shared' status of the layout.
+
+		:param is_shared: 0 or 1 (default=1)
+		"""
+		if is_shared not in [0,1]:
+			raise Exception("is_shared should have value either 0 or 1.")
+		else:
+			self.is_shared = is_shared
 
 	def get_positions_json(self):
 		"""

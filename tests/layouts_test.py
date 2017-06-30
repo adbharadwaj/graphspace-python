@@ -49,7 +49,8 @@ def test_update_graph_layout(graph_id, layout_id):
 	layout = graphspace.get_graph_layout(graph_id=graph_id, layout_id=layout_id).layout
 	layout.set_name('Updated test layout')
 	layout.set_node_position('z',74,37)
-	response = graphspace.update_graph_layout(graph_id=graph_id, layout_id=layout_id, layout=layout, is_shared=1)
+	layout.set_is_shared()
+	response = graphspace.update_graph_layout(graph_id=graph_id, layout_id=layout_id, layout=layout)
 	assert type(response) is LayoutResponse
 	assert hasattr(response, 'layout') and response.layout.name == layout.get_name()
 	assert 'z' in response.layout.positions_json.keys()

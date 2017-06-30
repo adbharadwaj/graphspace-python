@@ -15,18 +15,10 @@ class Layouts(object):
 		:param layout: GSLayout object.
 		:return: LayoutResponse object that wraps the response.
 		"""
-		data = {
-			'name': layout.get_name(),
-			'graph_id': graph_id,
-			'is_shared': layout.get_is_shared(),
-			'owner_email': self.client.username,
-			'style_json': layout.get_style_json(),
-			'positions_json': layout.get_positions_json()
-		}
-
 		layouts_path = LAYOUTS_PATH.format(graph_id)
 		return LayoutResponse(
-			self.client._make_request("POST", layouts_path, data=data)
+			self.client._make_request("POST", layouts_path,
+				data=layout.json().update({'graph_id': graph_id, 'owner_email': self.client.username}))
 		)
 
 	def update_graph_layout(self, graph_id, layout_id, layout):
@@ -37,16 +29,9 @@ class Layouts(object):
 		:param layout: GSLayout object.
 		:return: LayoutResponse object that wraps the response.
 		"""
-		data = {
-			'name': layout.get_name(),
-			'is_shared': layout.get_is_shared(),
-			'positions_json': layout.get_positions_json(),
-			'style_json': layout.get_style_json()
-		}
-
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
 		return LayoutResponse(
-			self.client._make_request("PUT", layout_by_id_path, data=data)
+			self.client._make_request("PUT", layout_by_id_path, data=layout.json())
 		)
 
 	def delete_graph_layout(self, graph_id, layout_id):
@@ -56,7 +41,6 @@ class Layouts(object):
 		:param layout_id: ID of the layout.
 		:return: Success/Error Message from GraphSpace
 		"""
-
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
 		response = self.client._make_request("DELETE", layout_by_id_path)
 		return response['message']
@@ -68,7 +52,6 @@ class Layouts(object):
 		:param layout_id: ID of the layout.
 		:return: LayoutResponse object that wraps the response.
 		"""
-
 		layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
 		return LayoutResponse(
 			self.client._make_request("GET", layout_by_id_path)

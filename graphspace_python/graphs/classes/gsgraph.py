@@ -53,6 +53,21 @@ class GSGraph(nx.DiGraph):
 		self.is_public = 0
 		self.set_name('Graph ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
 
+	def json(self):
+		"""
+		Get the json representation of graph details.
+
+		:return: dict
+		"""
+		data = {
+			'name': self.get_name(),
+			'is_public': self.get_is_public(),
+			'graph_json': self.compute_graph_json(),
+			'style_json': self.get_style_json(),
+			'tags': self.get_tags()
+		}
+		return data
+
 	def compute_graph_json(self):
 		"""
 		Computes the json representation for the graph structure from the graph

@@ -13,6 +13,20 @@ class GSLayout(object):
 		self.is_shared = 0
 		self.set_name('Layout ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
 
+	def json(self):
+		"""
+		Get the json representation of layout details.
+
+		:return: dict
+		"""
+		data = {
+			'name': self.get_name(),
+			'is_shared': self.get_is_shared(),
+			'style_json': self.get_style_json(),
+			'positions_json': self.get_positions_json()
+		}
+		return data
+
 	def get_name(self):
 		"""
 		Get the name of layout.

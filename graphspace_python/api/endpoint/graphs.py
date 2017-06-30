@@ -14,17 +14,9 @@ class Graphs(object):
 		:param graph: GSGraph object.
 		:return: GraphResponse object that wraps the response.
 		"""
-
 		return GraphResponse(
 			self.client._make_request("POST", GRAPHS_PATH,
-			                          data={
-				                          'name': graph.get_name(),
-				                          'is_public': graph.get_is_public(),
-				                          'owner_email': self.client.username,
-				                          'graph_json': graph.compute_graph_json(),
-				                          'style_json': graph.get_style_json(),
-										  'tags': graph.get_tags()
-			                          })
+					data=graph.json().update({'owner_email': self.client.username}))
 		)
 
 	def get_graph(self, name, owner_email=None):
@@ -144,21 +136,13 @@ class Graphs(object):
 
 		:return: GraphResponse object that wraps the response.
 		"""
-		data = {
-			'name': graph.get_name(),
-			'is_public': graph.get_is_public(),
-			'graph_json': graph.compute_graph_json(),
-			'style_json': graph.get_style_json(),
-			'tags': graph.get_tags()
-		}
-
 		response = self.get_graph(name, owner_email=owner_email)
 		if response is None or response.graph.id is None:
 			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 		else:
 			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
 			return GraphResponse(
-				self.client._make_request("PUT", graph_by_id_path, data=data)
+				self.client._make_request("PUT", graph_by_id_path, data=graph.json())
 			)
 
 	def make_graph_public(self, name):

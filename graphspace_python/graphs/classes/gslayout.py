@@ -188,8 +188,11 @@ class GSLayout(object):
 
 	def add_edge_style(self, source, target, attr_dict=None, directed=False, color='#000000', width=1.0, arrow_shape='triangle',
 	                   edge_style='solid', arrow_fill='filled'):
-		"""Add the style for the given edge in the style json.
+		"""
+		Add the style for the given edge in the style json.
 
+		Parameters
+		----------
 		source: string -- unique ID of the source node
 		target: string -- unique ID of the target node
 		color: string -- hexadecimal representation of the color (e.g., #000000), or the color name. Default = black.

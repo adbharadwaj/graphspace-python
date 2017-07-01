@@ -26,11 +26,14 @@ class Graphs(object):
 		:owner_email: Email of the owner of the graph.
 		:return: GraphResponse object if a graph with given name exists otherwise None.
 		"""
-		response = self.client._make_request("GET", GRAPHS_PATH, url_params={
+		query = {
 			'owner_email': self.client.username if owner_email is None else owner_email,
 			'names[]': name
-		})
+		}
+		if owner_email is not None and owner_email != self.client.username:
+			query.update({'is_public': 1})
 
+		response = self.client._make_request("GET", GRAPHS_PATH, url_params=query)
 		if response.get('total', 0) > 0:
 			return GraphResponse(
 				response.get('graphs')[0]

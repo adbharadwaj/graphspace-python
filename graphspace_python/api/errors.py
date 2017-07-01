@@ -30,27 +30,6 @@ class UserNotAuthorised(GraphSpaceError):
 class UserNotAuthenticated(GraphSpaceError):
     pass
 
-class IsPublicNotSet(GraphSpaceError):
-    pass
-
-class NotAllowedGraphAccess(GraphSpaceError):
-    pass
-
-class CannotCreateGraphForOtherUser(GraphSpaceError):
-    pass
-
-class NotAllowedGroupAccess(GraphSpaceError):
-    pass
-
-class CannotCreateGroupForOtherUser(GraphSpaceError):
-    pass
-
-class NotAllowedLayoutAccess(GraphSpaceError):
-    pass
-
-class CannotCreateLayoutForOtherUser(GraphSpaceError):
-    pass
-
 class LayoutNameAlreadyExists(GraphSpaceError):
     pass
 
@@ -64,13 +43,6 @@ class ErrorHandler(object):
         1002: BadRequest,
         1004: UserNotAuthorised,
         1005: UserNotAuthenticated,
-        1006: IsPublicNotSet,
-        1007: NotAllowedGraphAccess,
-        1008: CannotCreateGraphForOtherUser,
-        1010: NotAllowedGroupAccess,
-        1011: CannotCreateGroupForOtherUser,
-        1012: NotAllowedLayoutAccess,
-        1013: CannotCreateLayoutForOtherUser,
         1014: LayoutNameAlreadyExists
     }
 

@@ -1,14 +1,30 @@
+import pytest
 from graphspace_python.graphs.classes.gslayout import GSLayout
 from graphspace_python.api.client import GraphSpace
 from graphspace_python.api.obj.layout_response import LayoutResponse
+from graphspace_python.api import errors
 
 
 def test_layouts_endpoint(graph_id):
 	layout = test_post_graph_layout(graph_id=graph_id, name='MyTestLayout')
+	test_layout_name_already_exists_error(graph_id=graph_id, name='MyTestLayout')
 	test_get_my_graph_layouts(graph_id=graph_id)
 	test_update_graph_layout(graph_id=graph_id, layout_id=layout.id)
 	test_get_shared_graph_layouts(graph_id=graph_id)
 	test_delete_graph_layout(graph_id=graph_id, layout_id=layout.id)
+	test_user_not_authorised_error(graph_id=graph_id, layout_id=layout.id)
+
+
+def test_user_not_authorised_error(graph_id, layout_id):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	with pytest.raises(errors.UserNotAuthorised) as err:
+		graphspace.get_graph_layout(graph_id, layout_id)
+
+
+def test_layout_name_already_exists_error(graph_id, name):
+	with pytest.raises(errors.LayoutNameAlreadyExists) as err:
+		test_post_graph_layout(graph_id=graph_id, name=name)
 
 
 def test_get_my_graph_layouts(graph_id):

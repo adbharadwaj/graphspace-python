@@ -1,11 +1,15 @@
+import pytest
 from graphspace_python.graphs.classes.gsgraph import GSGraph
 from graphspace_python.api.client import GraphSpace
 from graphspace_python.api.obj.graph_response import GraphResponse
 from layouts_test import test_layouts_endpoint
+from graphspace_python.api import errors
 
 
 def test_graphs_endpoint():
+	test_user_not_authenticated_error()
 	graph = test_post_graph(name='MyTestGraph')
+	test_bad_request_error(name='MyTestGraph')
 	test_layouts_endpoint(graph.id)
 	test_get_graph(name='MyTestGraph')
 	test_make_graph_public(name='MyTestGraph')
@@ -16,6 +20,26 @@ def test_graphs_endpoint():
 	test_get_my_graphs()
 	test_get_graph_by_id()
 	test_delete_graph(name='MyTestGraph')
+	test_user_not_authorised_error(graph.id)
+
+
+def test_bad_request_error(name):
+	with pytest.raises(errors.BadRequest) as err:
+		test_post_graph(name=name)
+
+
+def test_user_not_authorised_error(graph_id):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	with pytest.raises(errors.UserNotAuthorised) as err:
+		graphspace.get_graph_by_id(graph_id)
+
+
+def test_user_not_authenticated_error():
+	graphspace = GraphSpace('user1@example.com', 'WrongPassword')
+	graphspace.set_api_host('localhost:8000')
+	with pytest.raises(errors.UserNotAuthenticated) as err:
+		graphspace.get_my_graphs()
 
 
 def test_make_graph_public(name):

@@ -29,6 +29,7 @@ class Graph(ResponseObject, GSGraph):
         """
         GSGraph.__init__(self)
         ResponseObject.__init__(self, response)
+        self.url = 'http://graphspace.org/graphs/' + str(self.id)
         self.set_data(self.graph_json['data'])
         self._assign_nodes_and_edges()
 

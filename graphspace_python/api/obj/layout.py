@@ -28,6 +28,7 @@ class Layout(ResponseObject, GSLayout):
         """
         GSLayout.__init__(self)
         ResponseObject.__init__(self, response)
+        self.url = 'http://graphspace.org/graphs/{0}?user_layout={1}'.format(self.graph_id, self.id)
         self._convert_string_to_json()
 
     def _convert_string_to_json(self):

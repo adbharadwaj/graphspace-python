@@ -14,9 +14,10 @@ class Graphs(object):
 		:param graph: GSGraph object.
 		:return: GraphResponse object that wraps the response.
 		"""
+		data = graph.json()
+		data.update({'owner_email': self.client.username})
 		return GraphResponse(
-			self.client._make_request("POST", GRAPHS_PATH,
-					data=graph.json().update({'owner_email': self.client.username}))
+			self.client._make_request("POST", GRAPHS_PATH, data=data)
 		)
 
 	def get_graph(self, name, owner_email=None):

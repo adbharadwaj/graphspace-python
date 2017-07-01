@@ -15,10 +15,11 @@ class Layouts(object):
 		:param layout: GSLayout object.
 		:return: LayoutResponse object that wraps the response.
 		"""
+		data = layout.json()
+		data.update({'graph_id': graph_id, 'owner_email': self.client.username})
 		layouts_path = LAYOUTS_PATH.format(graph_id)
 		return LayoutResponse(
-			self.client._make_request("POST", layouts_path,
-				data=layout.json().update({'graph_id': graph_id, 'owner_email': self.client.username}))
+			self.client._make_request("POST", layouts_path, data=data)
 		)
 
 	def update_graph_layout(self, graph_id, layout_id, layout):

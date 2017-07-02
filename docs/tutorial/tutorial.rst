@@ -63,6 +63,9 @@ You can save your graph online using the **post_graph** method.
 
 >>> graphspace.post_graph(G)
 
+The saved graph will look like this on GraphSpace:
+
+.. image:: images/post_graph.png
 
 Fetching a graph from GraphSpace
 --------------------------------
@@ -84,23 +87,35 @@ You can also update your graph anytime using the **update_graph** method.
 >>> G.add_node_style('b', shape='ellipse', color='yellow', width=40, height=40)
 >>> G.add_edge('a', 'b', directed=True, popup='sample edge popup')
 >>> G.add_edge_style('a', 'b', directed=True, edge_style='dotted')
+>>> G.set_name('My Sample Graph')
 >>> G.set_data(data={
 ...    'description': 'my sample graph'
 ... })
 >>> G.set_is_public(1)
 >>> graphspace.update_graph('My Sample Graph', graph=G)
 
-Here is an another example.
+The updated graph will look like this on GraphSpace:
+
+.. image:: images/update_graph1.png
+
+Here is another example.
 
 >>> # Retrieving graph
->>> response = graphspace.get_graph(name) # You can retrieve a graph by id as well - graphspace.get_graph_by_id(id)
+>>> response = graphspace.get_graph('My Sample Graph') # You can retrieve a graph by id as well - graphspace.get_graph_by_id(id)
 >>> graph = response.graph
 >>> # Modifying the retrieved graph object
 >>> graph.add_node('z', popup='sample node popup text', label='Z')
 >>> graph.add_node_style('z', shape='ellipse', color='green', width=90, height=90)
+>>> graph.add_edge('a', 'z', directed=True, popup='sample edge popup')
+>>> graph.add_edge_style('a', 'z', directed=True, edge_style='dotted')
 >>> graph.set_is_public(1)
 >>> # Updating graph
 >>> graphspace.update_graph('My Sample Graph', graph=graph)
+
+The updated graph in this case will look like this on GraphSpace:
+
+.. image:: images/update_graph2.png
+
 
 Making a graph public on GraphSpace
 -----------------------------------
@@ -148,7 +163,7 @@ You can set position of one node at a time.
 >>> L.set_node_position('a', y=38.5, x=67.3)
 
 >>> # Setting position of a node 'b' with y and x coordinates
->>> L.set_node_position('b', y=86, x=74.1)
+>>> L.set_node_position('b', y=124, x=332.2)
 
 Note: Setting position of an already present node updates its position.
 
@@ -158,8 +173,8 @@ Style
 
 You can also add style for a node or an edge.
 
->>> L.add_node_style('a', shape='ellipse', color='red', width=90, height=90)
->>> L.add_edge_style('a', 'b', directed=True, edge_style='dotted')
+>>> L.add_node_style('a', shape='ellipse', color='green', width=60, height=60)
+>>> L.add_edge_style('a', 'b', directed=True, edge_style='dashed')
 
 
 Layout Information
@@ -177,6 +192,10 @@ You can save your layout online using the **post_graph_layout** method.
 >>> response = graphspace.post_graph_layout(graph_id=21722, layout=L)
 >>> # layout_id = response.layout.layout_id
 
+The saved layout will look like this on GraphSpace:
+
+.. image:: images/post_layout.gif
+
 
 Fetching a layout from GraphSpace
 ---------------------------------
@@ -192,24 +211,35 @@ Updating a layout on GraphSpace
 You can also update your layout anytime using the **update_graph_layout** method.
 
 >>> L = GSLayout()
->>> L.set_node_position('x', y=38.5, x=67.3)
->>> L.set_node_position('y', y=86, x=74.1)
->>> L.add_node_style('y', shape='ellipse', color='red', width=90, height=90)
->>> L.add_edge_style('x', 'y', directed=True, edge_style='dotted')
->>> L.set_is_shared(0)
+>>> L.set_node_position('b', y=38.5, x=67.3)
+>>> L.set_node_position('a', y=102, x=238.1)
+>>> L.add_node_style('a', shape='octagon', color='green', width=60, height=60)
+>>> L.add_edge_style('a', 'b', directed=True, edge_style='solid')
+>>> L.set_name('My Sample Layout')
+>>> L.set_is_shared(1)
 >>> graphspace.update_graph_layout(graph_id=21722, layout_id=1068, layout=L)
 
-Here is an another example.
+The updated layout will look like this on GraphSpace:
+
+.. image:: images/update_layout1.gif
+
+Here is another example.
 
 >>> # Retrieving layout
 >>> response = graphspace.get_graph_graph_layout(graph_id=21722, layout_id=1068)
 >>> layout = response.layout
 >>> # Modifying the retrieved layout object
->>> layout.set_node_position('z', y=63, x=92)
->>> layout.add_node_style('z', shape='ellipse', color='green', width=90, height=90)
+>>> layout.set_node_position('b', y=30, x=67)
+>>> layout.set_node_position('a', y=30, x=211)
+>>> layout.add_node_style('a', shape='roundrectangle', color='green', width=45, height=45)
+>>> layout.add_edge_style('a', 'b', directed=True, edge_style='solid')
 >>> layout.set_is_shared(0)
 >>> # Updating layout
 >>> graphspace.update_graph_layout(graph_id=21722, layout_id=1068, layout=layout)
+
+The updated layout in this case will look like this on GraphSpace:
+
+.. image:: images/update_layout2.gif
 
 
 Deleting a layout on GraphSpace

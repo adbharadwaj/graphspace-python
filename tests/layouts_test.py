@@ -10,6 +10,7 @@ def test_layouts_endpoint(graph_id):
 	test_layout_name_already_exists_error(graph_id=graph_id, name='MyTestLayout')
 	test_get_my_graph_layouts(graph_id=graph_id)
 	test_update_graph_layout(graph_id=graph_id, layout_id=layout.id)
+	test_update_graph_layout2(graph_id=graph_id, name='MyTestLayout')
 	test_get_shared_graph_layouts(graph_id=graph_id)
 	test_delete_graph_layout(graph_id=graph_id, layout_id=layout.id)
 	test_user_not_authorised_error(graph_id=graph_id, layout_id=layout.id)
@@ -70,6 +71,20 @@ def test_update_graph_layout(graph_id, layout_id):
 	assert type(response) is LayoutResponse
 	assert hasattr(response, 'layout') and response.layout.name == layout.get_name()
 	assert 'z' in response.layout.positions_json.keys()
+	assert response.layout.is_shared == 1
+
+
+def test_update_graph_layout2(graph_id, name):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graphspace.set_api_host('localhost:8000')
+	layout = graphspace.get_graph_layout(graph_id=graph_id, name=name).layout
+	layout.set_name('Updated test layout 2')
+	layout.set_node_position('y',23,137)
+	layout.set_is_shared()
+	response = graphspace.update_graph_layout(graph_id=graph_id, name=name, layout=layout)
+	assert type(response) is LayoutResponse
+	assert hasattr(response, 'layout') and response.layout.name == layout.get_name()
+	assert 'y' in response.layout.positions_json.keys()
 	assert response.layout.is_shared == 1
 
 

@@ -102,21 +102,39 @@ class GraphSpace(object):
 				), headers=headers, auth=self.auth_token)
 			)
 		elif method == "POST":
-			return self._check_error(
-				requests.post('http://{0}{1}?{2}'.format(
-					self.api_host,
-					six.moves.urllib.parse.quote(path.encode('utf-8')),
-					six.moves.urllib.parse.urlencode(url_params)
-				), json=data, headers=headers, auth=self.auth_token)
-			)
+			if headers.get('Content-Type') == 'application/json':
+				return self._check_error(
+					requests.post('http://{0}{1}?{2}'.format(
+						self.api_host,
+						six.moves.urllib.parse.quote(path.encode('utf-8')),
+						six.moves.urllib.parse.urlencode(url_params)
+					), json=data, headers=headers, auth=self.auth_token)
+				)
+			else:
+				return self._check_error(
+					requests.post('http://{0}{1}?{2}'.format(
+						self.api_host,
+						six.moves.urllib.parse.quote(path.encode('utf-8')),
+						six.moves.urllib.parse.urlencode(url_params)
+					), data=data, headers=headers, auth=self.auth_token)
+				)
 		elif method == "PUT":
-			return self._check_error(
-				requests.put('http://{0}{1}?{2}'.format(
-					self.api_host,
-					six.moves.urllib.parse.quote(path.encode('utf-8')),
-					six.moves.urllib.parse.urlencode(url_params)
-				), json=data, headers=headers, auth=self.auth_token)
-			)
+			if headers.get('Content-Type') == 'application/json':
+				return self._check_error(
+					requests.put('http://{0}{1}?{2}'.format(
+						self.api_host,
+						six.moves.urllib.parse.quote(path.encode('utf-8')),
+						six.moves.urllib.parse.urlencode(url_params)
+					), json=data, headers=headers, auth=self.auth_token)
+				)
+			else:
+				return self._check_error(
+					requests.put('http://{0}{1}?{2}'.format(
+						self.api_host,
+						six.moves.urllib.parse.quote(path.encode('utf-8')),
+						six.moves.urllib.parse.urlencode(url_params)
+					), data=data, headers=headers, auth=self.auth_token)
+				)
 		elif method == "DELETE":
 			return self._check_error(
 				requests.delete('http://{0}{1}?{2}'.format(

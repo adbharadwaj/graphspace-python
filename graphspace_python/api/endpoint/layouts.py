@@ -23,7 +23,7 @@ class Layouts(object):
 		)
 
 	def update_graph_layout(self, graph_id, layout, layout_id=None, name=None, owner_email=None):
-		"""Update layout with given layout_id for the graph with given graph_id.
+		"""Update a layout with given layout_id or name for the graph with given graph_id.
 
 		:param graph_id: ID of the graph.
 		:param layout: GSLayout object.
@@ -50,7 +50,7 @@ class Layouts(object):
 		raise Exception('Both layout_id and name can\'t be none!')
 
 	def delete_graph_layout(self, graph_id, layout_id=None, name=None):
-		"""Delete the given layout for the graph.
+		"""Delete a layout with the given layout_id or name for the graph with given graph_id.
 
 		:param graph_id: ID of the graph.
 		:param layout_id: ID of the layout.
@@ -74,7 +74,7 @@ class Layouts(object):
 		raise Exception('Both layout_id and name can\'t be none!')
 
 	def get_graph_layout(self, graph_id, layout_id=None, name=None, owner_email=None):
-		"""Get the given layout for the graph.
+		"""Get a layout with given layout_id or name for the graph with given graph_id.
 
 		:param graph_id: ID of the graph.
 		:param layout_id: ID of the layout.

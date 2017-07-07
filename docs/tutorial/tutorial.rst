@@ -74,8 +74,8 @@ Fetching a graph from GraphSpace
 
 You can retrieve your saved graph anytime from GraphSpace using the **get_graph** method.
 
->>> response = graphspace.get_graph('My Sample Graph')
->>> # You can retrieve a graph by id as well - graphspace.get_graph_by_id(id)
+>>> response = graphspace.get_graph(name='My Sample Graph')
+>>> # You can retrieve a graph by id as well - graphspace.get_graph(graph_id=29824)
 >>> graph = response.graph
 
 
@@ -95,7 +95,8 @@ You can also update your graph anytime using the **update_graph** method.
 ...    'description': 'my sample graph'
 ... })
 >>> G.set_is_public(1)
->>> graphspace.update_graph('My Sample Graph', graph=G)
+>>> graphspace.update_graph(graph=G, name='My Sample Graph')
+>>> # You can update a graph by id as well - graphspace.update_graph(graph=G, graph_id=29824)
 
 The updated graph will look like this on GraphSpace:
 
@@ -104,7 +105,7 @@ The updated graph will look like this on GraphSpace:
 Here is another example.
 
 >>> # Retrieving graph
->>> response = graphspace.get_graph('My Sample Graph')
+>>> response = graphspace.get_graph(name='My Sample Graph')
 >>> graph = response.graph
 >>> # Modifying the retrieved graph object
 >>> graph.add_node('z', popup='sample node popup text', label='Z')
@@ -113,7 +114,7 @@ Here is another example.
 >>> graph.add_edge_style('a', 'z', directed=True, edge_style='dotted')
 >>> graph.set_is_public(1)
 >>> # Updating graph
->>> graphspace.update_graph('My Sample Graph', graph=graph)
+>>> graphspace.update_graph(graph=graph, name='My Sample Graph')
 
 The updated graph in this case will look like this on GraphSpace:
 
@@ -125,8 +126,8 @@ Making a graph public on GraphSpace
 
 You can also make a graph public using the **make_graph_public** method.
 
->>> graphspace.make_graph_public('My Sample Graph')
->>> assert graphspace.get_graph('My Sample Graph').graph.is_public == 1
+>>> graphspace.make_graph_public(name='My Sample Graph')
+>>> assert graphspace.get_graph(name='My Sample Graph').graph.is_public == 1
 
 
 Making a graph private on GraphSpace
@@ -134,8 +135,8 @@ Making a graph private on GraphSpace
 
 You can also make a graph private using the **make_graph_private** method.
 
->>> graphspace.make_graph_private('My Sample Graph')
->>> assert graphspace.get_graph('My Sample Graph').graph.is_public == 0
+>>> graphspace.make_graph_private(name='My Sample Graph')
+>>> assert graphspace.get_graph(name='My Sample Graph').graph.is_public == 0
 
 
 Deleting a graph on GraphSpace
@@ -143,9 +144,10 @@ Deleting a graph on GraphSpace
 
 You can also delete your graph anytime using the **delete_graph** method.
 
->>> print graphspace.delete_graph('My Sample Graph')
-Successfully deleted graph with id=39076
->>> assert graphspace.get_graph('My Sample Graph') is None
+>>> print graphspace.delete_graph(name='My Sample Graph')
+>>> # You can delete a graph by id as well - graphspace.delete_graph(graph_id=29824)
+Successfully deleted graph with id=29824
+>>> assert graphspace.get_graph(name='My Sample Graph') is None
 
 
 Creating a layout

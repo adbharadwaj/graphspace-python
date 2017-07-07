@@ -12,7 +12,7 @@ class Graphs(object):
 		"""Posts NetworkX graph to the requesting users account on GraphSpace.
 
 		:param graph: GSGraph object.
-		:return: GraphResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		data = graph.json()
 		data.update({'owner_email': self.client.username})
@@ -20,38 +20,36 @@ class Graphs(object):
 			self.client._make_request("POST", GRAPHS_PATH, data=data)
 		)
 
-	def get_graph(self, name, owner_email=None):
-		"""Get a graph owned by requesting user with the given name.
+	def get_graph(self, name=None, graph_id=None, owner_email=None):
+		"""Get a graph with the given name or graph_id.
 
 		:param name: Name of the graph to be fetched.
-		:owner_email: Email of the owner of the graph.
-		:return: GraphResponse object if a graph with given name exists otherwise None.
-		"""
-		query = {
-			'owner_email': self.client.username if owner_email is None else owner_email,
-			'names[]': name
-		}
-		if owner_email is not None and owner_email != self.client.username:
-			query.update({'is_public': 1})
-
-		response = self.client._make_request("GET", GRAPHS_PATH, url_params=query)
-		if response.get('total', 0) > 0:
-			return APIResponse('graph',
-				response.get('graphs')[0]
-			)
-		else:
-			return None
-
-	def get_graph_by_id(self, graph_id):
-		"""Get a graph by id.
-
 		:param graph_id: ID of the graph to be fetched.
-		:return: GraphResponse object that wraps the response.
+		:owner_email: Email of the owner of the graph.
+		:return: APIResponse object if a graph with given name or graph_id exists otherwise None.
 		"""
-		graph_by_id_path = GRAPHS_PATH + str(graph_id)
-		return APIResponse('graph',
-			self.client._make_request("GET", graph_by_id_path)
-		)
+		if graph_id is not None:
+			graph_by_id_path = GRAPHS_PATH + str(graph_id)
+			return APIResponse('graph',
+				self.client._make_request("GET", graph_by_id_path)
+			)
+
+		if name is not None:
+			query = {
+				'owner_email': self.client.username if owner_email is None else owner_email,
+				'names[]': name
+			}
+			if owner_email is not None and owner_email != self.client.username:
+				query.update({'is_public': 1})
+			response = self.client._make_request("GET", GRAPHS_PATH, url_params=query)
+			if response.get('total', 0) > 0:
+				return APIResponse('graph',
+					response.get('graphs')[0]
+				)
+			else:
+				return None
+
+		raise Exception('Both graph_id and name can\'t be none!')
 
 	def get_public_graphs(self, tags=None, limit=20, offset=0):
 		"""Get public graphs.
@@ -59,7 +57,7 @@ class Graphs(object):
 		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: GraphResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		query = {
 			'is_public': 1,
@@ -80,7 +78,7 @@ class Graphs(object):
 		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: GraphResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		query = {
 			'member_email': self.client.username,
@@ -101,7 +99,7 @@ class Graphs(object):
 		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: GraphResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		query = {
 			'owner_email': self.client.username,
@@ -116,65 +114,103 @@ class Graphs(object):
 			self.client._make_request("GET", GRAPHS_PATH, url_params=query)
 		)
 
-	def delete_graph(self, name):
-		"""Delete graph with the given name.
+	def delete_graph(self, name=None, graph_id=None):
+		"""Delete a graph with the given name or graph_id.
 
-		:param name: Name of the graph
-
+		:param name: Name of the graph to be deleted.
+		:param graph_id: ID of the graph to be deleted.
 		:return: Success/Error Message from GraphSpace
 		"""
-		response = self.get_graph(name)
-		if response is None or response.graph.id is None:
-			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
-		else:
-			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+		if graph_id is not None:
+			graph_by_id_path = GRAPHS_PATH + str(graph_id)
 			response = self.client._make_request("DELETE", graph_by_id_path)
 			return response['message']
 
-	def update_graph(self, name, graph, owner_email=None):
-		"""Update graph with the given name with given details.
+		if name is not None:
+			response = self.get_graph(name=name)
+			if response is None or response.graph.id is None:
+				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+			else:
+				graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+				response = self.client._make_request("DELETE", graph_by_id_path)
+				return response['message']
 
-		:param name: Name of the graph
+		raise Exception('Both graph_id and name can\'t be none!')
+
+	def update_graph(self, graph, name=None, graph_id=None, owner_email=None):
+		"""Update a graph with the given name or graph_id.
+
 		:param graph: GSGraph object.
+		:param name: Name of the graph to be updated.
+		:param graph_id: ID of the graph to be updated.
 		:param owner_email: Email of owner of the graph.
 
-		:return: GraphResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
-		response = self.get_graph(name, owner_email=owner_email)
-		if response is None or response.graph.id is None:
-			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
-		else:
-			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+		if graph_id is not None:
+			graph_by_id_path = GRAPHS_PATH + str(graph_id)
 			return APIResponse('graph',
 				self.client._make_request("PUT", graph_by_id_path, data=graph.json())
 			)
 
-	def make_graph_public(self, name):
+		if name is not None:
+			response = self.get_graph(name=name, owner_email=owner_email)
+			if response is None or response.graph.id is None:
+				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+			else:
+				graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+				return APIResponse('graph',
+					self.client._make_request("PUT", graph_by_id_path, data=graph.json())
+				)
+
+		raise Exception('Both graph_id and name can\'t be none!')
+
+	def make_graph_public(self, name=None, graph_id=None):
 		"""Makes a graph publicly viewable.
 
 		:param name: Name of the graph.
-		:return: GraphResponse object that wraps the response.
+		:param graph_id: ID of the graph.
+		:return: APIResponse object that wraps the response.
 		"""
-		response = self.get_graph(name)
-		if response is None or response.graph.id is None:
-			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
-		else:
-			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+		if graph_id is not None:
+			graph_by_id_path = GRAPHS_PATH + str(graph_id)
 			return APIResponse('graph',
 				self.client._make_request("PUT", graph_by_id_path, data={'is_public': 1})
 			)
 
-	def make_graph_private(self, name):
+		if name is not None:
+			response = self.get_graph(name=name)
+			if response is None or response.graph.id is None:
+				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+			else:
+				graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+				return APIResponse('graph',
+					self.client._make_request("PUT", graph_by_id_path, data={'is_public': 1})
+				)
+
+		raise Exception('Both graph_id and name can\'t be none!')
+
+	def make_graph_private(self, name=None, graph_id=None):
 		"""Makes a graph privately viewable.
 
 		:param name: Name of the graph.
-		:return: GraphResponse object that wraps the response.
+		:param graph_id: ID of the graph.
+		:return: APIResponse object that wraps the response.
 		"""
-		response = self.get_graph(name)
-		if response is None or response.graph.id is None:
-			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
-		else:
-			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+		if graph_id is not None:
+			graph_by_id_path = GRAPHS_PATH + str(graph_id)
 			return APIResponse('graph',
 				self.client._make_request("PUT", graph_by_id_path, data={'is_public': 0})
 			)
+
+		if name is not None:
+			response = self.get_graph(name=name)
+			if response is None or response.graph.id is None:
+				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+			else:
+				graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+				return APIResponse('graph',
+					self.client._make_request("PUT", graph_by_id_path, data={'is_public': 0})
+				)
+
+		raise Exception('Both graph_id and name can\'t be none!')

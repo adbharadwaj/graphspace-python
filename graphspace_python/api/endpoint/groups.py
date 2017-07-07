@@ -11,8 +11,8 @@ class Groups(object):
 	def post_group(self, group):
 		"""Create a group for the requesting user.
 
-		:param graph: GSGroup object.
-		:return: GroupResponse object that wraps the response.
+		:param group: GSGroup object.
+		:return: APIResponse object that wraps the response.
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -27,9 +27,9 @@ class Groups(object):
 	def get_group(self, name=None, group_id=None):
 		"""Get a group with the given name or group_id, where the requesting user is a member.
 
-		:param name: Name of the group to be searched.
-		:param id: ID of the group to be searched.
-		:return: GroupResponse object that wraps the response.
+		:param name: Name of the group to be fetched.
+		:param id: ID of the group to be fetched.
+		:return: APIResponse object if a group with given name or group_id exists otherwise None.
 		"""
 		if group_id is not None:
 			group_by_id_path = GROUPS_PATH + str(group_id)
@@ -57,7 +57,7 @@ class Groups(object):
 		:param group: GSGroup object.
 		:param name: Name of the group to be updated.
 		:param id: ID of the group to be updated.
-		:return: GroupResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -110,7 +110,7 @@ class Groups(object):
 
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: GroupResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		query = {
 			'limit': limit,
@@ -127,7 +127,7 @@ class Groups(object):
 
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: GroupResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		query = {
 			'limit': limit,
@@ -144,7 +144,7 @@ class Groups(object):
 
 		:param name: Name of the group.
 		:param group_id: ID of the group.
-		:return: MemberResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		if group_id is not None:
 			group_members_path = GROUPS_PATH + str(group_id) + '/members'
@@ -220,7 +220,7 @@ class Groups(object):
 
 		:param name: Name of the group.
 		:param group_id: ID of the group.
-		:return: GraphResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		if group_id is not None:
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs'

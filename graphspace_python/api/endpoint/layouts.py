@@ -13,7 +13,7 @@ class Layouts(object):
 
 		:param graph_id: ID of the graph.
 		:param layout: GSLayout object.
-		:return: LayoutResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		data = layout.json()
 		data.update({'graph_id': graph_id, 'owner_email': self.client.username})
@@ -22,14 +22,14 @@ class Layouts(object):
 			self.client._make_request("POST", layouts_path, data=data)
 		)
 
-	def update_graph_layout(self, graph_id, layout, layout_id=None, name=None, owner_email=None):
+	def update_graph_layout(self, graph_id, layout, name=None, layout_id=None, owner_email=None):
 		"""Update a layout with given layout_id or name for the graph with given graph_id.
 
 		:param graph_id: ID of the graph.
 		:param layout: GSLayout object.
-		:param layout_id: ID of the layout.
-		:param name: Name of the layout.
-		:return: LayoutResponse object that wraps the response.
+		:param name: Name of the layout to be updated.
+		:param layout_id: ID of the layout to be updated.
+		:return: APIResponse object that wraps the response.
 		"""
 		if layout_id is not None:
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
@@ -49,13 +49,13 @@ class Layouts(object):
 
 		raise Exception('Both layout_id and name can\'t be none!')
 
-	def delete_graph_layout(self, graph_id, layout_id=None, name=None):
+	def delete_graph_layout(self, graph_id, name=None, layout_id=None):
 		"""Delete a layout with the given layout_id or name for the graph with given graph_id.
 
 		:param graph_id: ID of the graph.
-		:param layout_id: ID of the layout.
-		:param name: Name of the layout.
-		:return: Success/Error Message from GraphSpace
+		:param name: Name of the layout to be deleted.
+		:param layout_id: ID of the layout to be deleted.
+		:return: Success/Error Message from GraphSpace.
 		"""
 		if layout_id is not None:
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
@@ -73,13 +73,13 @@ class Layouts(object):
 
 		raise Exception('Both layout_id and name can\'t be none!')
 
-	def get_graph_layout(self, graph_id, layout_id=None, name=None, owner_email=None):
+	def get_graph_layout(self, graph_id, name=None, layout_id=None, owner_email=None):
 		"""Get a layout with given layout_id or name for the graph with given graph_id.
 
 		:param graph_id: ID of the graph.
-		:param layout_id: ID of the layout.
-		:param name: Name of the layout.
-		:return: LayoutResponse object that wraps the response.
+		:param name: Name of the layout to be fetched.
+		:param layout_id: ID of the layout to be fetched.
+		:return: APIResponse object that wraps the response.
 		"""
 		if layout_id is not None:
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
@@ -106,12 +106,12 @@ class Layouts(object):
 		raise Exception('Both layout_id and name can\'t be none!')
 
 	def get_my_graph_layouts(self, graph_id, limit=20, offset=0):
-		"""Get layouts created by the requesting user for the graph with given graph_id
+		"""Get layouts created by the requesting user for the graph with given graph_id.
 
 		:param graph_id: ID of the graph.
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: LayoutResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		query = {
 			'limit': limit,
@@ -125,12 +125,12 @@ class Layouts(object):
 		)
 
 	def get_shared_graph_layouts(self, graph_id, limit=20, offset=0):
-		"""Get layouts shared with the requesting user for the graph with given graph_id .
+		"""Get layouts shared with the requesting user for the graph with given graph_id.
 
 		:param graph_id: ID of the graph.
 		:param offset: Offset the list of returned entities by this number. Default value is 0.
 		:param limit: Number of entities to return. Default value is 20.
-		:return: LayoutResponse object that wraps the response.
+		:return: APIResponse object that wraps the response.
 		"""
 		query = {
 			'limit': limit,

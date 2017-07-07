@@ -35,7 +35,7 @@ def test_user_not_authorised_error(graph_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	with pytest.raises(errors.UserNotAuthorised) as err:
-		graphspace.get_graph_by_id(graph_id)
+		graphspace.get_graph(graph_id=graph_id)
 
 
 def test_user_not_authenticated_error():
@@ -48,7 +48,7 @@ def test_user_not_authenticated_error():
 def test_make_graph_public(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
-	response = graphspace.make_graph_public(name)
+	response = graphspace.make_graph_public(name=name)
 	assert type(response) is APIResponse and response.graph.is_public == 1
 
 
@@ -68,7 +68,7 @@ def test_update_graph(name):
 		'description': 'my sample graph'
 	})
 
-	response = graphspace.update_graph(name, graph=graph1)
+	response = graphspace.update_graph(graph=graph1, name=name)
 	assert type(response) is APIResponse
 	assert hasattr(response, 'graph') and response.graph.name == graph1.get_name()
 	assert response.graph.is_public == 1
@@ -80,13 +80,13 @@ def test_update_graph2(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	# Retrieving graph
-	graph = graphspace.get_graph(name).graph
+	graph = graphspace.get_graph(name=name).graph
 	# Modifying the retrieved graph
 	graph.set_name(name)
 	graph.add_node('z', popup='sample node popup text', label='Z')
 	graph.set_is_public()
 	# Updating graph
-	response = graphspace.update_graph(name, graph=graph)
+	response = graphspace.update_graph(graph=graph, name=name)
 	assert type(response) is APIResponse
 	assert hasattr(response, 'graph') and response.graph.name == graph.get_name()
 	assert 'z' in response.graph.node.keys()
@@ -96,8 +96,8 @@ def test_update_graph2(name):
 def test_delete_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
-	graphspace.delete_graph(name)
-	assert graphspace.get_graph(name) is None
+	graphspace.delete_graph(name=name)
+	assert graphspace.get_graph(name=name) is None
 
 
 def test_post_graph(name=None):
@@ -126,7 +126,7 @@ def test_post_graph(name=None):
 def test_get_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
-	response = graphspace.get_graph(name)
+	response = graphspace.get_graph(name=name)
 	assert type(response) is APIResponse
 	assert hasattr(response, 'graph') and response.graph.name == name
 
@@ -134,7 +134,7 @@ def test_get_graph(name):
 def test_get_graph_by_id():
 	graphspace = GraphSpace('flud', 'Muraliistheman!')
 	# graphspace.set_api_host('localhost:8000')
-	response = graphspace.get_graph_by_id(20047)
+	response = graphspace.get_graph(graph_id=20047)
 	assert type(response) is APIResponse
 	assert hasattr(response, 'graph') and response.graph.id == 20047
 

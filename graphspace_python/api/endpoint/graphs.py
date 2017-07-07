@@ -1,5 +1,5 @@
 from graphspace_python.api.config import GRAPHS_PATH
-from graphspace_python.api.obj.graph_response import GraphResponse
+from graphspace_python.api.obj.api_response import APIResponse
 
 class Graphs(object):
 	"""Graphs endpoint Class
@@ -16,7 +16,7 @@ class Graphs(object):
 		"""
 		data = graph.json()
 		data.update({'owner_email': self.client.username})
-		return GraphResponse(
+		return APIResponse('graph',
 			self.client._make_request("POST", GRAPHS_PATH, data=data)
 		)
 
@@ -36,7 +36,7 @@ class Graphs(object):
 
 		response = self.client._make_request("GET", GRAPHS_PATH, url_params=query)
 		if response.get('total', 0) > 0:
-			return GraphResponse(
+			return APIResponse('graph',
 				response.get('graphs')[0]
 			)
 		else:
@@ -49,7 +49,7 @@ class Graphs(object):
 		:return: GraphResponse object that wraps the response.
 		"""
 		graph_by_id_path = GRAPHS_PATH + str(graph_id)
-		return GraphResponse(
+		return APIResponse('graph',
 			self.client._make_request("GET", graph_by_id_path)
 		)
 
@@ -70,7 +70,7 @@ class Graphs(object):
 		if tags is not None:
 			query.update({'tags[]': tags})
 
-		return GraphResponse(
+		return APIResponse('graph',
 			self.client._make_request("GET", GRAPHS_PATH, url_params=query)
 		)
 
@@ -91,7 +91,7 @@ class Graphs(object):
 		if tags is not None:
 			query.update({'tags[]': tags})
 
-		return GraphResponse(
+		return APIResponse('graph',
 			self.client._make_request("GET", GRAPHS_PATH, url_params=query)
 		)
 
@@ -112,7 +112,7 @@ class Graphs(object):
 		if tags is not None:
 			query.update({'tags[]': tags})
 
-		return GraphResponse(
+		return APIResponse('graph',
 			self.client._make_request("GET", GRAPHS_PATH, url_params=query)
 		)
 
@@ -145,7 +145,7 @@ class Graphs(object):
 			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 		else:
 			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
-			return GraphResponse(
+			return APIResponse('graph',
 				self.client._make_request("PUT", graph_by_id_path, data=graph.json())
 			)
 
@@ -160,7 +160,7 @@ class Graphs(object):
 			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 		else:
 			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
-			return GraphResponse(
+			return APIResponse('graph',
 				self.client._make_request("PUT", graph_by_id_path, data={'is_public': 1})
 			)
 
@@ -175,6 +175,6 @@ class Graphs(object):
 			raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 		else:
 			graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
-			return GraphResponse(
+			return APIResponse('graph',
 				self.client._make_request("PUT", graph_by_id_path, data={'is_public': 0})
 			)

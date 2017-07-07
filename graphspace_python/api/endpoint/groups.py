@@ -1,7 +1,5 @@
 from graphspace_python.api.config import GROUPS_PATH
-from graphspace_python.api.obj.group_response import GroupResponse
-from graphspace_python.api.obj.member_response import MemberResponse
-from graphspace_python.api.obj.graph_response import GraphResponse
+from graphspace_python.api.obj.api_response import APIResponse
 
 class Groups(object):
 	"""Groups Endpoint Class
@@ -22,7 +20,7 @@ class Groups(object):
 		}
 		data = group.json()
 		data.update({'owner_email': self.client.username})
-		return GroupResponse(
+		return APIResponse('group',
 			self.client._make_request("POST", GROUPS_PATH, data=data, headers=headers)
 		)
 
@@ -35,7 +33,7 @@ class Groups(object):
 		"""
 		if group_id is not None:
 			group_by_id_path = GROUPS_PATH + str(group_id)
-			return GroupResponse(
+			return APIResponse('group',
 				self.client._make_request("GET", group_by_id_path)
 			)
 
@@ -45,7 +43,7 @@ class Groups(object):
 				'name': name
 			})
 			if response.get('total', 0) > 0:
-				return GroupResponse(
+				return APIResponse('group',
 					response.get('groups')[0]
 				)
 			else:
@@ -68,7 +66,7 @@ class Groups(object):
 
 		if group_id is not None:
 			group_by_id_path = GROUPS_PATH + str(group_id)
-			return GroupResponse(
+			return APIResponse('group',
 				self.client._make_request("PUT", group_by_id_path, data=group.json(), headers=headers)
 			)
 
@@ -78,7 +76,7 @@ class Groups(object):
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
 				group_by_id_path = GROUPS_PATH + str(response.group.id)
-				return GroupResponse(
+				return APIResponse('group',
 					self.client._make_request("PUT", group_by_id_path, data=group.json(), headers=headers)
 				)
 
@@ -120,7 +118,7 @@ class Groups(object):
 			'owner_email': self.client.username
 		}
 
-		return GroupResponse(
+		return APIResponse('group',
 			self.client._make_request("GET", GROUPS_PATH, url_params=query)
 		)
 
@@ -137,7 +135,7 @@ class Groups(object):
 			'member_email': self.client.username
 		}
 
-		return GroupResponse(
+		return APIResponse('group',
 			self.client._make_request("GET", GROUPS_PATH, url_params=query)
 		)
 
@@ -150,7 +148,7 @@ class Groups(object):
 		"""
 		if group_id is not None:
 			group_members_path = GROUPS_PATH + str(group_id) + '/members'
-			return MemberResponse(
+			return APIResponse('member',
 				self.client._make_request("GET", group_members_path)
 			)
 
@@ -160,7 +158,7 @@ class Groups(object):
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
 				group_members_path = GROUPS_PATH + str(response.group.id) + '/members'
-				return MemberResponse(
+				return APIResponse('member',
 					self.client._make_request("GET", group_members_path)
 				)
 
@@ -226,7 +224,7 @@ class Groups(object):
 		"""
 		if group_id is not None:
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs'
-			return GraphResponse(
+			return APIResponse('graph',
 				self.client._make_request("GET", group_graphs_path)
 			)
 
@@ -236,7 +234,7 @@ class Groups(object):
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
 				group_graphs_path = GROUPS_PATH + str(response.group.group_id) + '/graphs'
-				return GraphResponse(
+				return APIResponse('graph',
 					self.client._make_request("GET", group_graphs_path)
 				)
 

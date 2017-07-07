@@ -1,5 +1,5 @@
 from graphspace_python.api.config import LAYOUTS_PATH
-from graphspace_python.api.obj.layout_response import LayoutResponse
+from graphspace_python.api.obj.api_response import APIResponse
 
 class Layouts(object):
 	"""Layouts endpoint Class
@@ -18,7 +18,7 @@ class Layouts(object):
 		data = layout.json()
 		data.update({'graph_id': graph_id, 'owner_email': self.client.username})
 		layouts_path = LAYOUTS_PATH.format(graph_id)
-		return LayoutResponse(
+		return APIResponse('layout',
 			self.client._make_request("POST", layouts_path, data=data)
 		)
 
@@ -33,7 +33,7 @@ class Layouts(object):
 		"""
 		if layout_id is not None:
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
-			return LayoutResponse(
+			return APIResponse('layout',
 				self.client._make_request("PUT", layout_by_id_path, data=layout.json())
 			)
 
@@ -43,7 +43,7 @@ class Layouts(object):
 				raise Exception('Layout with name `%s` of graph with graph_id=%s doesnt exist for user `%s`!' % (name, graph_id, self.client.username))
 			else:
 				layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(response.layout.id)
-				return LayoutResponse(
+				return APIResponse('layout',
 					self.client._make_request("PUT", layout_by_id_path, data=layout.json())
 				)
 
@@ -83,7 +83,7 @@ class Layouts(object):
 		"""
 		if layout_id is not None:
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
-			return LayoutResponse(
+			return APIResponse('layout',
 				self.client._make_request("GET", layout_by_id_path)
 			)
 
@@ -97,7 +97,7 @@ class Layouts(object):
 			layouts_path = LAYOUTS_PATH.format(graph_id)
 			response = self.client._make_request("GET", layouts_path, url_params=query)
 			if response.get('total', 0) > 0:
-				return LayoutResponse(
+				return APIResponse('layout',
 					response.get('layouts')[0]
 				)
 			else:
@@ -120,7 +120,7 @@ class Layouts(object):
 		}
 
 		layouts_path = LAYOUTS_PATH.format(graph_id)
-		return LayoutResponse(
+		return APIResponse('layout',
 			self.client._make_request("GET", layouts_path, url_params=query)
 		)
 
@@ -139,6 +139,6 @@ class Layouts(object):
 		}
 
 		layouts_path = LAYOUTS_PATH.format(graph_id)
-		return LayoutResponse(
+		return APIResponse('layout',
 			self.client._make_request("GET", layouts_path, url_params=query)
 		)

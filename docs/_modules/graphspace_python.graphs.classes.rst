@@ -12,6 +12,14 @@ graphspace\_python\.graphs\.classes\.gsgraph module
     :undoc-members:
     :show-inheritance:
 
+graphspace\_python\.graphs\.classes\.gsgroup module
+---------------------------------------------------
+
+.. automodule:: graphspace_python.graphs.classes.gsgroup
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 graphspace\_python\.graphs\.classes\.gslayout module
 ----------------------------------------------------
 

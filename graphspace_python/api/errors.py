@@ -21,6 +21,9 @@ class GraphSpaceError(Exception):
         """
         return self.error_message
 
+class UserAlreadyExists(GraphSpaceError):
+    pass
+
 class BadRequest(GraphSpaceError):
     pass
 
@@ -40,6 +43,7 @@ class ErrorHandler(object):
     """
 
     _error_map = {
+        1000: UserAlreadyExists,
         1002: BadRequest,
         1004: UserNotAuthorised,
         1005: UserNotAuthenticated,

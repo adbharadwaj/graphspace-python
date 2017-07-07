@@ -254,9 +254,10 @@ Successfully deleted layout with id=1068
 Responses
 ---------
 
-Responses from the API are parsed into Python objects.
+Responses from the API are parsed into **APIResponse** objects.
 
-**Graphs endpoint** responses are parsed into **GraphResponse** objects.
+Graphs endpoint responses
+-------------------------
 
 When response has a single graph object:
 
@@ -274,7 +275,8 @@ When response has multiple graph objects:
 >>> response.graphs[0].name
 u'My Sample Graph'
 
-**Layouts endpoint** responses are parsed into **LayoutResponse** objects.
+Layouts endpoint responses
+--------------------------
 
 When response has a single layout object:
 

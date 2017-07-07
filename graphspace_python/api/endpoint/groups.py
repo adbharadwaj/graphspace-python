@@ -267,7 +267,7 @@ class Groups(object):
 
 		raise Exception('Both group_id and name can\'t be none!')
 
-	def delete_group_graphs(self, graph_id, name=None, group_id=None):
+	def delete_group_graph(self, graph_id, name=None, group_id=None):
 		"""Delete a graph from a group with given group_id or name.
 
 		:param graph_id: ID of the group to be deleted from the group.

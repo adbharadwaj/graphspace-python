@@ -280,6 +280,10 @@ You can save your group online using the **post_group** method.
 
 >>> graphspace.post_group(group)
 
+You can also view your saved group on GraphSpace.
+
+.. image:: images/post_group.gif
+
 
 Fetching a group from GraphSpace
 --------------------------------
@@ -305,6 +309,10 @@ Here is another example.
 >>> group.set_description('updated description')
 >>> graphspace.update_group(group, name='My first group')
 
+You can also view your updated group on GraphSpace.
+
+.. image:: images/update_group.gif
+
 
 Fetching members of a group from GraphSpace
 -------------------------------------------
@@ -323,6 +331,10 @@ You can add a member to your group anytime using the **add_group_member** method
 >>> # You can add a group member by group_id as well - graphspace.add_group_member(member_email='user3@example.com', group_id=318)
 >>> member_id = response['user_id']
 
+You can also view the added member on GraphSpace.
+
+.. image:: images/add_group_member.gif
+
 
 Deleting a member from a group on GraphSpace
 --------------------------------------------
@@ -331,6 +343,10 @@ You can delete a member from your group anytime using the **delete_group_member*
 >>> print graphspace.delete_group_member(member_id=47, name='My first group')
 >>> # You can delete a group member by group_id as well - graphspace.delete_group_member(member_id=47, group_id=318)
 Successfully deleted member with id=47 from group with id=318
+
+You can also view the change on GraphSpace.
+
+.. image:: images/delete_group_member.gif
 
 
 Fetching graphs of a group from GraphSpace
@@ -349,6 +365,10 @@ You can add a graph to your group anytime using the **add_group_graph** method.
 >>> graphspace.add_group_graph(graph_id=34786, name='My first group')
 >>> # You can add a group graph by group_id as well - graphspace.add_group_graph(graph_id=34786, group_id=318)
 
+You can also view the added graph on GraphSpace.
+
+.. image:: images/add_group_graph.gif
+
 
 Deleting a graph from a group on GraphSpace
 -------------------------------------------
@@ -357,6 +377,10 @@ You can delete a graph from your group anytime using the **delete_group_graph** 
 >>> print graphspace.delete_group_graph(graph_id=34786, name='My first group')
 >>> # You can delete a group graph by group_id as well - graphspace.delete_group_graph(graph_id=34786, group_id=318)
 Successfully deleted graph with id=34786 from group with id=318
+
+You can also view the change on GraphSpace.
+
+.. image:: images/delete_group_graph.gif
 
 
 Deleting a group on GraphSpace
@@ -367,6 +391,10 @@ You can also delete your group anytime using the **delete_group** method.
 >>> print graphspace.delete_group(name='My first group')
 >>> # You can delete a group by id as well - graphspace.delete_group(group_id=318)
 Successfully deleted group with id=318
+
+You can also view the change on GraphSpace.
+
+.. image:: images/delete_group.gif
 
 
 Responses

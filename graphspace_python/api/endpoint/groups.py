@@ -233,7 +233,7 @@ class Groups(object):
 			if response is None or response.group.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_graphs_path = GROUPS_PATH + str(response.group.group_id) + '/graphs'
+				group_graphs_path = GROUPS_PATH + str(response.group.id) + '/graphs'
 				return APIResponse('graph',
 					self.client._make_request("GET", group_graphs_path)
 				)
@@ -262,7 +262,7 @@ class Groups(object):
 			if response is None or response.group.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_graphs_path = GROUPS_PATH + str(response.group.group_id) + '/graphs'
+				group_graphs_path = GROUPS_PATH + str(response.group.id) + '/graphs'
 				return self.client._make_request("POST", group_graphs_path, data={'graph_id': graph_id}, headers=headers)
 
 		raise Exception('Both group_id and name can\'t be none!')
@@ -285,7 +285,7 @@ class Groups(object):
 			if response is None or response.group.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_graphs_path = GROUPS_PATH + str(response.group.group_id) + '/graphs/' + str(graph_id)
+				group_graphs_path = GROUPS_PATH + str(response.group.id) + '/graphs/' + str(graph_id)
 				response = self.client._make_request("DELETE", group_graphs_path)
 				return response['message']
 

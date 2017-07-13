@@ -20,7 +20,7 @@ class Layouts(object):
 		layouts_path = LAYOUTS_PATH.format(graph_id)
 		return APIResponse('layout',
 			self.client._make_request("POST", layouts_path, data=data)
-		)
+		).layout
 
 	def update_graph_layout(self, graph_id, layout, name=None, layout_id=None, owner_email=None):
 		"""Update a layout with given layout_id or name for the graph with given graph_id.
@@ -35,7 +35,7 @@ class Layouts(object):
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
 			return APIResponse('layout',
 				self.client._make_request("PUT", layout_by_id_path, data=layout.json())
-			)
+			).layout
 
 		if name is not None:
 			response = self.get_graph_layout(graph_id=graph_id, name=name, owner_email=owner_email)
@@ -45,7 +45,7 @@ class Layouts(object):
 				layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(response.layout.id)
 				return APIResponse('layout',
 					self.client._make_request("PUT", layout_by_id_path, data=layout.json())
-				)
+				).layout
 
 		raise Exception('Both layout_id and name can\'t be none!')
 
@@ -85,7 +85,7 @@ class Layouts(object):
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
 			return APIResponse('layout',
 				self.client._make_request("GET", layout_by_id_path)
-			)
+			).layout
 
 		if name is not None:
 			query = {
@@ -99,7 +99,7 @@ class Layouts(object):
 			if response.get('total', 0) > 0:
 				return APIResponse('layout',
 					response.get('layouts')[0]
-				)
+				).layout
 			else:
 				return None
 
@@ -122,7 +122,7 @@ class Layouts(object):
 		layouts_path = LAYOUTS_PATH.format(graph_id)
 		return APIResponse('layout',
 			self.client._make_request("GET", layouts_path, url_params=query)
-		)
+		).layouts
 
 	def get_shared_graph_layouts(self, graph_id, limit=20, offset=0):
 		"""Get layouts shared with the requesting user for the graph with given graph_id.
@@ -141,4 +141,4 @@ class Layouts(object):
 		layouts_path = LAYOUTS_PATH.format(graph_id)
 		return APIResponse('layout',
 			self.client._make_request("GET", layouts_path, url_params=query)
-		)
+		).layouts

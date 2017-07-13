@@ -11,28 +11,31 @@ class Graphs(object):
 	def post_graph(self, graph):
 		"""Posts NetworkX graph to the requesting users account on GraphSpace.
 
-		:param graph: GSGraph object.
-		:return: APIResponse object that wraps the response.
+		Args:
+			graph (GSGraph): GSGraph object having graph details.
+
+		Returns:
+			Graph: Saved graph on GraphSpace.
 		"""
 		data = graph.json()
 		data.update({'owner_email': self.client.username})
 		return APIResponse('graph',
 			self.client._make_request("POST", GRAPHS_PATH, data=data)
-		)
+		).graph
 
 	def get_graph(self, name=None, graph_id=None, owner_email=None):
 		"""Get a graph with the given name or graph_id.
 
 		:param name: Name of the graph to be fetched.
 		:param graph_id: ID of the graph to be fetched.
-		:owner_email: Email of the owner of the graph.
+		:param owner_email: Email of the owner of the graph.
 		:return: APIResponse object if a graph with given name or graph_id exists otherwise None.
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
 			return APIResponse('graph',
 				self.client._make_request("GET", graph_by_id_path)
-			)
+			).graph
 
 		if name is not None:
 			query = {
@@ -45,7 +48,7 @@ class Graphs(object):
 			if response.get('total', 0) > 0:
 				return APIResponse('graph',
 					response.get('graphs')[0]
-				)
+				).graph
 			else:
 				return None
 
@@ -70,7 +73,7 @@ class Graphs(object):
 
 		return APIResponse('graph',
 			self.client._make_request("GET", GRAPHS_PATH, url_params=query)
-		)
+		).graphs
 
 	def get_shared_graphs(self, tags=None, limit=20, offset=0):
 		"""Get graphs shared with the groups where requesting user is a member.
@@ -91,7 +94,7 @@ class Graphs(object):
 
 		return APIResponse('graph',
 			self.client._make_request("GET", GRAPHS_PATH, url_params=query)
-		)
+		).graphs
 
 	def get_my_graphs(self, tags=None, limit=20, offset=0):
 		"""Get graphs created by the requesting user.
@@ -112,7 +115,7 @@ class Graphs(object):
 
 		return APIResponse('graph',
 			self.client._make_request("GET", GRAPHS_PATH, url_params=query)
-		)
+		).graphs
 
 	def delete_graph(self, name=None, graph_id=None):
 		"""Delete a graph with the given name or graph_id.
@@ -151,7 +154,7 @@ class Graphs(object):
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
 			return APIResponse('graph',
 				self.client._make_request("PUT", graph_by_id_path, data=graph.json())
-			)
+			).graph
 
 		if name is not None:
 			response = self.get_graph(name=name, owner_email=owner_email)
@@ -161,7 +164,7 @@ class Graphs(object):
 				graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
 				return APIResponse('graph',
 					self.client._make_request("PUT", graph_by_id_path, data=graph.json())
-				)
+				).graph
 
 		raise Exception('Both graph_id and name can\'t be none!')
 
@@ -176,7 +179,7 @@ class Graphs(object):
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
 			return APIResponse('graph',
 				self.client._make_request("PUT", graph_by_id_path, data={'is_public': 1})
-			)
+			).graph
 
 		if name is not None:
 			response = self.get_graph(name=name)
@@ -186,7 +189,7 @@ class Graphs(object):
 				graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
 				return APIResponse('graph',
 					self.client._make_request("PUT", graph_by_id_path, data={'is_public': 1})
-				)
+				).graph
 
 		raise Exception('Both graph_id and name can\'t be none!')
 
@@ -201,7 +204,7 @@ class Graphs(object):
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
 			return APIResponse('graph',
 				self.client._make_request("PUT", graph_by_id_path, data={'is_public': 0})
-			)
+			).graph
 
 		if name is not None:
 			response = self.get_graph(name=name)
@@ -211,6 +214,6 @@ class Graphs(object):
 				graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
 				return APIResponse('graph',
 					self.client._make_request("PUT", graph_by_id_path, data={'is_public': 0})
-				)
+				).graph
 
 		raise Exception('Both graph_id and name can\'t be none!')

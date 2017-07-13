@@ -1,7 +1,7 @@
 import pytest
 from graphspace_python.graphs.classes.gsgraph import GSGraph
 from graphspace_python.api.client import GraphSpace
-from graphspace_python.api.obj.api_response import APIResponse
+from graphspace_python.api.obj.graph import Graph
 from layouts_test import test_layouts_endpoint
 from groups_test import test_groups_endpoint
 from graphspace_python.api import errors
@@ -48,8 +48,8 @@ def test_user_not_authenticated_error():
 def test_make_graph_public(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
-	response = graphspace.make_graph_public(name=name)
-	assert type(response) is APIResponse and response.graph.is_public == 1
+	graph = graphspace.make_graph_public(name=name)
+	assert type(graph) is Graph and graph.is_public == 1
 
 
 def test_update_graph(name):
@@ -68,29 +68,28 @@ def test_update_graph(name):
 		'description': 'my sample graph'
 	})
 
-	response = graphspace.update_graph(graph=graph1, name=name)
-	assert type(response) is APIResponse
-	assert hasattr(response, 'graph') and response.graph.name == graph1.get_name()
-	assert response.graph.is_public == 1
-	assert len(response.graph.graph_json['elements']['edges']) == 0
-	assert len(response.graph.graph_json['elements']['nodes']) == 2
+	graph = graphspace.update_graph(graph=graph1, name=name)
+	assert type(graph) is Graph
+	assert graph.get_name() == graph1.get_name() and graph.is_public == 1
+	assert len(graph.graph_json['elements']['edges']) == 0
+	assert len(graph.graph_json['elements']['nodes']) == 2
 
 
 def test_update_graph2(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	# Retrieving graph
-	graph = graphspace.get_graph(name=name).graph
+	graph = graphspace.get_graph(name=name)
 	# Modifying the retrieved graph
 	graph.set_name(name)
 	graph.add_node('z', popup='sample node popup text', label='Z')
 	graph.set_is_public()
 	# Updating graph
-	response = graphspace.update_graph(graph=graph, name=name)
-	assert type(response) is APIResponse
-	assert hasattr(response, 'graph') and response.graph.name == graph.get_name()
-	assert 'z' in response.graph.node.keys()
-	assert response.graph.is_public == 1
+	graph1 = graphspace.update_graph(graph=graph, name=name)
+	assert type(graph1) is Graph
+	assert graph1.get_name() == graph.get_name()
+	assert 'z' in graph1.node
+	assert graph1.is_public == 1
 
 
 def test_delete_graph(name):
@@ -117,49 +116,49 @@ def test_post_graph(name=None):
 		'description': 'my sample graph'
 	})
 	graph1.set_tags(['sample'])
-	response = graphspace.post_graph(graph1)
-	assert type(response) is APIResponse
-	assert hasattr(response, 'graph') and response.graph.name == graph1.get_name()
-	return response.graph
+	graph = graphspace.post_graph(graph1)
+	assert type(graph) is Graph
+	assert graph.get_name() == graph1.get_name()
+	return graph
 
 
 def test_get_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
-	response = graphspace.get_graph(name=name)
-	assert type(response) is APIResponse
-	assert hasattr(response, 'graph') and response.graph.name == name
+	graph = graphspace.get_graph(name=name)
+	assert type(graph) is Graph
+	assert graph.get_name() == name
 
 
 def test_get_graph_by_id():
 	graphspace = GraphSpace('flud', 'Muraliistheman!')
 	# graphspace.set_api_host('localhost:8000')
-	response = graphspace.get_graph(graph_id=20047)
-	assert type(response) is APIResponse
-	assert hasattr(response, 'graph') and response.graph.id == 20047
+	graph = graphspace.get_graph(graph_id=20047)
+	assert type(graph) is Graph
+	assert graph.id == 20047
 
 
 def test_get_public_graphs():
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
-	response = graphspace.get_public_graphs(tags=['Kegg-networks'])
-	assert type(response) is APIResponse
-	assert hasattr(response, 'graphs') and len(response.graphs) > 0
+	graphs = graphspace.get_public_graphs(tags=['Kegg-networks'])
+	assert all(isinstance(x, Graph) for x in graphs)
+	assert len(graphs) > 0
 
 
 def test_get_shared_graphs():
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	# response = graphspace.get_public_graphs(tags=['2015-bioinformatics-xtalk', 'kegg-curated-top-rank-FPs'])
-	response = graphspace.get_shared_graphs()
-	assert type(response) is APIResponse
-	assert hasattr(response, 'graphs') and len(response.graphs) > 0
+	graphs = graphspace.get_shared_graphs()
+	assert all(isinstance(x, Graph) for x in graphs)
+	assert len(graphs) > 0
 
 
 def test_get_my_graphs():
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	# response = graphspace.get_public_graphs(tags=['2015-bioinformatics-xtalk', 'kegg-curated-top-rank-FPs'])
-	response = graphspace.get_my_graphs()
-	assert type(response) is APIResponse
-	assert hasattr(response, 'graphs') and len(response.graphs) > 0
+	graphs = graphspace.get_my_graphs()
+	assert all(isinstance(x, Graph) for x in graphs)
+	assert len(graphs) > 0

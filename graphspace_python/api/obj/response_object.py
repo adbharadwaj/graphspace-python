@@ -13,9 +13,8 @@ class ResponseObject(object):
         :param response: Response Dict obtained from API call.
         """
         for field in self._fields:
-            if field in response:
-                value = response[field]
-                self.__setattr__(field, value)
+            value = response[field] if field in response else None
+            self.__setattr__(field, value)
 
     def _parse(self, field_name, cls_name, response):
         """Parses the response from API call and produces the desired object.

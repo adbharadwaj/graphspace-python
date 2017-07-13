@@ -74,9 +74,8 @@ Fetching a graph from GraphSpace
 
 You can retrieve your saved graph anytime from GraphSpace using the **get_graph** method.
 
->>> response = graphspace.get_graph(name='My Sample Graph')
+>>> graph = graphspace.get_graph(name='My Sample Graph')
 >>> # You can retrieve a graph by id as well - graphspace.get_graph(graph_id=29824)
->>> graph = response.graph
 
 
 Updating a graph on GraphSpace
@@ -105,8 +104,7 @@ The updated graph will look like this on GraphSpace:
 Here is another example.
 
 >>> # Retrieving graph
->>> response = graphspace.get_graph(name='My Sample Graph')
->>> graph = response.graph
+>>> graph = graphspace.get_graph(name='My Sample Graph')
 >>> # Modifying the retrieved graph object
 >>> graph.add_node('z', popup='sample node popup text', label='Z')
 >>> graph.add_node_style('z', shape='ellipse', color='green', width=90, height=90)
@@ -127,7 +125,7 @@ Making a graph public on GraphSpace
 You can also make a graph public using the **make_graph_public** method.
 
 >>> graphspace.make_graph_public(name='My Sample Graph')
->>> assert graphspace.get_graph(name='My Sample Graph').graph.is_public == 1
+>>> assert graphspace.get_graph(name='My Sample Graph').is_public == 1
 
 
 Making a graph private on GraphSpace
@@ -136,7 +134,7 @@ Making a graph private on GraphSpace
 You can also make a graph private using the **make_graph_private** method.
 
 >>> graphspace.make_graph_private(name='My Sample Graph')
->>> assert graphspace.get_graph(name='My Sample Graph').graph.is_public == 0
+>>> assert graphspace.get_graph(name='My Sample Graph').is_public == 0
 
 
 Deleting a graph on GraphSpace
@@ -194,8 +192,7 @@ Saving a layout on GraphSpace
 -----------------------------
 You can save your layout online using the **post_graph_layout** method.
 
->>> response = graphspace.post_graph_layout(graph_id=21722, layout=L)
->>> # layout_id = response.layout.layout_id
+>>> graphspace.post_graph_layout(graph_id=21722, layout=L)
 
 The saved layout will look like this on GraphSpace:
 
@@ -207,9 +204,8 @@ Fetching a layout from GraphSpace
 
 You can retrieve your saved layout anytime from GraphSpace using the **get_graph_layout** method.
 
->>> response = graphspace.get_graph_layout(graph_id=21722, name='My Sample Layout')
+>>> layout = graphspace.get_graph_layout(graph_id=21722, name='My Sample Layout')
 >>> # You can retrieve a layout by id as well - graphspace.get_graph_layout(graph_id=21722, layout_id=1068)
->>> layout = response.layout
 
 
 Updating a layout on GraphSpace
@@ -233,8 +229,7 @@ The updated layout will look like this on GraphSpace:
 Here is another example.
 
 >>> # Retrieving layout
->>> response = graphspace.get_graph_graph_layout(graph_id=21722, name='My Sample Layout')
->>> layout = response.layout
+>>> layout = graphspace.get_graph_layout(graph_id=21722, name='My Sample Layout')
 >>> # Modifying the retrieved layout object
 >>> layout.set_node_position('b', y=30, x=67)
 >>> layout.set_node_position('a', y=30, x=211)
@@ -290,9 +285,8 @@ Fetching a group from GraphSpace
 
 You can retrieve your saved group anytime from GraphSpace using the **get_group** method.
 
->>> response = graphspace.get_group(name='My first group')
+>>> group = graphspace.get_group(name='My first group')
 >>> # You can retrieve a group by id as well - graphspace.get_group(group_id=318)
->>> group = response.group
 
 
 Updating a group on GraphSpace
@@ -305,7 +299,7 @@ You can also update your group anytime using the **update_group** method.
 
 Here is another example.
 
->>> group = graphspace.get_group(name='My first group').group
+>>> group = graphspace.get_group(name='My first group')
 >>> group.set_description('updated description')
 >>> graphspace.update_group(group, name='My first group')
 
@@ -318,9 +312,8 @@ Fetching members of a group from GraphSpace
 -------------------------------------------
 You can retrieve the members of your group anytime using the **get_group_members** method.
 
->>> response = graphspace.get_group_members(name='My first group')
+>>> members = graphspace.get_group_members(name='My first group')
 >>> # You can retrieve group members by group_id as well - graphspace.get_group_members(group_id=318)
->>> members = response.members
 
 
 Adding a member to a group on GraphSpace
@@ -353,9 +346,8 @@ Fetching graphs of a group from GraphSpace
 ------------------------------------------
 You can retrieve the graphs of your group anytime using the **get_group_graphs** method.
 
->>> response = graphspace.get_group_graphs(name='My first group')
+>>> graphs = graphspace.get_group_graphs(name='My first group')
 >>> # You can retrieve group graphs by group_id as well - graphspace.get_group_graphs(group_id=318)
->>> graphs = response.graphs
 
 
 Adding a graph to a group on GraphSpace
@@ -400,25 +392,23 @@ You can also view the change on GraphSpace.
 Responses
 ---------
 
-Responses from the API are parsed into **APIResponse** objects.
+Responses from the API are parsed into the respective object types.
 
 Graphs endpoint responses
 -------------------------
 
 When response has a single **Graph** object:
 
->>> response = graphspace.get_graph('My Sample Graph')
->>> response.graph.name
+>>> graph = graphspace.get_graph('My Sample Graph')
+>>> graph.name
 u'My Sample Graph'
 
 When response has multiple **Graph** objects:
 
->>> response = graphspace.get_my_graphs()
->>> response.graphs
+>>> graphs = graphspace.get_my_graphs()
+>>> graphs
 [<Graph 1>, <Graph 2>, ...]
->>> response.total
-32
->>> response.graphs[0].name
+>>> graphs[0].name
 u'My Sample Graph'
 
 Layouts endpoint responses
@@ -426,18 +416,16 @@ Layouts endpoint responses
 
 When response has a single **Layout** object:
 
->>> response = graphspace.get_graph_layout(graph_id=21722, name='My Sample Layout')
->>> response.layout.name
+>>> layout = graphspace.get_graph_layout(graph_id=21722, name='My Sample Layout')
+>>> layout.name
 u'My Sample Layout'
 
 When response has multiple **Layout** objects:
 
->>> response = graphspace.get_my_graph_layouts(graph_id=21722)
->>> response.layouts
+>>> layouts = graphspace.get_my_graph_layouts(graph_id=21722)
+>>> layouts
 [<Layout 1>, <Layout 2>, ...]
->>> response.total
-4
->>> response.layouts[0].name
+>>> layouts[0].name
 u'My Sample Layout'
 
 Groups endpoint responses
@@ -445,18 +433,16 @@ Groups endpoint responses
 
 When response has a single **Group** object:
 
->>> response = graphspace.get_group(name='My first group')
->>> response.group.name
+>>> group = graphspace.get_group(name='My first group')
+>>> group.name
 u'My first group'
 
 When response has multiple **Group** objects:
 
->>> response = graphspace.get_my_groups()
->>> response.groups
+>>> groups = graphspace.get_my_groups()
+>>> groups
 [<Group 1>, <Group 2>, ...]
->>> response.total
-3
->>> response.layouts[0].name
+>>> groups[0].name
 u'My first group'
 
 Groups member response
@@ -464,10 +450,8 @@ Groups member response
 
 Group member response consists of an array of **Member** objects.
 
->>> response = graphspace.get_group_members(name='My first group')
->>> response.members
+>>> members = graphspace.get_group_members(name='My first group')
+>>> members
 [<Member 1>, <Member 2>, ...]
->>> response.total
-6
->>> response.members[0].email
+>>> members[0].email
 u'user1@example.com'

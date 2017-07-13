@@ -22,7 +22,7 @@ class Groups(object):
 		data.update({'owner_email': self.client.username})
 		return APIResponse('group',
 			self.client._make_request("POST", GROUPS_PATH, data=data, headers=headers)
-		)
+		).group
 
 	def get_group(self, name=None, group_id=None):
 		"""Get a group with the given name or group_id, where the requesting user is a member.
@@ -35,7 +35,7 @@ class Groups(object):
 			group_by_id_path = GROUPS_PATH + str(group_id)
 			return APIResponse('group',
 				self.client._make_request("GET", group_by_id_path)
-			)
+			).group
 
 		if name is not None:
 			response = self.client._make_request("GET", GROUPS_PATH, url_params={
@@ -45,7 +45,7 @@ class Groups(object):
 			if response.get('total', 0) > 0:
 				return APIResponse('group',
 					response.get('groups')[0]
-				)
+				).group
 			else:
 				return None
 
@@ -68,7 +68,7 @@ class Groups(object):
 			group_by_id_path = GROUPS_PATH + str(group_id)
 			return APIResponse('group',
 				self.client._make_request("PUT", group_by_id_path, data=group.json(), headers=headers)
-			)
+			).group
 
 		if name is not None:
 			response = self.get_group(name=name)
@@ -78,7 +78,7 @@ class Groups(object):
 				group_by_id_path = GROUPS_PATH + str(response.group.id)
 				return APIResponse('group',
 					self.client._make_request("PUT", group_by_id_path, data=group.json(), headers=headers)
-				)
+				).group
 
 		raise Exception('Both group_id and name can\'t be none!')
 
@@ -120,7 +120,7 @@ class Groups(object):
 
 		return APIResponse('group',
 			self.client._make_request("GET", GROUPS_PATH, url_params=query)
-		)
+		).groups
 
 	def get_all_groups(self, limit=20, offset=0):
 		"""Get groups where the requesting user is a member.
@@ -137,7 +137,7 @@ class Groups(object):
 
 		return APIResponse('group',
 			self.client._make_request("GET", GROUPS_PATH, url_params=query)
-		)
+		).groups
 
 	def get_group_members(self, name=None, group_id=None):
 		"""Get members of a group with given group_id or name.
@@ -150,7 +150,7 @@ class Groups(object):
 			group_members_path = GROUPS_PATH + str(group_id) + '/members'
 			return APIResponse('member',
 				self.client._make_request("GET", group_members_path)
-			)
+			).members
 
 		if name is not None:
 			response = self.get_group(name=name)
@@ -160,7 +160,7 @@ class Groups(object):
 				group_members_path = GROUPS_PATH + str(response.group.id) + '/members'
 				return APIResponse('member',
 					self.client._make_request("GET", group_members_path)
-				)
+				).members
 
 		raise Exception('Both group_id and name can\'t be none!')
 
@@ -226,7 +226,7 @@ class Groups(object):
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs'
 			return APIResponse('graph',
 				self.client._make_request("GET", group_graphs_path)
-			)
+			).graphs
 
 		if name is not None:
 			response = self.get_group(name=name)
@@ -236,7 +236,7 @@ class Groups(object):
 				group_graphs_path = GROUPS_PATH + str(response.group.id) + '/graphs'
 				return APIResponse('graph',
 					self.client._make_request("GET", group_graphs_path)
-				)
+				).graphs
 
 		raise Exception('Both group_id and name can\'t be none!')
 

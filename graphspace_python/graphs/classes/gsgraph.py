@@ -48,10 +48,12 @@ class GSGraph(nx.DiGraph):
 
 	def __init__(self, *args, **kwargs):
 		super(GSGraph, self).__init__(*args, **kwargs)
+		self.set_name('Graph ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
+		self.tags = []
+		self.data = {}
 		self.graph_json = self.compute_graph_json()
 		self.style_json = {'style': []}
 		self.is_public = 0
-		self.set_name('Graph ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
 
 	def json(self):
 		"""
@@ -76,14 +78,26 @@ class GSGraph(nx.DiGraph):
 		:return: dict
 		"""
 		self.graph_json = {
-			'data': self.graph,
+			'data': self.compute_data(),
 			'elements': {
 				'nodes': [node[1]for node in self.nodes(data=True)],
 				'edges': [edge[2] for edge in self.edges(data=True)],
 			}
 		}
-
 		return self.graph_json
+
+	def compute_data(self):
+		"""
+		Computes the metadata of the graph.
+
+		:return: dict
+		"""
+		data = {
+			'name': self.name,
+			'tags': self.tags
+		}
+		self.data.update(data)
+		return self.data
 
 	def get_graph_json(self):
 		"""
@@ -126,7 +140,7 @@ class GSGraph(nx.DiGraph):
 
 		:return: string
 		"""
-		return self.graph.get("name", None)
+		return self.name
 
 	def set_name(self, name):
 		"""
@@ -134,7 +148,7 @@ class GSGraph(nx.DiGraph):
 
 		:param name: name of the graph.
 		"""
-		return self.graph.update({"name": name})
+		self.name = name
 
 	def get_is_public(self):
 		"""
@@ -161,7 +175,7 @@ class GSGraph(nx.DiGraph):
 
 		:return: dict
 		"""
-		return self.graph
+		return self.data
 
 	def set_data(self, data=dict()):
 		"""
@@ -170,7 +184,7 @@ class GSGraph(nx.DiGraph):
 		:param data: dict - key-value pairs describing the graph.
 
 		"""
-		self.graph.update(data)
+		self.data.update(data)
 
 	def get_tags(self):
 		"""
@@ -178,7 +192,7 @@ class GSGraph(nx.DiGraph):
 
 		:return: list of strings
 		"""
-		return self.graph.get("tags", [])
+		return self.tags
 
 	def set_tags(self, tags):
 		"""
@@ -187,7 +201,7 @@ class GSGraph(nx.DiGraph):
 		:param tags: list of strings
 
 		"""
-		return self.graph.update({"tags": tags})
+		self.tags = tags
 
 	def add_edge(self, source, target, attr_dict=None, directed=False, popup=None, k=None, **attr):
 		attr_dict = attr_dict if attr_dict is not None else dict()
@@ -235,7 +249,7 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		node_name: string - name of the node.
+		node_name: string -- name of the node.
 		shape: string -- shape of node. Default = "ellipse".
 		color: string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name. Default = white.
 		height: int -- height of the node's body. Use None to determine height from the number of lines in the label. Default = None.
@@ -292,7 +306,7 @@ class GSGraph(nx.DiGraph):
 		source: string -- unique ID of the source node
 		target: string -- unique ID of the target node
 		color: string -- hexadecimal representation of the color (e.g., #000000), or the color name. Default = black.
-		directed: bool - if True, draw the edge as directed. Default = False.
+		directed: bool -- if True, draw the edge as directed. Default = False.
 		width: float -- width of the edge.  Default = 1.0
 		arrow_shape: string -- shape of arrow head. Default is "triangle"
 		edge_style: string -- style of edge. Default is "solid"
@@ -341,8 +355,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		label - text to display on node. "\n" will be interpreted as a newline.
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		label: text to display on node. "\n" will be interpreted as a newline.
 
 		Returns
 		-------
@@ -362,8 +376,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		wrap - string denoting the type of wrap: one of "wrap" or "none".
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		wrap: string denoting the type of wrap: one of "wrap" or "none".
 
 		Returns
 		-------
@@ -372,7 +386,7 @@ class GSGraph(nx.DiGraph):
 		Raises
 		-------
 
-		Exception - if the wrap parameter is not one of the allowed wrap styles. See ALLOWED_NODE_TEXT_WRAP for more details.
+		Exception: if the wrap parameter is not one of the allowed wrap styles. See ALLOWED_NODE_TEXT_WRAP for more details.
 
 		"""
 		if wrap not in GSGraph.ALLOWED_NODE_TEXT_WRAP:
@@ -387,8 +401,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		shape - string -- shape of node. Default = "ellipse".
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		shape: string -- shape of node. Default = "ellipse".
 
 		Returns
 		-------
@@ -397,7 +411,7 @@ class GSGraph(nx.DiGraph):
 		Raises
 		-------
 
-		Exception - if the shape is not one of the allowed node shapes. See ALLOWED_NODE_SHAPES global variable.
+		Exception: if the shape is not one of the allowed node shapes. See ALLOWED_NODE_SHAPES global variable.
 
 		"""
 		if shape not in GSGraph.ALLOWED_NODE_SHAPES:
@@ -414,8 +428,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		color - string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name.
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		color: string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name.
 
 		Returns
 		-------
@@ -424,7 +438,7 @@ class GSGraph(nx.DiGraph):
 		Raises
 		-------
 
-		Exception - if the color is improperly formatted.
+		Exception: if the color is improperly formatted.
 
 		"""
 		error = GSGraph.check_color_hex(color)
@@ -441,8 +455,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		height - int -- height of the node's body. Use None to determine height from the number of lines in the label.
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		height: int -- height of the node's body. Use None to determine height from the number of lines in the label.
 
 		Returns
 		-------
@@ -463,8 +477,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		width - int -- width of the node's body, or None to determine width from length of label.
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		width: int -- width of the node's body, or None to determine width from length of label.
 
 		Returns
 		-------
@@ -485,9 +499,9 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		whitetext - Boolean -- if True, text is colored white instead of black. Default is False.
-		color - string -- hexadecimal representation of the text outline color (e.g., #FFFFFF) or a color name.
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		whitetext: Boolean -- if True, text is colored white instead of black. Default is False.
+		color: string -- hexadecimal representation of the text outline color (e.g., #FFFFFF) or a color name.
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
 
 		Returns
 		-------
@@ -509,7 +523,7 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
 
 		Returns
 		-------
@@ -526,7 +540,7 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
 
 		Returns
 		-------
@@ -535,7 +549,7 @@ class GSGraph(nx.DiGraph):
 		Raises
 		-------
 
-		Exception - if the border_style parameter is not one of the allowed border styles. See ALLOWED_NODE_BORDER_STYLES for more details.
+		Exception: if the border_style parameter is not one of the allowed border styles. See ALLOWED_NODE_BORDER_STYLES for more details.
 
 
 		"""
@@ -551,8 +565,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		color - string -- hexadecimal representation of the text outline color (e.g., #FFFFFF) or a color name.
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		color: string -- hexadecimal representation of the text outline color (e.g., #FFFFFF) or a color name.
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
 
 		Returns
 		-------
@@ -561,7 +575,7 @@ class GSGraph(nx.DiGraph):
 		Raises
 		-------
 
-		Exception - if the border_color is improperly formatted.
+		Exception: if the border_color is improperly formatted.
 
 
 		"""
@@ -578,8 +592,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		valign - string -- alignment of text.
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		valign: string -- alignment of text.
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
 
 		Returns
 		-------
@@ -597,8 +611,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		valign - halign -- alignment of text.
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		valign: halign -- alignment of text.
+		node_properties: Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
 
 		Returns
 		-------
@@ -626,17 +640,17 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
-		color - string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name.
+		edge_properties: Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
+		color: string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name.
 
 		Returns
 		-------
 		Dictionary of edge attributes.
 
 		Raises
-		-------
+		------
 
-		Exception - if the color is improperly formatted.
+		Exception: if the color is improperly formatted.
 
 		"""
 		error = GSGraph.check_color_hex(color)
@@ -654,9 +668,9 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
-		directed - bool - if True, draw the edge as directed.
-		arrow_shape - string -- shape of arrow. See ALLOWED_ARROW_SHAPES.
+		edge_properties: Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
+		directed: bool -- if True, draw the edge as directed.
+		arrow_shape: string -- shape of arrow. See ALLOWED_ARROW_SHAPES.
 
 		Returns
 		-------
@@ -676,8 +690,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
-		width - float -- width of the edge.  Default = 1.0
+		edge_properties: Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
+		width: float -- width of the edge.  Default = 1.0
 
 		Returns
 		-------
@@ -694,7 +708,7 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
+		edge_properties: Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
 
 		Returns
 		-------
@@ -711,8 +725,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
-		style - string -- style of line
+		edge_properties: Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
+		style: string -- style of line
 
 		Returns
 		-------
@@ -729,8 +743,8 @@ class GSGraph(nx.DiGraph):
 
 		Parameters
 		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
-		fill - string -- fill of arrowhead.
+		edge_properties: Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
+		fill: string -- fill of arrowhead.
 
 		Returns
 		-------
@@ -774,8 +788,8 @@ class GSGraph(nx.DiGraph):
 
 		Returns
 		-------
-		None - if the property is valid or does not exist
-		Error message - if the property is not valid
+		None: if the property is valid or does not exist
+		Error message: if the property is not valid
 
 		"""
 		if property_name in element and element[property_name] not in valid_property_values:
@@ -797,11 +811,11 @@ class GSGraph(nx.DiGraph):
 
 		Returns
 		-------
-		None - if node_properties are valid
+		None: if node_properties are valid
 
 		Raises
-		--------
-		Raises an exception - if properties are not valid.
+		------
+		Exception: if properties are not valid.
 
 		"""
 
@@ -829,11 +843,11 @@ class GSGraph(nx.DiGraph):
 
 		Returns
 		-------
-		None - if node_properties are valid
+		None: if node_properties are valid
 
 		Raises
-		--------
-		Raises an exception - if properties are not valid.
+		------
+		Exception: if properties are not valid.
 
 		Notes
 		-----
@@ -899,11 +913,11 @@ class GSGraph(nx.DiGraph):
 
 		Returns
 		-------
-		None - if edge_properties are valid
+		None: if edge_properties are valid
 
 		Raises
 		--------
-		Raises an exception - if properties are not valid.
+		Exception: if properties are not valid.
 
 		"""
 

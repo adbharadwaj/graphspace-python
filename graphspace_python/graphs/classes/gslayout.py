@@ -3,21 +3,31 @@ from graphspace_python.graphs.classes.gsgraph import GSGraph
 
 
 class GSLayout(object):
-	"""GSLayout Class
+	"""GSLayout class.
 
+	Encapsulates details of a GraphSpace layout and provides methods to read and manipulate the details.
+
+	Attributes:
+		name (str): Name of layout.
+		is_shared (int): Sharing status of layout. Has value 0 if layout is private, 1 if layout is shared.
+		style_json (dict): Json representation for layout style.
+		positions_json (dict): Json representation for layout node positions.
 	"""
 
 	def __init__(self):
+		"""Construct a new 'GSLayout' object.
+
+		"""
 		self.style_json = {'style': []}
 		self.positions_json = {}
 		self.is_shared = 0
 		self.set_name('Layout ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
 
 	def json(self):
-		"""
-		Get the json representation of layout details.
+		"""Get the json representation of layout details.
 
-		:return: dict
+		Returns:
+			dict: Json representation of layout details.
 		"""
 		data = {
 			'name': self.get_name(),
@@ -28,34 +38,37 @@ class GSLayout(object):
 		return data
 
 	def get_name(self):
-		"""
-		Get the name of layout.
+		"""Get the name of layout.
 
-		:return: string
+		Returns:
+			str: Name of layout.
 		"""
 		return self.name
 
 	def set_name(self, name):
-		"""
-		Set the name of the layout.
+		"""Set the name of the layout.
 
-		:param name: name of the layout.
+		Args:
+			name (str): Name of layout.
 		"""
 		self.name = name
 
 	def get_is_shared(self):
-		"""
-		Get 'is_shared' status of the layout.
+		"""Get sharing status of the layout.
 
-		:return: 0 or 1
+		Returns:
+			int: Sharing status of layout. Either 0 or 1.
 		"""
 		return self.is_shared
 
 	def set_is_shared(self, is_shared=1):
-		"""
-		Set 'is_shared' status of the layout.
+		"""Set sharing status of the layout.
 
-		:param is_shared: 0 or 1 (default=1)
+		Args:
+		 	is_shared (int, optional): Sharing status of layout. Defaults to 1.
+
+		Raises:
+			Exception: If 'is_shared' is neither 0 nor 1.
 		"""
 		if is_shared not in [0,1]:
 			raise Exception("is_shared should have value either 0 or 1.")
@@ -63,37 +76,39 @@ class GSLayout(object):
 			self.is_shared = is_shared
 
 	def get_positions_json(self):
-		"""
-		Get the json representation for the layout node postitions.
+		"""Get the json representation for the layout node postitions.
 
-		:return: dict
+		Returns:
+		 	dict: Json representation of layout node postitions.
 		"""
 		return self.positions_json
 
 	def set_positions_json(self, positions_json):
-		"""
-		Set the json representation for the layout node postitions.
+		"""Set the json representation for the layout node postitions.
 
-		:param positions_json: dict - json representation for the node positions
+		Args:
+			positions_json (dict): Json representation of layout node positions.
 		"""
 		self.positions_json = positions_json
 
 	def get_node_position(self, node_name):
-		"""
-		Get the position of a node.
+		"""Get the position of a node.
 
-		:param node_name: name of the node.
-		:return: Dict of x,y co-ordinates of the node.
+		Args:
+			node_name (str): Name of the node.
+
+		Returns:
+		 	dict: Dict of x,y co-ordinates of the node.
 		"""
 		return self.positions_json.get(node_name, None)
 
 	def set_node_position(self, node_name, y, x):
-		"""
-		Sets the position of a node.
+		"""Sets the position of a node.
 
-		:param node_name: name of the node.
-		:param y: y co-ordinate of node.
-		:param x: x co-ordinate of node.
+		Args:
+			node_name (str): Name of the node.
+			y (float): y co-ordinate of node.
+			x (float): x co-ordinate of node.
 		"""
 		node_position = {
 			node_name: {
@@ -104,10 +119,13 @@ class GSLayout(object):
 		self.positions_json.update(node_position)
 
 	def remove_node_position(self, node_name):
-		"""
-		Remove the position of a node.
+		"""Remove the position of a node.
 
-		:param node_name: name of the node.
+		Args:
+			node_name (str): Name of the node.
+
+		Raises:
+			Exception: If node positions are undefined.
 		"""
 		if node_name not in self.positions_json.keys():
 			raise Exception("Positions of node '%s' is undefined." % (node_name))
@@ -115,18 +133,18 @@ class GSLayout(object):
 			del self.positions_json[node_name]
 
 	def get_style_json(self):
-		"""
-		Get the json representation for the layout style.
+		"""Get the json representation for the layout style.
 
-		:return: dict
+		Returns:
+			dict: Json representation of layout style.
 		"""
 		return self.style_json
 
 	def set_style_json(self, style_json):
-		"""
-		Set the json representation for the layout style.
+		"""Set the json representation for the layout style.
 
-		:param style_json: dict - json representation for the layout structure
+		Args:
+			style_json (dict): Json representation of layout style.
 		"""
 		GSGraph.validate_style_json(style_json)
 		self.style_json = style_json
@@ -134,28 +152,21 @@ class GSLayout(object):
 	def add_node_style(self, node_name, attr_dict=None, content=None, shape='ellipse', color='#FFFFFF', height=None,
 	                                   width=None, bubble=None, valign='center', halign='center', style="solid",
 	                                   border_color='#000000', border_width=1):
-		"""
-		Add the style for the given node in the style json.
+		"""Add the style for the given node in the style json.
 
-		Parameters
-		----------
-		node_name: string - name of the node.
-		shape: string -- shape of node. Default = "ellipse".
-		color: string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name. Default = white.
-		height: int -- height of the node's body. Use None to determine height from the number of lines in the label. Default = None.
-		width: int -- width of the node's body, or None to determine width from length of label.  Default=None.
-		bubble: string -- color of the text outline. Using this option gives a "bubble" effect; see the bubbleeffect() function. Optional.
-		valign: string -- vertical alignment. Default = center.
-		halign: string -- horizontal alignment. Default = center.
-		style: string -- style of border. Default is "solid".  If Bubble is specified, then style is overwritten.
-		border_color: string -- color of border. Default is #000000. If Bubble is specified, then style is overwritten.
-		border_width: int -- width of border. Default is 4.  If Bubble is specified, then style is overwritten.
-
-
-		Returns
-		-------
-		None
-
+		Args:
+			node_name (str): Name of node.
+			attr_dict (dict, optional): Json representation of style of node. Defaults to None.
+			shape (str, optional): Shape of node. Defaults to 'ellipse'.
+			color (str, optional): Hexadecimal representation of the color (e.g., #FFFFFF) or color name. Defaults to white.
+			height (int, optional): Height of the node's body, or None to determine height from the number of lines in the label. Defaults to None.
+			width (int, optional): Width of the node's body, or None to determine width from length of label. Defaults to None.
+			bubble (str, optional): Color of the text outline. Using this option gives a "bubble" effect; see the bubbleeffect() function. Defaults to None.
+			valign (str, optional): Vertical alignment. Defaults to 'center'.
+			halign (str, optional): Horizontal alignment. Defaults to 'center'.
+			style (str, optional): Style of border. Defaults to 'solid'. If 'bubble' is specified, then style is overwritten.
+			border_color (str, optional): Color of border. Defaults to '#000000'. If 'bubble' is specified, then style is overwritten.
+			border_width (int, optional): Width of border. Defaults to 1. If 'bubble' is specified, then style is overwritten.
 		"""
 		attr_dict = attr_dict if attr_dict is not None else dict()
 
@@ -188,24 +199,18 @@ class GSLayout(object):
 
 	def add_edge_style(self, source, target, attr_dict=None, directed=False, color='#000000', width=1.0, arrow_shape='triangle',
 	                   edge_style='solid', arrow_fill='filled'):
-		"""
-		Add the style for the given edge in the style json.
+		"""Add the style for the given edge in the style json.
 
-		Parameters
-		----------
-		source: string -- unique ID of the source node
-		target: string -- unique ID of the target node
-		color: string -- hexadecimal representation of the color (e.g., #000000), or the color name. Default = black.
-		directed: bool - if True, draw the edge as directed. Default = False.
-		width: float -- width of the edge.  Default = 1.0
-		arrow_shape: string -- shape of arrow head. Default is "triangle"
-		edge_style: string -- style of edge. Default is "solid"
-		arrow_fill: string -- fill of arrow. Default is "filled"
-
-		Returns
-		-------
-		None
-
+		Args:
+			source (str): Unique ID of the source node.
+			target (str): Unique ID of the target node.
+			attr_dict (dict, optional): Json representation of style of edge. Defaults to None.
+			color (str, optional): Hexadecimal representation of the color (e.g., #000000), or the color name. Defaults to black.
+			directed (bool, optional): If True, draw the edge as directed. Defaults to False.
+			width (float, optional): Width of the edge.  Defaults to 1.0.
+			arrow_shape (str, optional): Shape of arrow head. Defaults to 'triangle'.
+			edge_style (str, optional): Style of edge. Defaults to 'solid'.
+			arrow_fill (str, optional): Fill of arrow. Defaults to 'filled'.
 		"""
 		data_properties = {}
 		style_properties = {}

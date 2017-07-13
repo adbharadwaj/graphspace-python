@@ -3,10 +3,21 @@ from graphspace_python.api.obj.response_object import ResponseObject
 from graphspace_python.graphs.classes.gslayout import GSLayout
 
 class Layout(ResponseObject, GSLayout):
-    """Layout object Class
-    Inherits ResponseObject and GSLayout classes.
+    """Layout object class.
 
     Encapsulates details of a layout received in response.
+
+    Attributes:
+        id (int): Id of layout.
+        graph_id (int): Id of graph to which the layout belongs.
+        name (str): Name of layout.
+        owner_email (str): Email of owner of layout.
+        is_shared (int): Sharing status of layout. Has value 0 if layout is private, 1 if layout is shared.
+        style_json (dict): Json representation for layout style.
+        positions_json (dict): Json representation for layout node positions.
+        created_at (str): Timestamp of layout creation.
+        updated_at (str): Timestamp of layout updation.
+        url (str): URL of graph layout on GraphSpace.
     """
 
     _fields = [
@@ -24,7 +35,8 @@ class Layout(ResponseObject, GSLayout):
     def __init__(self, response):
         """Construct a new 'Layout' object having the attributes specified in '_fields'
 
-        :param response: Dict having layout details.
+        Args:
+            response (dict): Json representation of layout details.
         """
         GSLayout.__init__(self)
         ResponseObject.__init__(self, response)

@@ -2,10 +2,25 @@ from graphspace_python.api.obj.response_object import ResponseObject
 from graphspace_python.graphs.classes.gsgraph import GSGraph
 
 class Graph(ResponseObject, GSGraph):
-    """Graph object Class
-    Inherits ResponseObject and GSGraph classes.
+    """Graph object class.
 
     Encapsulates details of a graph received in response.
+
+    Attributes:
+        id (int): Id of graph.
+        name (str): Name of graph.
+        owner_email (str): Email of owner of graph.
+        is_public (int): Accessibility status of graph. Has value 0 if graph is private, 1 if graph is public.
+        style_json (dict): Json representation for graph style.
+        graph_json (dict): Json representation for graph structure.
+        tags (list of str): Tags of graph.
+        data (dict): Metadata of graph.
+        node (dict): Json representation for nodes of graph.
+        edge (dict): Json representation for edges of graph.
+        default_layout_id (int or None): Id of default layout of graph.
+        created_at (str): Timestamp of graph creation.
+        updated_at (str): Timestamp of graph updation.
+        url (str): URL of graph on GraphSpace.
     """
 
     _fields = [
@@ -25,7 +40,9 @@ class Graph(ResponseObject, GSGraph):
         """Construct a new 'Graph' object having the attributes specified in '_fields'
 
         Sets the graph data and also creates the nodes and edges for the GSGraph class.
-        :param response: Dict having graph details.
+
+        Args:
+            response (dict): Json representation of graph details.
         """
         GSGraph.__init__(self)
         ResponseObject.__init__(self, response)

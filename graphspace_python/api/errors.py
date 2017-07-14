@@ -1,15 +1,22 @@
 class GraphSpaceError(Exception):
-    """GraphSpaceError class
+    """GraphSpaceError class.
 
-    Base error class for the GraphSpace HTTPErrors.
+    Base error class for the GraphSpace HTTP errors.
+
+    Attributes:
+        status_code (int): HTTP error status code.
+        reason (str): Reason of HTTP error.
+        error_code (int): Error code received from GraphSpace.
+        error_message (str): Error message received from GraphSpace.
     """
 
     def __init__(self, status_code, reason, response):
         """Construct a new 'GraphSpaceError' object.
 
-        :param status_code: Status Code of the HTTPError.
-        :param reason: Reason of HTTPError.
-        :response: Response dict having error details from the API call.
+        Args:
+            status_code (int): Status Code of the HTTP error.
+            reason (str): Reason of HTTP error.
+            response (dict): Response dict having error details from the API call.
         """
         self.status_code = status_code
         self.reason = reason
@@ -37,9 +44,9 @@ class LayoutNameAlreadyExists(GraphSpaceError):
     pass
 
 class ErrorHandler(object):
-    """ErrorHandler class
+    """ErrorHandler class.
 
-    Exception handling class for GraphSpace API's HTTPErrors.
+    Exception handling class for GraphSpace API's HTTP errors.
     """
 
     _error_map = {
@@ -51,10 +58,12 @@ class ErrorHandler(object):
     }
 
     def raise_error(self, error, response):
-        """Raises exception based on the error code when any HTTPError occurs in API call.
+        """Raises exception based on the 'error_code' received in response when
+        any HTTP error occurs in API call.
 
-        :param error: HTTPError object.
-        :param response: Response dict having error details from the API call.
+        Args:
+            error (object): HTTPError object.
+            response (dict): Response dict having error details from the API call.
         """
         try:
             raise self._error_map[response['error_code']](

@@ -24,7 +24,7 @@ class ResponseObject(object):
 
         Args:
             field_name (str): Name of field to be created as an attribute in the object.
-            cls_name (class): Class whose object is to be created and assigned to the attribute with the field name.
+            cls_name (type): Class whose object is to be created and assigned to the attribute with the field name.
             response (dict): Response dict received from API call.
         """
         if response:

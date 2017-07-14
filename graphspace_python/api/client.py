@@ -12,7 +12,16 @@ from graphspace_python.api.endpoint.groups import Groups
 from graphspace_python.api.errors import ErrorHandler
 
 class GraphSpace(object):
-	"""GraphSpace Client Class
+	"""GraphSpace client class.
+
+	Connects the user with GraphSpace.
+
+	Makes request to the GraphSpace REST APIs and returns the response.
+
+	Attributes:
+		auth_token (str): Base64 encoded username and password.
+		username (str): Email of user.
+		api_host (str): Host address of GraphSpace REST API.
 	"""
 
 	_endpoints = [
@@ -24,8 +33,9 @@ class GraphSpace(object):
 	def __init__(self, username, password):
 		"""Construct a new 'GraphSpace' client object.
 
-		:param username: Username of the user.
-		:param password: Password of the user.
+		Args:
+			username (str): Email of the user.
+			password (str): Password of the user.
 		"""
 		# self.auth_token = 'Basic %s' % base64.b64encode('{0}:{1}'.format(username, password))
 		self.auth_token = requests.auth.HTTPBasicAuth(username, password)
@@ -46,8 +56,9 @@ class GraphSpace(object):
 	def _add_instance_methods(self, instance_methods):
 		"""Adds the instance methods to GraphSpace client.
 
-		:param instance_methods: List of (name, value) tuples where value is the
-		 instance of the bound method.
+		Args:
+			instance_methods (List[tuple]): List of (name, value) tuples where value is the
+		 		instance of the bound method.
 		"""
 		for method in instance_methods:
 			if method[0][0] is not '_':
@@ -56,7 +67,8 @@ class GraphSpace(object):
 	def set_api_host(self, host):
 		"""Manually set host address of GraphSpace REST APIs.
 
-		:param host: String - Host address of GraphSpace APIs.
+		Args:
+		 	host (str): Host address of GraphSpace APIs.
 		"""
 		self.api_host = host
 
@@ -64,9 +76,15 @@ class GraphSpace(object):
 		"""Checks if the response has any HTTPError and raise exception else
 		returns the response json data.
 
-		:param response: Response object from API call.
-		:raises GraphSpaceError: Raises error according to the error code.
-		:return: Response Dict.
+		Args:
+			response (object): Response object from API call.
+
+		Raises:
+			GraphSpaceError: If response has an error status code; raises a particular
+				error according to the 'error_code' received in response.
+
+		Returns:
+		 	dict: Response dict, if response has no error.
 		"""
 		try:
 			response.raise_for_status()
@@ -76,16 +94,18 @@ class GraphSpace(object):
 			return response.json()
 
 	def _make_request(self, method, path, url_params={}, data={}, headers=None):
-		"""Calls the GraphSpace REST API in the given endpoint, in the given method,
+		"""Calls the GraphSpace REST API for the given endpoint, for the given method,
 		with the given data, url params and headers.
 
-		:param method: String - Method of request.
-		:param path: String - Path of request.
-		:param url_params: Dict - URL parameters for request.
-		:param data: Dict - Payload.
-		:param headers: Dict - Headers for the request.
+		Args:
+			method (str): Method of request.
+			path (str): Path of request.
+			url_params (dict, optional): URL parameters for request. Defaults to empty dict.
+			data (dict, optional): Payload. Defaults to empty dict.
+			headers (dict, optional): Headers for the request. Defaults to None.
 
-		:return: Response Dict.
+		Returns:
+		 	dict: Response dict.
 		"""
 		if headers is None:
 			headers = {

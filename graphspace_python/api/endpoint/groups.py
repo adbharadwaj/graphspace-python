@@ -2,7 +2,12 @@ from graphspace_python.api.config import GROUPS_PATH
 from graphspace_python.api.obj.api_response import APIResponse
 
 class Groups(object):
-	"""Groups Endpoint Class
+	"""Groups endpoint class.
+
+	Provides methods for group related operations such as saving, fetching, updating, deleting groups on GraphSpace.
+
+	Also provides methods for group member and group graph related operations such as fetching
+	all members or graphs of the group, adding or deleting new member or graph to the group.
 	"""
 
 	def __init__(self, client):
@@ -11,8 +16,11 @@ class Groups(object):
 	def post_group(self, group):
 		"""Create a group for the requesting user.
 
-		:param group: GSGroup object.
-		:return: APIResponse object that wraps the response.
+		Args:
+			group (GSGroup or Group): Object having group details, such as name, description.
+
+		Returns:
+		 	Group: Saved group on GraphSpace.
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -27,9 +35,15 @@ class Groups(object):
 	def get_group(self, name=None, group_id=None):
 		"""Get a group with the given name or group_id, where the requesting user is a member.
 
-		:param name: Name of the group to be fetched.
-		:param id: ID of the group to be fetched.
-		:return: APIResponse object if a group with given name or group_id exists otherwise None.
+		Args:
+			name (str, optional): Name of the group to be fetched. Defaults to None.
+			group_id (int, optional): ID of the group to be fetched. Defaults to None.
+
+		Returns:
+		 	Group or None: Group object, if group with the given 'name' or 'group_id' exists; otherwise None.
+
+		Raises:
+			Exception: If both 'name' and 'group_id' are None.
 		"""
 		if group_id is not None:
 			group_by_id_path = GROUPS_PATH + str(group_id)
@@ -54,10 +68,16 @@ class Groups(object):
 	def update_group(self, group, name=None, group_id=None):
 		"""Update a group with the given name or group_id, where the requesting user is the owner.
 
-		:param group: GSGroup object.
-		:param name: Name of the group to be updated.
-		:param id: ID of the group to be updated.
-		:return: APIResponse object that wraps the response.
+		Args:
+			group (GSGroup or Group): Object having group details, such as name, description.
+			name (str, optional): Name of the group to be updated. Defaults to None.
+			group_id (int, optional): ID of the group to be updated. Defaults to None.
+
+		Returns:
+		 	Group: Updated group on GraphSpace.
+
+		Raises:
+			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -85,9 +105,15 @@ class Groups(object):
 	def delete_group(self, name=None, group_id=None):
 		"""Delete a group with the given name or group_id, where the requesting user is the owner.
 
-		:param name: Name of the group to be deleted.
-		:param id: ID of the group to be deleted.
-		:return: Success/Error Message from GraphSpace.
+		Args:
+			name (str, optional): Name of the group to be deleted. Defaults to None.
+			group_id (int, optional): ID of the group to be deleted. Defaults to None.
+
+		Returns:
+		 	str: Success/Error Message from GraphSpace.
+
+		Raises:
+			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
 		"""
 		if group_id is not None:
 			group_by_id_path = GROUPS_PATH + str(group_id)
@@ -108,9 +134,12 @@ class Groups(object):
 	def get_my_groups(self, limit=20, offset=0):
 		"""Get groups created by the requesting user.
 
-		:param offset: Offset the list of returned entities by this number. Default value is 0.
-		:param limit: Number of entities to return. Default value is 20.
-		:return: APIResponse object that wraps the response.
+		Args:
+			offset (int, optional): Offset the list of returned entities by this number. Defaults to 0.
+			limit (int, optional): Number of entities to return. Defaults to 20.
+
+		Returns:
+			List[Group]: List of groups owned by the requesting user.
 		"""
 		query = {
 			'limit': limit,
@@ -125,9 +154,12 @@ class Groups(object):
 	def get_all_groups(self, limit=20, offset=0):
 		"""Get groups where the requesting user is a member.
 
-		:param offset: Offset the list of returned entities by this number. Default value is 0.
-		:param limit: Number of entities to return. Default value is 20.
-		:return: APIResponse object that wraps the response.
+		Args:
+			offset (int, optional): Offset the list of returned entities by this number. Defaults to 0.
+			limit (int, optional): Number of entities to return. Defaults to 20.
+
+		Returns:
+		 	List[Group]: List of groups where the requesting user is a member.
 		"""
 		query = {
 			'limit': limit,
@@ -142,9 +174,15 @@ class Groups(object):
 	def get_group_members(self, name=None, group_id=None):
 		"""Get members of a group with given group_id or name.
 
-		:param name: Name of the group.
-		:param group_id: ID of the group.
-		:return: APIResponse object that wraps the response.
+		Args:
+			name (str, optional): Name of the group. Defaults to None.
+			group_id (int, optional): ID of the group. Defaults to None.
+
+		Returns:
+			List[Member]: List of members belonging to the group.
+
+		Raises:
+			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
 		"""
 		if group_id is not None:
 			group_members_path = GROUPS_PATH + str(group_id) + '/members'
@@ -167,10 +205,16 @@ class Groups(object):
 	def add_group_member(self, member_email, name=None, group_id=None):
 		"""Add a member to a group with given group_id or name.
 
-		:param member_email: Email of the member to be added to the group.
-		:param name: Name of the group.
-		:param group_id: ID of the group.
-		:return: Dict containing group_id and member_id of the added member.
+		Args:
+			member_email (str): Email of the member to be added to the group.
+			name (str, optional): Name of the group. Defaults to None.
+			group_id (int, optional): ID of the group. Defaults to None.
+
+		Returns:
+			dict: Dict containing 'group_id' and 'user_id' of the added member.
+
+		Raises:
+			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -194,10 +238,16 @@ class Groups(object):
 	def delete_group_member(self, member_id, name=None, group_id=None):
 		"""Delete a member from a group with given group_id or name.
 
-		:param member_id: ID of the member to be deleted from the group.
-		:param name: Name of the group.
-		:param group_id: ID of the group.
-		:return: Success/Error Message from GraphSpace.
+		Args:
+			member_id (int): ID of the member to be deleted from the group.
+			name (str, optional): Name of the group. Defaults to None.
+			group_id (int, optional): ID of the group. Defaults to None.
+
+		Returns:
+		 	str: Success/Error Message from GraphSpace.
+
+		Raises:
+			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
 		"""
 		if group_id is not None:
 			group_members_path = GROUPS_PATH + str(group_id) + '/members/' + str(member_id)
@@ -218,9 +268,15 @@ class Groups(object):
 	def get_group_graphs(self, name=None, group_id=None):
 		"""Get graphs of a group with given group_id or name.
 
-		:param name: Name of the group.
-		:param group_id: ID of the group.
-		:return: APIResponse object that wraps the response.
+		Args:
+			name (str, optional): Name of the group. Defaults to None.
+			group_id (int, optional): ID of the group. Defaults to None.
+
+		Returns:
+			List[Graph]: List of graphs belonging to the group.
+
+		Raises:
+			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
 		"""
 		if group_id is not None:
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs'
@@ -243,10 +299,16 @@ class Groups(object):
 	def add_group_graph(self, graph_id, name=None, group_id=None):
 		"""Add a graph to a group with given group_id or name.
 
-		:param graph_id: ID of the graph to be added to the group.
-		:param name: Name of the group.
-		:param group_id: ID of the group.
-		:return: Dict containing group_id, graph_id and other details of the added graph.
+		Args:
+			graph_id (int): ID of the graph to be added to the group.
+			name (str, optional): Name of the group. Defaults to None.
+			group_id (int, optional): ID of the group. Defaults to None.
+
+		Returns:
+			dict: Dict containing 'group_id', 'graph_id', 'created_at', 'updated_at' details of the added graph.
+
+		Raises:
+			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -270,10 +332,16 @@ class Groups(object):
 	def delete_group_graph(self, graph_id, name=None, group_id=None):
 		"""Delete a graph from a group with given group_id or name.
 
-		:param graph_id: ID of the group to be deleted from the group.
-		:param name: Name of the group.
-		:param group_id: ID of the group.
-		:return: Success/Error Message from GraphSpace.
+		Args:
+			graph_id (int): ID of the group to be deleted from the group.
+			name (str, optional): Name of the group. Defaults to None.
+			group_id (int, optional): ID of the group. Defaults to None.
+
+		Returns:
+		 	str: Success/Error Message from GraphSpace.
+
+		Raises:
+			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
 		"""
 		if group_id is not None:
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs/' + str(graph_id)

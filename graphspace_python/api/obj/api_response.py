@@ -5,7 +5,7 @@ from graphspace_python.api.obj.member import Member
 from graphspace_python.api.obj.response_object import ResponseObject
 
 class APIResponse(ResponseObject):
-    """APIResponse Class
+    """APIResponse class.
 
     Encapsulates the response from API calls.
     """
@@ -18,8 +18,10 @@ class APIResponse(ResponseObject):
         """Construct a new 'APIResponse' object.
 
         Calls '_parse' method of parent class 'ResponseObject' to parse the response.
-        :param response_type: Type of response received from API call.
-        :param response: Response Dict received from API call.
+
+        Args:
+            response_type (str): Type of response received from API call.
+            response (dict): Response dict received from API call.
         """
         super(APIResponse, self).__init__(response)
         if response_type == 'graph':

@@ -45,7 +45,7 @@ class Layout(ResponseObject, GSLayout):
 
     def _convert_string_to_json(self):
         """Convert the json dumped string attributes 'positions_json' and 'style_json'
-        into Dict type.
+        into dictionaries.
         """
         self.style_json = json.loads(self.style_json)
         self.positions_json = json.loads(self.positions_json)

@@ -1,5 +1,7 @@
 class ResponseObject(object):
-    """ResponseObject Class
+    """ResponseObject class.
+
+    Abstract class that provides methods to parse an entity received in response into an object.
     """
 
     _fields = []
@@ -8,9 +10,10 @@ class ResponseObject(object):
         """Construct a new 'ResponseObject' object.
 
         Creates certain attributes of the object and assigns them value
-        if that attribute is present in response Dict.
+        if that attribute is present in 'response' dict.
 
-        :param response: Response Dict obtained from API call.
+        Args:
+            response (dict): Response dict received from API call.
         """
         for field in self._fields:
             value = response[field] if field in response else None
@@ -19,11 +22,10 @@ class ResponseObject(object):
     def _parse(self, field_name, cls_name, response):
         """Parses the response from API call and produces the desired object.
 
-        :param field_name: Name of field (string) to be created as an attribute
-         in the class object.
-        :param cls_name: Class whose object is to be created and assigned to the
-         attribute with the field name.
-        :param response: Response Dict obtained from API call.
+        Args:
+            field_name (str): Name of field to be created as an attribute in the object.
+            cls_name (class): Class whose object is to be created and assigned to the attribute with the field name.
+            response (dict): Response dict received from API call.
         """
         if response:
             # Check if there is a 'total' field in the response which will

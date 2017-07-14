@@ -14,7 +14,7 @@ class GSGraph(nx.DiGraph):
 		is_public (int): Visibility status of graph. Has value 0 if graph is private, 1 if graph is public.
 		style_json (dict): Json representation for graph style.
 		graph_json (dict): Json representation for graph structure.
-		tags (list of str): Tags of graph.
+		tags (List[str]): Tags of graph.
 		data (dict): Metadata of graph.
 		node (dict): Json representation for nodes of graph.
 		edge (dict): Json representation for edges of graph.
@@ -208,7 +208,7 @@ class GSGraph(nx.DiGraph):
 		"""Get the tags for the graph.
 
 		Returns:
-		 	list of str: List of tags of graph.
+		 	List[str]: List of tags of graph.
 		"""
 		return self.tags
 
@@ -216,7 +216,7 @@ class GSGraph(nx.DiGraph):
 		"""Set the tags for the graph.
 
 		Args:
-		 	tags (list of str): List of tags of graph.
+		 	tags (List[str]): List of tags of graph.
 		"""
 		self.tags = tags
 
@@ -721,7 +721,7 @@ class GSGraph(nx.DiGraph):
 			element (dict): Element to search for in network.
 			element_selector (str): Selector for element in the network.
 			property_name (str): Name of the property.
-			valid_property_values (list of str): List of valid properties.
+			valid_property_values (List[str]): List of valid properties.
 
 		Returns:
 			None or str: None, if the property is valid or does not exist; error message if property is invalid.
@@ -738,7 +738,7 @@ class GSGraph(nx.DiGraph):
 
 		Args:
 			data_properties (dict): Dict of node data properties
-			nodes_list (list): List of nodes.
+			nodes_list (List[str]): List of nodes.
 
 		Raises:
 			Exception: If properties are invalid.
@@ -824,7 +824,7 @@ class GSGraph(nx.DiGraph):
 
 		Args:
 			data_properties (dict): Dict of edge data properties.
-			nodes_list (list): List of nodes.
+			nodes_list (List[str]): List of nodes.
 
 		Raises:
 			Exception: If properties are invalid.

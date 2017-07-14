@@ -2,7 +2,9 @@ from graphspace_python.api.config import GRAPHS_PATH
 from graphspace_python.api.obj.api_response import APIResponse
 
 class Graphs(object):
-	"""Graphs endpoint Class
+	"""Graphs endpoint class.
+
+	Provides methods for graph related operations such as saving, fetching, updating and deleting graphs on GraphSpace.
 	"""
 
 	def __init__(self, client):
@@ -12,7 +14,7 @@ class Graphs(object):
 		"""Posts NetworkX graph to the requesting users account on GraphSpace.
 
 		Args:
-			graph (GSGraph): GSGraph object having graph details.
+			graph (GSGraph or Graph): Object having graph details, such as name, graph_json, style_json, is_public, tags.
 
 		Returns:
 			Graph: Saved graph on GraphSpace.
@@ -26,10 +28,16 @@ class Graphs(object):
 	def get_graph(self, name=None, graph_id=None, owner_email=None):
 		"""Get a graph with the given name or graph_id.
 
-		:param name: Name of the graph to be fetched.
-		:param graph_id: ID of the graph to be fetched.
-		:param owner_email: Email of the owner of the graph.
-		:return: APIResponse object if a graph with given name or graph_id exists otherwise None.
+		Args:
+			name (str, optional): Name of the graph to be fetched. Defaults to None.
+			graph_id (int, optional): ID of the graph to be fetched. Defaults to None.
+			owner_email (str, optional): Email of the owner of the graph. Defaults to None.
+
+		Returns:
+			Graph or None: Graph object, if graph with the given 'name' or 'graph_id' exists; otherwise None.
+
+		Raises:
+			Exception: If both 'name' and 'graph_id' are None.
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -57,10 +65,15 @@ class Graphs(object):
 	def get_public_graphs(self, tags=None, limit=20, offset=0):
 		"""Get public graphs.
 
-		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
-		:param offset: Offset the list of returned entities by this number. Default value is 0.
-		:param limit: Number of entities to return. Default value is 20.
-		:return: APIResponse object that wraps the response.
+		Args:
+			tags (List[str], optional): Search for graphs with the given given list of tag names.
+				In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol.
+				For example, %xyz% will search for all graphs with 'xyz' in their tag names. Defaults to None.
+			offset (int, optional): Offset the list of returned entities by this number. Defaults to 0.
+			limit (int, optional): Number of entities to return. Defaults to 20.
+
+		Returns:
+		 	List[Graph]: List of public graphs.
 		"""
 		query = {
 			'is_public': 1,
@@ -78,10 +91,15 @@ class Graphs(object):
 	def get_shared_graphs(self, tags=None, limit=20, offset=0):
 		"""Get graphs shared with the groups where requesting user is a member.
 
-		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
-		:param offset: Offset the list of returned entities by this number. Default value is 0.
-		:param limit: Number of entities to return. Default value is 20.
-		:return: APIResponse object that wraps the response.
+		Args:
+			tags (List[str], optional): Search for graphs with the given given list of tag names.
+				In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol.
+				For example, %xyz% will search for all graphs with 'xyz' in their tag names. Defaults to None.
+			offset (int, optional): Offset the list of returned entities by this number. Defaults to 0.
+			limit (int, optional): Number of entities to return. Defaults to 20.
+
+		Returns:
+		 	List[Graph]: List of shared graphs.
 		"""
 		query = {
 			'member_email': self.client.username,
@@ -99,10 +117,15 @@ class Graphs(object):
 	def get_my_graphs(self, tags=None, limit=20, offset=0):
 		"""Get graphs created by the requesting user.
 
-		:param tags: Search for graphs with the given given list of tag names. In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol. For example, %xyz% will search for all graphs with 'xyz' in their tag names.
-		:param offset: Offset the list of returned entities by this number. Default value is 0.
-		:param limit: Number of entities to return. Default value is 20.
-		:return: APIResponse object that wraps the response.
+		Args:
+			tags (List[str], optional): Search for graphs with the given given list of tag names.
+				In order to search for graphs with given tag as a substring, wrap the name of the tag with percentage symbol.
+				For example, %xyz% will search for all graphs with 'xyz' in their tag names. Defaults to None.
+			offset (int, optional): Offset the list of returned entities by this number. Defaults to 0.
+			limit (int, optional): Number of entities to return. Defaults to 20.
+
+		Returns:
+		 	List[Graph]: List of graphs owned by the requesting user.
 		"""
 		query = {
 			'owner_email': self.client.username,
@@ -120,9 +143,15 @@ class Graphs(object):
 	def delete_graph(self, name=None, graph_id=None):
 		"""Delete a graph with the given name or graph_id.
 
-		:param name: Name of the graph to be deleted.
-		:param graph_id: ID of the graph to be deleted.
-		:return: Success/Error Message from GraphSpace
+		Args:
+			name (str, optional): Name of the graph to be deleted. Defaults to None.
+			graph_id (int, optional): ID of the graph to be deleted. Defaults to None.
+
+		Returns:
+		 	str: Success/Error Message from GraphSpace.
+
+		Raises:
+			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -143,12 +172,17 @@ class Graphs(object):
 	def update_graph(self, graph, name=None, graph_id=None, owner_email=None):
 		"""Update a graph with the given name or graph_id.
 
-		:param graph: GSGraph object.
-		:param name: Name of the graph to be updated.
-		:param graph_id: ID of the graph to be updated.
-		:param owner_email: Email of owner of the graph.
+		Args:
+			graph (GSGraph or Graph): Object having graph details, such as name, graph_json, style_json, is_public, tags.
+			name (str, optional): Name of the graph to be updated. Defaults to None.
+			graph_id (int, optional): ID of the graph to be updated. Defaults to None.
+			owner_email (str, optional): Email of owner of the graph. Defaults to None.
 
-		:return: APIResponse object that wraps the response.
+		Returns:
+		 	Graph: Updated graph on GraphSpace.
+
+		Raises:
+			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -171,9 +205,15 @@ class Graphs(object):
 	def make_graph_public(self, name=None, graph_id=None):
 		"""Makes a graph publicly viewable.
 
-		:param name: Name of the graph.
-		:param graph_id: ID of the graph.
-		:return: APIResponse object that wraps the response.
+		Args:
+			name (str, optional): Name of the graph. Defaults to None.
+			graph_id (int, optional): ID of the graph. Defaults to None.
+
+		Returns:
+		 	Graph: Updated graph on GraphSpace.
+
+		Raises:
+			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -196,9 +236,15 @@ class Graphs(object):
 	def make_graph_private(self, name=None, graph_id=None):
 		"""Makes a graph privately viewable.
 
-		:param name: Name of the graph.
-		:param graph_id: ID of the graph.
-		:return: APIResponse object that wraps the response.
+		Args:
+			name (str, optional): Name of the graph. Defaults to None.
+			graph_id (int, optional): ID of the graph. Defaults to None.
+
+		Returns:
+		 	Graph: Updated graph on GraphSpace.
+
+		Raises:
+			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)

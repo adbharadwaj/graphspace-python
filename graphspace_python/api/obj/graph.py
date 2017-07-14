@@ -13,7 +13,7 @@ class Graph(ResponseObject, GSGraph):
         is_public (int): Accessibility status of graph. Has value 0 if graph is private, 1 if graph is public.
         style_json (dict): Json representation for graph style.
         graph_json (dict): Json representation for graph structure.
-        tags (list of str): Tags of graph.
+        tags (List[str]): Tags of graph.
         data (dict): Metadata of graph.
         node (dict): Json representation for nodes of graph.
         edge (dict): Json representation for edges of graph.

@@ -277,7 +277,10 @@ class GSGraph(nx.DiGraph):
 
 		selector = 'edge[source="%s"][target="%s"]' % (source, target)
 
-		attr_dict.update(style_properties)
+                # if any of the properties were specified in the attr_dict, 
+                # then overwrite the default style_properties with the given attr_dict value
+		style_properties.update(attr_dict)
+                attr_dict = style_properties
 
 		self.set_style_json({
 			'style': self.get_style_json().get('style') + [{

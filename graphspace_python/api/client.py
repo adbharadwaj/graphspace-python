@@ -18,6 +18,12 @@ class GraphSpace(object):
 
 	Makes request to the GraphSpace REST APIs and returns the response.
 
+	Example:
+		Initialising a GraphSpace client can be done in the following way:
+
+		>>> from graphspace_python.api.client import GraphSpace
+		>>> graphspace = GraphSpace('user1@example.com', 'user1')
+
 	Attributes:
 		auth_token (str): Base64 encoded username and password.
 		username (str): Email of user.

@@ -18,6 +18,22 @@ class Graphs(object):
 
 		Returns:
 			Graph: Saved graph on GraphSpace.
+
+		Example:
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Creating a graph
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.set_name('My Sample Graph')
+			>>> G.set_tags(['sample'])
+			>>> G.add_node('a', popup='sample node popup text', label='A')
+			>>> G.add_node('b', popup='sample node popup text', label='B')
+			>>> G.add_edge('a', 'b', directed=True, popup='sample edge popup')
+			>>> G.add_edge_style('a', 'b', directed=True, edge_style='dotted')
+			>>> # Saving graph on GraphSpace
+			>>> graphspace.post_graph(G)
 		"""
 		data = graph.json()
 		data.update({'owner_email': self.client.username})
@@ -38,6 +54,23 @@ class Graphs(object):
 
 		Raises:
 			Exception: If both 'name' and 'graph_id' are None.
+
+		Examples:
+			Getting a graph by name:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching a graph
+			>>> graph = graphspace.get_graph(name='My Sample Graph')
+			>>> graph.get_name()
+			u'My Sample Graph'
+
+			Getting a graph by id:
+
+			>>> graph = graphspace.get_graph(graph_id=65930)
+			>>> graph.get_name()
+			u'My Sample Graph'
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -74,6 +107,23 @@ class Graphs(object):
 
 		Returns:
 		 	List[Graph]: List of public graphs.
+
+		Examples:
+			Getting public graphs:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching public graphs
+			>>> graphs = graphspace.get_public_graphs(limit=5)
+			>>> graphs[0].get_name()
+			u'Wnt-Pathway-Reconstruction'
+
+			Getting public graphs by tags:
+
+			>>> graphs = graphspace.get_public_graphs(tags=['Kegg-networks'], limit=5)
+			>>> graphs[0].get_name()
+			u'KEGG-Wnt-signaling-pathway-with-ranks'
 		"""
 		query = {
 			'is_public': 1,
@@ -100,6 +150,23 @@ class Graphs(object):
 
 		Returns:
 		 	List[Graph]: List of shared graphs.
+
+		Examples:
+			Getting shared graphs:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching shared graphs
+			>>> graphs = graphspace.get_shared_graphs(limit=5)
+			>>> graphs[0].get_name()
+			u'KEGG-Wnt-signaling-pathway'
+
+			Getting shared graphs by tags:
+
+			>>> graphs = graphspace.get_shared_graphs(tags=['Kegg-networks'], limit=5)
+			>>> graphs[0].get_name()
+			u'KEGG-Wnt-signaling-pathway'
 		"""
 		query = {
 			'member_email': self.client.username,
@@ -126,6 +193,23 @@ class Graphs(object):
 
 		Returns:
 		 	List[Graph]: List of graphs owned by the requesting user.
+
+		Examples:
+			Getting your graphs:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching my graphs
+			>>> graphs = graphspace.get_my_graphs(limit=5)
+			>>> graphs[0].get_name()
+			u'test'
+
+			Getting your graphs by tags:
+
+			>>> graphs = graphspace.get_my_graphs(tags=['Kegg-networks'], limit=5)
+			>>> graphs[0].get_name()
+			u'KEGG-Wnt-signaling-pathway'
 		"""
 		query = {
 			'owner_email': self.client.username,
@@ -152,6 +236,21 @@ class Graphs(object):
 
 		Raises:
 			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
+
+		Examples:
+			Deleting a graph by name:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Deleting a graph
+			>>> graphspace.delete_graph(name='My Sample Graph')
+			u'Successfully deleted graph with id=65930'
+
+			Deleting a graph by id:
+
+			>>> graphspace.delete_graph(graph_id=65930)
+			u'Successfully deleted graph with id=65930'
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -159,11 +258,11 @@ class Graphs(object):
 			return response['message']
 
 		if name is not None:
-			response = self.get_graph(name=name)
-			if response is None or response.graph.id is None:
+			graph = self.get_graph(name=name)
+			if graph is None or graph.id is None:
 				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+				graph_by_id_path = GRAPHS_PATH + str(graph.id)
 				response = self.client._make_request("DELETE", graph_by_id_path)
 				return response['message']
 
@@ -183,6 +282,39 @@ class Graphs(object):
 
 		Raises:
 			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
+
+		Examples:
+			Updating a graph by creating a new graph and replacing the existing graph:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Creating the new graph
+			>>> G = GSGraph()
+			>>> G.add_node('a', popup='sample node popup text', label='A updated')
+			>>> G.add_node('b', popup='sample node popup text', label='B updated')
+			>>> G.add_edge('a', 'b', directed=True, popup='sample edge popup')
+			>>> G.add_edge_style('a', 'b', directed=True, edge_style='dotted')
+			>>> G.set_name('My Sample Graph')
+			>>> G.set_is_public(1)
+			>>> # Updating to replace the existing graph
+			>>> graphspace.update_graph(graph=G, name='My Sample Graph')
+
+			Another way of updating a graph by fetching and editing the existing graph:
+
+			>>> # Fetching the graph
+			>>> graph = graphspace.get_graph(name='My Sample Graph')
+			>>> # Modifying the fetched graph
+			>>> graph.add_node('z', popup='sample node popup text', label='Z')
+			>>> graph.add_node_style('z', shape='ellipse', color='green', width=90, height=90)
+			>>> graph.add_edge('a', 'z', directed=True, popup='sample edge popup')
+			>>> graph.set_is_public(1)
+			>>> # Updating graph
+			>>> graphspace.update_graph(graph=graph, name='My Sample Graph')
+
+			You can update a graph by id as well:
+
+			>>> graphspace.update_graph(graph=G, graph_id=65930)
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -191,11 +323,11 @@ class Graphs(object):
 			).graph
 
 		if name is not None:
-			response = self.get_graph(name=name, owner_email=owner_email)
-			if response is None or response.graph.id is None:
+			graph = self.get_graph(name=name, owner_email=owner_email)
+			if graph is None or graph.id is None:
 				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+				graph_by_id_path = GRAPHS_PATH + str(graph.id)
 				return APIResponse('graph',
 					self.client._make_request("PUT", graph_by_id_path, data=graph.json())
 				).graph
@@ -214,6 +346,23 @@ class Graphs(object):
 
 		Raises:
 			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
+
+		Examples:
+			Make graph public by name:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Making graph public
+			>>> graph = graphspace.make_graph_public(name='My Sample Graph')
+			>>> graph.get_is_public()
+			1
+
+			Make graph public by id:
+
+			>>> graph = graphspace.make_graph_public(graph_id=65930)
+			>>> graph.get_is_public()
+			1
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -222,11 +371,11 @@ class Graphs(object):
 			).graph
 
 		if name is not None:
-			response = self.get_graph(name=name)
-			if response is None or response.graph.id is None:
+			graph = self.get_graph(name=name)
+			if graph is None or graph.id is None:
 				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+				graph_by_id_path = GRAPHS_PATH + str(graph.id)
 				return APIResponse('graph',
 					self.client._make_request("PUT", graph_by_id_path, data={'is_public': 1})
 				).graph
@@ -245,6 +394,23 @@ class Graphs(object):
 
 		Raises:
 			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
+
+		Examples:
+			Make graph private by name:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Making graph private
+			>>> graph = graphspace.make_graph_private(name='My Sample Graph')
+			>>> graph.get_is_public()
+			0
+
+			Make graph private by id:
+
+			>>> graph = graphspace.make_graph_private(graph_id=65930)
+			>>> graph.get_is_public()
+			0
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -253,11 +419,11 @@ class Graphs(object):
 			).graph
 
 		if name is not None:
-			response = self.get_graph(name=name)
-			if response is None or response.graph.id is None:
+			graph = self.get_graph(name=name)
+			if graph is None or graph.id is None:
 				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				graph_by_id_path = GRAPHS_PATH + str(response.graph.id)
+				graph_by_id_path = GRAPHS_PATH + str(graph.id)
 				return APIResponse('graph',
 					self.client._make_request("PUT", graph_by_id_path, data={'is_public': 0})
 				).graph

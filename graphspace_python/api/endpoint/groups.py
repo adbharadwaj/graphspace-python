@@ -21,6 +21,16 @@ class Groups(object):
 
 		Returns:
 		 	Group: Saved group on GraphSpace.
+
+		Example:
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Creating a group
+			>>> from graphspace_python.graphs.classes.gsgroup import GSGroup
+			>>> group = GSGroup(name='My Sample Group', description='sample group')
+			>>> # Saving group on GraphSpace
+			>>> graphspace.post_graph(group)
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -44,6 +54,23 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None.
+
+		Examples:
+			Getting a group by name:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching a group
+			>>> group = graphspace.get_group(name='My Sample Group')
+			>>> group.get_name()
+			u'My Sample Group'
+
+			Getting a group by id:
+
+			>>> group = graphspace.get_group(group_id=198)
+			>>> group.get_name()
+			u'My Sample Graph'
 		"""
 		if group_id is not None:
 			group_by_id_path = GROUPS_PATH + str(group_id)
@@ -78,6 +105,34 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+
+		Examples:
+			Updating a group by creating a new group and replacing the existing group:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Creating the new group
+			>>> group = GSGroup(name='My Sample Group (updated)', description='sample group')
+			>>> # Updating to replace the existing group
+			>>> group = graphspace.update_group(group, name='My Sample Group')
+			>>> group.get_name()
+			u'My Sample Group (updated)'
+
+			Another way of updating a group by fetching and editing the existing group:
+
+			>>> # Fetching the group
+			>>> group = graphspace.get_group(name='My Sample Group')
+			>>> # Modifying the fetched group
+			>>> group.set_description('updated sample group')
+			>>> # Updating group
+			>>> group = graphspace.update_group(group, name='My Sample Group')
+			>>> group.get_description()
+			u'updated sample group'
+
+			You can update a group by id as well:
+
+			>>> graphspace.update_group(group, group_id=198)
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -91,11 +146,11 @@ class Groups(object):
 			).group
 
 		if name is not None:
-			response = self.get_group(name=name)
-			if response is None or response.group.id is None:
+			group = self.get_group(name=name)
+			if group is None or group.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_by_id_path = GROUPS_PATH + str(response.group.id)
+				group_by_id_path = GROUPS_PATH + str(group.id)
 				return APIResponse('group',
 					self.client._make_request("PUT", group_by_id_path, data=group.json(), headers=headers)
 				).group
@@ -114,6 +169,21 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+
+		Examples:
+			Deleting a group by name:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Deleting a group
+			>>> graphspace.delete_group(name='My Sample Group')
+			u'Successfully deleted group with id=198'
+
+			Deleting a group by id:
+
+			>>> graphspace.delete_group(group_id=198)
+			u'Successfully deleted group with id=198'
 		"""
 		if group_id is not None:
 			group_by_id_path = GROUPS_PATH + str(group_id)
@@ -121,11 +191,11 @@ class Groups(object):
 			return response['message']
 
 		if name is not None:
-			response = self.get_group(name=name)
-			if response is None or response.group.id is None:
+			group = self.get_group(name=name)
+			if group is None or rgroup.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_by_id_path = GROUPS_PATH + str(response.group.id)
+				group_by_id_path = GROUPS_PATH + str(group.id)
 				response = self.client._make_request("DELETE", group_by_id_path)
 				return response['message']
 
@@ -140,6 +210,15 @@ class Groups(object):
 
 		Returns:
 			List[Group]: List of groups owned by the requesting user.
+
+		Example:
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching my groups
+			>>> groups = graphspace.get_my_groups(limit=5)
+			>>> groups[0].get_name()
+			u'Test Group'
 		"""
 		query = {
 			'limit': limit,
@@ -160,6 +239,15 @@ class Groups(object):
 
 		Returns:
 		 	List[Group]: List of groups where the requesting user is a member.
+
+		Example:
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching all groups
+			>>> groups = graphspace.get_all_groups(limit=5)
+			>>> groups[0].get_name()
+			u'Test Group'
 		"""
 		query = {
 			'limit': limit,
@@ -183,6 +271,23 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+
+		Examples:
+			Getting members of a group when group name is known:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching group members
+			>>> members = graphspace.get_group_members(name='My Sample Group')
+			>>> members[0].email
+			u'user1@example.com'
+
+			Getting members of a group when group id is known:
+
+			>>> members = graphspace.get_group_members(group_id=198)
+			>>> members[0].email
+			u'user1@example.com'
 		"""
 		if group_id is not None:
 			group_members_path = GROUPS_PATH + str(group_id) + '/members'
@@ -191,11 +296,11 @@ class Groups(object):
 			).members
 
 		if name is not None:
-			response = self.get_group(name=name)
-			if response is None or response.group.id is None:
+			group = self.get_group(name=name)
+			if group is None or group.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_members_path = GROUPS_PATH + str(response.group.id) + '/members'
+				group_members_path = GROUPS_PATH + str(group.id) + '/members'
 				return APIResponse('member',
 					self.client._make_request("GET", group_members_path)
 				).members
@@ -215,6 +320,21 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+
+		Examples:
+			Adding a member to a group when group name is known:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Adding a member to group
+			>>> graphspace.add_group_member(member_email='user2@example.com', name='My Sample Group')
+			{u'group_id': u'198', u'user_id': 2}
+
+			Adding a member to a group when group id is known:
+
+			>>> graphspace.add_group_member(member_email='user2@example.com', group_id=198)
+			{u'group_id': u'198', u'user_id': 2}
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -226,11 +346,11 @@ class Groups(object):
 			return self.client._make_request("POST", group_members_path, data={'member_email': member_email}, headers=headers)
 
 		if name is not None:
-			response = self.get_group(name=name)
-			if response is None or response.group.id is None:
+			group = self.get_group(name=name)
+			if group is None or group.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_members_path = GROUPS_PATH + str(response.group.id) + '/members'
+				group_members_path = GROUPS_PATH + str(group.id) + '/members'
 				return self.client._make_request("POST", group_members_path, data={'member_email': member_email}, headers=headers)
 
 		raise Exception('Both group_id and name can\'t be none!')
@@ -248,6 +368,21 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+
+		Examples:
+			Deleting a member from a group when group name is known:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Deleting a member from group
+			>>> graphspace.delete_group_member(member_id=2, name='My Sample Group')
+			u'Successfully deleted member with id=2 from group with id=198'
+
+			Deleting a member from a group when group id is known:
+
+			>>> graphspace.delete_group_member(member_id=2, group_id=198)
+			u'Successfully deleted member with id=2 from group with id=198'
 		"""
 		if group_id is not None:
 			group_members_path = GROUPS_PATH + str(group_id) + '/members/' + str(member_id)
@@ -255,11 +390,11 @@ class Groups(object):
 			return response['message']
 
 		if name is not None:
-			response = self.get_group(name=name)
-			if response is None or response.group.id is None:
+			group = self.get_group(name=name)
+			if group is None or group.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_members_path = GROUPS_PATH + str(response.group.id) + '/members/' + str(member_id)
+				group_members_path = GROUPS_PATH + str(group.id) + '/members/' + str(member_id)
 				response = self.client._make_request("DELETE", group_members_path)
 				return response['message']
 
@@ -277,6 +412,23 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+
+		Examples:
+			Getting graphs of a group when group name is known:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching group graphs
+			>>> graphs = graphspace.get_group_graphs(name='My Sample Group')
+			>>> graphs[0].get_name()
+			u'My Sample Graph'
+
+			Getting graphs of a group when group id is known:
+
+			>>> graphs = graphspace.get_group_graphs(group_id=198)
+			>>> graphs[0].get_name()
+			u'My Sample Graph'
 		"""
 		if group_id is not None:
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs'
@@ -285,11 +437,11 @@ class Groups(object):
 			).graphs
 
 		if name is not None:
-			response = self.get_group(name=name)
-			if response is None or response.group.id is None:
+			group = self.get_group(name=name)
+			if group is None or group.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_graphs_path = GROUPS_PATH + str(response.group.id) + '/graphs'
+				group_graphs_path = GROUPS_PATH + str(group.id) + '/graphs'
 				return APIResponse('graph',
 					self.client._make_request("GET", group_graphs_path)
 				).graphs
@@ -309,6 +461,23 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+
+		Examples:
+			Adding a graph to a group when group name is known:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Adding a graph to group
+			>>> graphspace.add_group_graph(graph_id=65390, name='My Sample Group')
+			{u'created_at': u'2017-07-20T18:40:36.267052', u'group_id': u'198', u'graph_id':
+			65390, u'updated_at': u'2017-07-20T18:40:36.267052'}
+
+			Adding a graph to a group when group id is known:
+
+			>>> graphspace.add_group_graph(graph_id=65390, group_id=198)
+			{u'created_at': u'2017-07-20T18:40:36.267052', u'group_id': u'198', u'graph_id':
+			65390, u'updated_at': u'2017-07-20T18:40:36.267052'}
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -320,11 +489,11 @@ class Groups(object):
 			return self.client._make_request("POST", group_graphs_path, data={'graph_id': graph_id}, headers=headers)
 
 		if name is not None:
-			response = self.get_group(name=name)
-			if response is None or response.group.id is None:
+			group = self.get_group(name=name)
+			if group is None or group.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_graphs_path = GROUPS_PATH + str(response.group.id) + '/graphs'
+				group_graphs_path = GROUPS_PATH + str(group.id) + '/graphs'
 				return self.client._make_request("POST", group_graphs_path, data={'graph_id': graph_id}, headers=headers)
 
 		raise Exception('Both group_id and name can\'t be none!')
@@ -342,6 +511,21 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+
+		Examples:
+			Deleting a graph from a group when group name is known:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Deleting a graph from group
+			>>> graphspace.delete_group_graph(graph_id=65390, name='My Sample Group')
+			u'Successfully deleted graph with id=65390 from group with id=198'
+
+			Deleting a graph from a group when group id is known:
+
+			>>> graphspace.delete_group_graph(graph_id=65390, group_id=198)
+			u'Successfully deleted graph with id=65390 from group with id=198'
 		"""
 		if group_id is not None:
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs/' + str(graph_id)
@@ -349,11 +533,11 @@ class Groups(object):
 			return response['message']
 
 		if name is not None:
-			response = self.get_group(name=name)
-			if response is None or response.group.id is None:
+			group = self.get_group(name=name)
+			if group is None or group.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_graphs_path = GROUPS_PATH + str(response.group.id) + '/graphs/' + str(graph_id)
+				group_graphs_path = GROUPS_PATH + str(group.id) + '/graphs/' + str(graph_id)
 				response = self.client._make_request("DELETE", group_graphs_path)
 				return response['message']
 

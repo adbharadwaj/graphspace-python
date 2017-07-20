@@ -19,6 +19,20 @@ class Layouts(object):
 
 		Returns:
 		 	Layout: Saved layout on GraphSpace.
+
+		Example:
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Creating a layout
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.set_node_position('a', y=38.5, x=67.3)
+			>>> L.add_node_style('a', shape='ellipse', color='green', width=60, height=60)
+			>>> L.set_name('My Sample Layout')
+			>>> L.set_is_shared(1)
+			>>> # Saving layout on GraphSpace
+			>>> graphspace.post_graph_layout(graph_id=65390, layout=L)
 		"""
 		data = layout.json()
 		data.update({'graph_id': graph_id, 'owner_email': self.client.username})
@@ -42,6 +56,36 @@ class Layouts(object):
 
 		Raises:
 			Exception: If both 'name' and 'layout_id' are None or if layout doesnot exist.
+
+		Examples:
+			Updating a layout by creating a new layout and replacing the existing layout:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Creating the new layout
+			>>> L = GSLayout()
+			>>> L.set_node_position('a', y=102, x=238.1)
+			>>> L.add_node_style('a', shape='octagon', color='green', width=60, height=60)
+			>>> L.set_name('My Sample Layout')
+			>>> L.set_is_shared(1)
+			>>> # Updating to replace the existing layout
+			>>> graphspace.update_graph_layout(graph_id=65390, layout=L, name='My Sample Layout')
+
+			Another way of updating a layout by fetching and editing the existing layout:
+
+			>>> # Fetching the layout
+			>>> layout = graphspace.get_graph_layout(name='My Sample Layout')
+			>>> # Modifying the fetched layout
+			>>> layout.set_node_position('a', y=30, x=211)
+			>>> layout.add_node_style('a', shape='roundrectangle', color='green', width=45, height=45)
+			>>> layout.set_is_shared(0)
+			>>> # Updating layout
+			>>> graphspace.update_graph_layout(graph_id=65390, layout=layout, name='My Sample Layout')
+
+			You can update a layout by id as well:
+
+			>>> graphspace.update_graph_layout(graph_id=65390, layout=L, layout_id=1087)
 		"""
 		if layout_id is not None:
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
@@ -50,11 +94,11 @@ class Layouts(object):
 			).layout
 
 		if name is not None:
-			response = self.get_graph_layout(graph_id=graph_id, name=name, owner_email=owner_email)
-			if response is None or response.layout.id is None:
+			layout = self.get_graph_layout(graph_id=graph_id, name=name, owner_email=owner_email)
+			if layout is None or layout.id is None:
 				raise Exception('Layout with name `%s` of graph with graph_id=%s doesnt exist for user `%s`!' % (name, graph_id, self.client.username))
 			else:
-				layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(response.layout.id)
+				layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout.id)
 				return APIResponse('layout',
 					self.client._make_request("PUT", layout_by_id_path, data=layout.json())
 				).layout
@@ -74,6 +118,21 @@ class Layouts(object):
 
 		Raises:
 			Exception: If both 'name' and 'layout_id' are None or if layout doesnot exist.
+
+		Examples:
+			Deleting a layout by name:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Deleting a layout
+			>>> graphspace.delete_graph_layout(graph_id=65390, name='My Sample Layout')
+			u'Successfully deleted layout with id=1087'
+
+			Deleting a layout by id:
+
+			>>> graphspace.delete_graph_layout(graph_id=65930, layout_id=1087)
+			u'Successfully deleted layout with id=1087'
 		"""
 		if layout_id is not None:
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
@@ -81,11 +140,11 @@ class Layouts(object):
 			return response['message']
 
 		if name is not None:
-			response = self.get_graph_layout(graph_id=graph_id, name=name)
-			if response is None or response.layout.id is None:
+			layout = self.get_graph_layout(graph_id=graph_id, name=name)
+			if layout is None or layout.id is None:
 				raise Exception('Layout with name `%s` of graph with graph_id=%s doesnt exist for user `%s`!' % (name, graph_id, self.client.username))
 			else:
-				layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(response.layout.id)
+				layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout.id)
 				response = self.client._make_request("DELETE", layout_by_id_path)
 				return response['message']
 
@@ -105,6 +164,23 @@ class Layouts(object):
 
 		Raises:
 			Exception: If both 'name' and 'layout_id' are None.
+
+		Examples:
+			Getting a layout by name:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching a layout
+			>>> layout = graphspace.get_graph_layout(graph_id=65390, name='My Sample Layout')
+			>>> layout.get_name()
+			u'My Sample Layout'
+
+			Getting a layout by id:
+
+			>>> layout = graphspace.get_graph_layout(graph_id=65390, layout_id=1087)
+			>>> layout.get_name()
+			u'My Sample Layout'
 		"""
 		if layout_id is not None:
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
@@ -140,6 +216,15 @@ class Layouts(object):
 
 		Returns:
 		 	List[Layout]: List of layouts owned by the requesting user.
+
+		Example:
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching my graph layouts
+			>>> layouts = graphspace.get_my_graph_layouts(graph_id=65390, limit=5)
+			>>> layouts[0].get_name()
+			u'My Sample Layout'
 		"""
 		query = {
 			'limit': limit,
@@ -162,6 +247,15 @@ class Layouts(object):
 
 		Returns:
 		 	List[Layout]: List of layouts shared with the requesting user.
+
+		Example:
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Fetching shared graph layouts
+			>>> layouts = graphspace.get_shared_graph_layouts(graph_id=65390, limit=5)
+			>>> layouts[0].get_name()
+			u'Test Layout'
 		"""
 		query = {
 			'limit': limit,

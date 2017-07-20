@@ -22,14 +22,19 @@ class GSGroup(object):
 			self.set_name('Group ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
 		else:
 			self.name = name
-		if description is not None:
-			self.description = description
+		self.description = description
 
 	def json(self):
 		"""Get the json representation of group details.
 
 		Returns:
 			dict: Json representation of group details.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgroup import GSGroup
+			>>> group = GSGroup(name='My sample group', description='a sample group for demo')
+			>>> group.json()
+			{'name': 'My sample group', 'description': 'a sample group for demo'}
 		"""
 		data = {
 			'name': self.get_name(),
@@ -42,6 +47,12 @@ class GSGroup(object):
 
 		Returns:
 			str: Name of group.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgroup import GSGroup
+			>>> group = GSGroup(name='My sample group', description='a sample group for demo')
+			>>> group.get_name()
+			'My sample group'
 		"""
 		return self.name
 
@@ -50,6 +61,13 @@ class GSGroup(object):
 
 		Args:
 			name (str): Name of group.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgroup import GSGroup
+			>>> group = GSGroup()
+			>>> group.set_name('My sample group')
+			>>> group.get_name()
+			'My sample group'
 		"""
 		self.name = name
 
@@ -58,6 +76,12 @@ class GSGroup(object):
 
 		Returns:
 			str: Description of group.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgroup import GSGroup
+			>>> group = GSGroup(name='My sample group', description='a sample group for demo')
+			>>> group.get_description()
+			'a sample group for demo'
 		"""
 		return self.description
 
@@ -66,5 +90,12 @@ class GSGroup(object):
 
 		Args:
 			description (str): Description of group.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgroup import GSGroup
+			>>> group = GSGroup()
+			>>> group.set_description('a sample group for demo')
+			>>> group.get_description()
+			'a sample group for demo'
 		"""
 		self.description = description

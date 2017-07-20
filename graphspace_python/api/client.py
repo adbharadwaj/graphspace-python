@@ -69,6 +69,11 @@ class GraphSpace(object):
 
 		Args:
 		 	host (str): Host address of GraphSpace APIs.
+
+		Example:
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> graphspace.set_api_host('localhost:8000')
 		"""
 		self.api_host = host
 

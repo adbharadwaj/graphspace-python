@@ -69,7 +69,7 @@ class GSGraph(nx.DiGraph):
 		self.set_name('Graph ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
 		self.tags = []
 		self.data = {}
-		self.graph_json = self.compute_graph_json()
+		self.graph_json = self.get_graph_json()
 		self.style_json = {'style': []}
 		self.is_public = 0
 
@@ -78,25 +78,61 @@ class GSGraph(nx.DiGraph):
 
 		Returns:
 			dict: Json representation of graph details.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.json()
+			{'is_public': 0, 'style_json': {'style': []}, 'tags': [], 'name':
+			'Graph 12:10PM on July 20, 2017', 'graph_json': {'elements': {'nodes': [],
+			'edges': []}, 'data': {'name': 'Graph 12:10PM on July 20, 2017', 'tags': []}}}
+			>>> G.set_name('My sample graph')
+			>>> G.add_node('a', popup='sample node popup text', label='A')
+			>>> G.add_node_style('a', shape='ellipse', color='red', width=90, height=90)
+			>>> G.json()
+			{'is_public': 0, 'style_json': {'style': [{'style': {'border-color': '#000000',
+			'border-width': 1, 'height': 90, 'width': 90, 'shape': 'ellipse', 'border-style':
+			'solid', 'text-wrap': 'wrap', 'text-halign': 'center', 'text-valign': 'center',
+			'background-color': 'red'}, 'selector': 'node[name="a"]'}]}, 'tags': [], 'name':
+			'My sample graph', 'graph_json': {'elements': {'nodes': [{'data': {'id': 'a',
+			'popup': 'sample node popup text', 'name': 'a', 'label': 'A'}}], 'edges': []},
+			'data': {'name': 'My sample graph', 'tags': []}}}
 		"""
 		data = {
 			'name': self.get_name(),
 			'is_public': self.get_is_public(),
-			'graph_json': self.compute_graph_json(),
+			'graph_json': self.get_graph_json(),
 			'style_json': self.get_style_json(),
 			'tags': self.get_tags()
 		}
 		return data
 
-	def compute_graph_json(self):
+	def get_graph_json(self):
 		"""Computes the json representation for the graph structure from the graph
-		nodes and edges.
+		nodes and edges and returns it.
 
 		Returns:
 			dict: Json representation of graph structure.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_graph_json()
+			{'elements': {'nodes': [], 'edges': []}, 'data': {'name':
+			'Graph 12:10PM on July 20, 2017', 'tags': []}}
+			>>> G.set_name('My sample graph')
+			>>> G.add_node('a', popup='sample node popup text', label='A')
+			>>> G.add_node('b', popup='sample node popup text', label='B')
+			>>> G.add_edge('a', 'b', directed=True, popup='sample edge popup')
+			>>> G.get_graph_json()
+			{'elements': {'nodes': [{'data': {'id': 'a', 'popup': 'sample node popup text',
+			'name': 'a', 'label': 'A'}}, {'data': {'id': 'b', 'popup': 'sample node popup text',
+			'name': 'b', 'label': 'B'}}], 'edges': [{'data': {'source': 'a', 'popup':
+			'sample edge popup', 'is_directed': True, 'target': 'b'}}]}, 'data': {'name':
+			'My sample graph', 'tags': []}}
 		"""
 		self.graph_json = {
-			'data': self.compute_data(),
+			'data': self.get_data(),
 			'elements': {
 				'nodes': [node[1]for node in self.nodes(data=True)],
 				'edges': [edge[2] for edge in self.edges(data=True)],
@@ -104,11 +140,21 @@ class GSGraph(nx.DiGraph):
 		}
 		return self.graph_json
 
-	def compute_data(self):
-		"""Computes the metadata of the graph.
+	def get_data(self):
+		"""Computes the metadata of the graph and returns it.
 
 		Returns:
 			dict: Metadata of the graph.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_data()
+			{'name': 'Graph 12:10PM on July 20, 2017', 'tags': []}
+			>>> G.set_name('My sample graph')
+			>>> G.set_tags(['sample','tutorial'])
+			>>> G.get_data()
+			{'name': 'My sample graph', 'tags': ['sample', 'tutorial']}
 		"""
 		data = {
 			'name': self.name,
@@ -117,19 +163,23 @@ class GSGraph(nx.DiGraph):
 		self.data.update(data)
 		return self.data
 
-	def get_graph_json(self):
-		"""Get the json representation for the graph structure.
-
-		Returns:
-			dict: Json representation of graph structure.
-		"""
-		return self.graph_json
-
 	def get_style_json(self):
 		"""Get the json representation for the graph style.
 
 		Returns:
 			dict: Json representation of graph style.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_style_json()
+			{'style': []}
+			>>> G.add_node_style('a', shape='ellipse', color='red', width=90, height=90)
+			>>> G.get_style_json()
+			{'style': [{'style': {'border-color': '#000000', 'border-width': 1, 'height': 90,
+			'width': 90, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap': 'wrap',
+			'text-halign': 'center', 'text-valign': 'center', 'background-color': 'red'},
+			'selector': 'node[name="a"]'}]}
 		"""
 		return self.style_json
 
@@ -138,6 +188,34 @@ class GSGraph(nx.DiGraph):
 
 		Args:
 			graph_json (dict): Json representation for the graph structure.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> graph_json = {
+			... 	'elements': {
+			... 		'nodes': [
+			... 			{
+			... 				'data': {
+			... 					'id': 'a',
+			... 					'popup': 'sample node popup text',
+			... 					'name': 'a',
+			... 					'label': 'A'
+			... 				}
+			... 			}
+			... 		],
+			... 		'edges': []
+			... 	},
+			... 	'data': {
+			... 		'name': 'My sample graph',
+			... 		'tags': ['sample', 'tutorial']
+			... 	}
+			... }
+			>>> G.set_graph_json(graph_json)
+			>>> G.get_graph_json()
+			{'elements': {'nodes': [{'data': {'id': 'a', 'popup': 'sample node popup text',
+			'name': 'a', 'label': 'A'}}], 'edges': []}, 'data': {'name': 'My sample graph',
+			'tags': ['sample', 'tutorial']}}
 		"""
 		self.graph_json = graph_json
 
@@ -146,6 +224,35 @@ class GSGraph(nx.DiGraph):
 
 		Args:
 			style_json (dict): Json representation for the graph style.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> style_json = {
+			... 	'style': [
+			... 		{
+			... 			'style': {
+			... 				'border-color': '#000000',
+			... 				'border-width': 1,
+			... 				'height': 90,
+			... 				'width': 90,
+			... 				'shape': 'ellipse',
+			... 				'border-style': 'solid',
+			... 				'text-wrap': 'wrap',
+			... 				'text-halign': 'center',
+			... 				'text-valign': 'center',
+			... 				'background-color': 'red'
+			... 			},
+			... 			'selector': 'node[name="a"]'
+			... 		}
+			... 	]
+			... }
+			>>> G.set_style_json(style_json)
+			>>> G.get_style_json()
+			{'style': [{'style': {'border-color': '#000000', 'border-width': 1, 'height': 90,
+			'width': 90, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap': 'wrap',
+			'text-halign': 'center', 'text-valign': 'center', 'background-color': 'red'},
+			'selector': 'node[name="a"]'}]}
 		"""
 		GSGraph.validate_style_json(style_json)
 		self.style_json = style_json
@@ -155,6 +262,15 @@ class GSGraph(nx.DiGraph):
 
 		Returns:
 			str: Name of graph.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_name()
+			'Graph 01:22PM on July 20, 2017'
+			>>> G.set_name('My sample graph')
+			>>> G.get_name()
+			'My sample graph'
 		"""
 		return self.name
 
@@ -163,6 +279,13 @@ class GSGraph(nx.DiGraph):
 
 		Args:
 			name (str): Name of graph.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.set_name('My sample graph')
+			>>> G.get_name()
+			'My sample graph'
 		"""
 		self.name = name
 
@@ -171,6 +294,15 @@ class GSGraph(nx.DiGraph):
 
 		Returns:
 			int: Visibility status of graph. Either 0 or 1.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_is_public()
+			0
+			>>> G.set_is_public(1)
+			>>> G.get_is_public()
+			1
 		"""
 		return self.is_public
 
@@ -182,25 +314,37 @@ class GSGraph(nx.DiGraph):
 
 		Raises:
 			Exception: If 'is_public' is neither 0 nor 1.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.set_is_public() # By default takes param 'is_public' as 1.
+			>>> G.get_is_public()
+			1
+			>>> G.set_is_public(0)
+			>>> G.get_is_public()
+			0
 		"""
 		if is_public not in [0,1]:
 			raise Exception("is_public should have value either 0 or 1.")
 		else:
 			self.is_public = is_public
 
-	def get_data(self):
-		"""Get the metadata of the graph.
-
-		Returns:
-			dict: Metadata of graph.
-		"""
-		return self.data
-
 	def set_data(self, data):
 		"""Set the metadata of the graph.
 
 		Args:
 			data (dict): Key-value pairs describing the graph.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.set_name('My sample graph')
+			>>> G.set_tags(['sample'])
+			>>> G.set_data({'description': 'A sample graph for demonstration purpose.'})
+			>>> G.get_data()
+			{'description': 'A sample graph for demonstration purpose.', 'name':
+			'My sample graph', 'tags': ['sample']}
 		"""
 		self.data.update(data)
 
@@ -209,6 +353,15 @@ class GSGraph(nx.DiGraph):
 
 		Returns:
 		 	List[str]: List of tags of graph.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_tags()
+			[]
+			>>> G.set_tags(['sample', 'tutorial'])
+			>>> G.get_tags()
+			['sample', 'tutorial']
 		"""
 		return self.tags
 
@@ -217,6 +370,13 @@ class GSGraph(nx.DiGraph):
 
 		Args:
 		 	tags (List[str]): List of tags of graph.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.set_tags(['sample', 'tutorial'])
+			>>> G.get_tags()
+			['sample', 'tutorial']
 		"""
 		self.tags = tags
 
@@ -231,6 +391,16 @@ class GSGraph(nx.DiGraph):
 			popup (str, optional): Edge popup text. Defaults to None.
 			k (int, optional): k value of edge. Defaults to None.
 			**attr: Arbitrary keyword arguments.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.add_node('a', popup='sample node popup text', label='A')
+			>>> G.add_node('b', popup='sample node popup text', label='B')
+			>>> G.add_edge('a', 'b', directed=True, popup='sample edge popup')
+			>>> G.edges(data=True)
+			[('a', 'b', {'data': {'source': 'a', 'popup': 'sample edge popup',
+			'is_directed': True, 'target': 'b'}})]
 		"""
 		attr_dict = attr_dict if attr_dict is not None else dict()
 		if 'data' not in attr_dict:
@@ -261,6 +431,16 @@ class GSGraph(nx.DiGraph):
 			popup (str, optional): Node popup text. Defaults to None.
 			k (int, optional): k value of node. Defaults to None.
 			**attr: Arbitrary keyword arguments.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.add_node('a', popup='sample node popup text', label='A')
+			>>> G.add_node('b', popup='sample node popup text', label='B')
+			>>> G.nodes(data=True)
+			[('a', {'data': {'id': 'a', 'popup': 'sample node popup text', 'name': 'a',
+			'label': 'A'}}), ('b', {'data': {'id': 'b', 'popup': 'sample node popup text',
+			'name': 'b', 'label': 'B'}})]
 		"""
 		attr_dict = attr_dict if attr_dict is not None else dict()
 
@@ -297,6 +477,22 @@ class GSGraph(nx.DiGraph):
 			style (str, optional): Style of border. Defaults to 'solid'. If 'bubble' is specified, then style is overwritten.
 			border_color (str, optional): Color of border. Defaults to '#000000'. If 'bubble' is specified, then style is overwritten.
 			border_width (int, optional): Width of border. Defaults to 1. If 'bubble' is specified, then style is overwritten.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.add_node('a', popup='sample node popup text', label='A')
+			>>> G.add_node_style('a', shape='ellipse', color='red', width=90, height=90)
+			>>> G.add_node('b', popup='sample node popup text', label='B')
+			>>> G.add_node_style('b', color='blue', width=90, height=90, border_color='#4f4f4f')
+			>>> G.get_style_json()
+			{'style': [{'style': {'border-color': '#000000', 'border-width': 1, 'height': 90,
+			'width': 90, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap': 'wrap',
+			'text-halign': 'center', 'text-valign': 'center', 'background-color': 'red'},
+			'selector': 'node[name="a"]'}, {'style': {'border-color': '#4f4f4f', 'border-width': 1,
+			'height': 90, 'width': 90, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap':
+			'wrap', 'text-halign': 'center', 'text-valign': 'center', 'background-color': 'blue'},
+			'selector': 'node[name="b"]'}]}
 		"""
 		attr_dict = attr_dict if attr_dict is not None else dict()
 
@@ -341,6 +537,19 @@ class GSGraph(nx.DiGraph):
 			arrow_shape (str, optional): Shape of arrow head. Defaults to 'triangle'.
 			edge_style (str, optional): Style of edge. Defaults to 'solid'.
 			arrow_fill (str, optional): Fill of arrow. Defaults to 'filled'.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.add_edge_style('a', 'b', directed=True, edge_style='dotted')
+			>>> G.add_edge_style('b', 'c', arrow_shape='tee', arrow_fill='hollow')
+			>>> G.get_style_json()
+			{'style': [{'style': {'width': 1.0, 'line-color': '#000000', 'target-arrow-shape':
+			'triangle', 'line-style': 'dotted', 'target-arrow-fill': 'filled', 'target-arrow-color':
+			'#000000'}, 'selector': 'edge[source="a"][target="b"]'}, {'style': {'width': 1.0,
+			'line-color': '#000000', 'target-arrow-shape': 'none', 'line-style': 'solid',
+			'target-arrow-fill': 'hollow', 'target-arrow-color': '#000000'}, 'selector':
+			'edge[source="b"][target="c"]'}]}
 		"""
 		data_properties = {}
 		style_properties = {}

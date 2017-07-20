@@ -28,6 +28,22 @@ class GSLayout(object):
 
 		Returns:
 			dict: Json representation of layout details.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.json()
+			{'style_json': {'style': []}, 'positions_json': {}, 'name':
+			'Layout 03:42PM on July 20, 2017', 'is_shared': 0}
+			>>> L.set_node_position('a', y=38.5, x=67.3)
+			>>> L.add_node_style('a', shape='ellipse', color='green', width=60, height=60)
+			>>> L.set_name('My Sample Layout')
+			>>> L.json()
+			{'style_json': {'style': [{'style': {'border-color': '#000000', 'border-width': 1,
+			'height': 60, 'width': 60, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap':
+			'wrap', 'text-halign': 'center', 'text-valign': 'center', 'background-color': 'green'},
+			'selector': 'node[name="a"]'}]}, 'positions_json': {'a': {'y': 38.5, 'x': 67.3}},
+			'name': 'My Sample Layout', 'is_shared': 0}
 		"""
 		data = {
 			'name': self.get_name(),
@@ -42,6 +58,15 @@ class GSLayout(object):
 
 		Returns:
 			str: Name of layout.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.get_name()
+			'Layout 03:42PM on July 20, 2017'
+			>>> L.set_name('My Sample Layout')
+			>>> L.get_name()
+			'My Sample Layout'
 		"""
 		return self.name
 
@@ -50,6 +75,13 @@ class GSLayout(object):
 
 		Args:
 			name (str): Name of layout.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.set_name('My Sample Layout')
+			>>> L.get_name()
+			'My Sample Layout'
 		"""
 		self.name = name
 
@@ -58,6 +90,15 @@ class GSLayout(object):
 
 		Returns:
 			int: Sharing status of layout. Either 0 or 1.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.get_is_shared()
+			0
+			>>> L.set_is_shared(1)
+			>>> L.get_is_shared()
+			1
 		"""
 		return self.is_shared
 
@@ -69,6 +110,16 @@ class GSLayout(object):
 
 		Raises:
 			Exception: If 'is_shared' is neither 0 nor 1.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.set_is_shared() # By default takes param 'is_shared' as 1.
+			>>> L.get_is_shared()
+			1
+			>>> L.set_is_shared(0)
+			>>> L.get_is_shared()
+			0
 		"""
 		if is_shared not in [0,1]:
 			raise Exception("is_shared should have value either 0 or 1.")
@@ -80,6 +131,15 @@ class GSLayout(object):
 
 		Returns:
 		 	dict: Json representation of layout node postitions.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.get_positions_json()
+			{}
+			>>> L.set_node_position('a', y=38.5, x=67.3)
+			>>> L.get_positions_json()
+			{'a': {'y': 38.5, 'x': 67.3}}
 		"""
 		return self.positions_json
 
@@ -88,6 +148,23 @@ class GSLayout(object):
 
 		Args:
 			positions_json (dict): Json representation of layout node positions.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> positions_json = {
+			... 	'a': {
+			... 		'y': 38.5,
+			... 		'x': 67.3
+			... 	},
+			... 	'b': {
+			... 		'y': 124,
+			... 		'x': 332.2
+			... 	}
+			... }
+			>>> L.set_positions_json(positions_json)
+			>>> L.get_positions_json()
+			{'a': {'y': 38.5, 'x': 67.3}, 'b': {'y': 124, 'x': 332.2}}
 		"""
 		self.positions_json = positions_json
 
@@ -98,7 +175,14 @@ class GSLayout(object):
 			node_name (str): Name of the node.
 
 		Returns:
-		 	dict: Dict of x,y co-ordinates of the node.
+		 	dict or None: Dict of x,y co-ordinates of the node, if node position is defined; otherwise None.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.set_node_position('a', y=38.5, x=67.3)
+			>>> L.get_node_position('a')
+			{'y': 38.5, 'x': 67.3}
 		"""
 		return self.positions_json.get(node_name, None)
 
@@ -109,6 +193,16 @@ class GSLayout(object):
 			node_name (str): Name of the node.
 			y (float): y co-ordinate of node.
 			x (float): x co-ordinate of node.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.set_node_position('a', y=38.5, x=67.3)
+			>>> L.get_positions_json()
+			{'a': {'y': 38.5, 'x': 67.3}}
+			>>> L.set_node_position('a', y=45, x=176) # Overwrites the position of 'a'.
+			>>> L.get_positions_json()
+			{'a': {'y': 45, 'x': 176}}
 		"""
 		node_position = {
 			node_name: {
@@ -126,6 +220,16 @@ class GSLayout(object):
 
 		Raises:
 			Exception: If node positions are undefined.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.set_node_position('a', y=38.5, x=67.3)
+			>>> L.get_positions_json()
+			{'a': {'y': 38.5, 'x': 67.3}}
+			>>> L.remove_node_position('a')
+			>>> L.get_positions_json()
+			{}
 		"""
 		if node_name not in self.positions_json.keys():
 			raise Exception("Positions of node '%s' is undefined." % (node_name))
@@ -137,6 +241,18 @@ class GSLayout(object):
 
 		Returns:
 			dict: Json representation of layout style.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.get_style_json()
+			{'style': []}
+			>>> L.add_node_style('a', shape='ellipse', color='green', width=60, height=60)
+			>>> L.get_style_json()
+			{'style': [{'style': {'border-color': '#000000', 'border-width': 1, 'height': 60,
+			'width': 60, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap': 'wrap',
+			'text-halign': 'center', 'text-valign': 'center', 'background-color': 'green'},
+			'selector': 'node[name="a"]'}]}
 		"""
 		return self.style_json
 
@@ -145,6 +261,35 @@ class GSLayout(object):
 
 		Args:
 			style_json (dict): Json representation of layout style.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> style_json = {
+			... 	'style': [
+			... 		{
+			... 			'style': {
+			... 				'border-color': '#000000',
+			... 				'border-width': 1,
+			... 				'height': 60,
+			... 				'width': 60,
+			... 				'shape': 'ellipse',
+			... 				'border-style': 'solid',
+			... 				'text-wrap': 'wrap',
+			... 				'text-halign': 'center',
+			... 				'text-valign': 'center',
+			... 				'background-color': 'green'
+			... 			},
+			... 			'selector': 'node[name="a"]'
+			... 		}
+			... 	]
+			... }
+			>>> L.set_style_json(style_json)
+			>>> L.get_style_json()
+			{'style': [{'style': {'border-color': '#000000', 'border-width': 1, 'height': 60,
+			'width': 60, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap': 'wrap',
+			'text-halign': 'center', 'text-valign': 'center', 'background-color': 'green'},
+			'selector': 'node[name="a"]'}]}
 		"""
 		GSGraph.validate_style_json(style_json)
 		self.style_json = style_json
@@ -167,6 +312,20 @@ class GSLayout(object):
 			style (str, optional): Style of border. Defaults to 'solid'. If 'bubble' is specified, then style is overwritten.
 			border_color (str, optional): Color of border. Defaults to '#000000'. If 'bubble' is specified, then style is overwritten.
 			border_width (int, optional): Width of border. Defaults to 1. If 'bubble' is specified, then style is overwritten.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.add_node_style('a', shape='ellipse', color='red', width=90, height=90)
+			>>> L.add_node_style('b', color='blue', width=90, height=90, border_color='#4f4f4f')
+			>>> L.get_style_json()
+			{'style': [{'style': {'border-color': '#000000', 'border-width': 1, 'height': 90,
+			'width': 90, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap': 'wrap',
+			'text-halign': 'center', 'text-valign': 'center', 'background-color': 'red'},
+			'selector': 'node[name="a"]'}, {'style': {'border-color': '#4f4f4f', 'border-width': 1,
+			'height': 90, 'width': 90, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap':
+			'wrap', 'text-halign': 'center', 'text-valign': 'center', 'background-color': 'blue'},
+			'selector': 'node[name="b"]'}]}
 		"""
 		attr_dict = attr_dict if attr_dict is not None else dict()
 
@@ -211,6 +370,19 @@ class GSLayout(object):
 			arrow_shape (str, optional): Shape of arrow head. Defaults to 'triangle'.
 			edge_style (str, optional): Style of edge. Defaults to 'solid'.
 			arrow_fill (str, optional): Fill of arrow. Defaults to 'filled'.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> L = GSLayout()
+			>>> L.add_edge_style('a', 'b', directed=True, edge_style='dotted')
+			>>> L.add_edge_style('b', 'c', arrow_shape='tee', arrow_fill='hollow')
+			>>> L.get_style_json()
+			{'style': [{'style': {'width': 1.0, 'line-color': '#000000', 'target-arrow-shape':
+			'triangle', 'line-style': 'dotted', 'target-arrow-fill': 'filled', 'target-arrow-color':
+			'#000000'}, 'selector': 'edge[source="a"][target="b"]'}, {'style': {'width': 1.0,
+			'line-color': '#000000', 'target-arrow-shape': 'none', 'line-style': 'solid',
+			'target-arrow-fill': 'hollow', 'target-arrow-color': '#000000'}, 'selector':
+			'edge[source="b"][target="c"]'}]}
 		"""
 		data_properties = {}
 		style_properties = {}

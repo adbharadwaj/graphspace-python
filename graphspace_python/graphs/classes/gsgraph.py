@@ -203,9 +203,9 @@ class GSGraph(nx.DiGraph):
 		bubble: string -- color of the text outline. Using this option gives a "bubble" effect; see the bubbleeffect() function. Optional.
 		valign: string -- vertical alignment. Default = center.
 		halign: string -- horizontal alignment. Default = center.
-		style: string -- style of border. Default is "solid".  If Bubble is specified, then style is overwritten.
-		border_color: string -- color of border. Default is #000000. If Bubble is specified, then style is overwritten.
-		border_width: int -- width of border. Default is 4.  If Bubble is specified, then style is overwritten.
+		style: string -- style of border. Default is "solid".  
+		border_color: string -- color of border. Default is #000000. 
+		border_width: int -- width of border. Default is 4.
 
 
 		Returns
@@ -233,7 +233,10 @@ class GSGraph(nx.DiGraph):
 		if bubble:
 			style_properties = GSGraph.set_node_bubble_effect_property(style_properties, bubble, whitetext=False)
 
-		attr_dict.update(style_properties)
+                # if any of the properties were specified in the attr_dict, 
+                # then overwrite the default style_properties with the given attr_dict value
+		style_properties.update(attr_dict)
+                attr_dict = style_properties
 
 		self.set_style_json({
 			'style': self.get_style_json().get('style') + [{
@@ -437,8 +440,8 @@ class GSGraph(nx.DiGraph):
 	@staticmethod
 	def set_node_bubble_effect_property(node_properties, color, whitetext=False):
 		"""
-		Add a "bubble effect" to the node by making the
-		border color the same as the text outline color.
+		Add a "bubble effect" to the node by adding a border or outline 
+                around the text ('text-outline-width': 4) with the given color ('text-outline-color': color)
 
 		Parameters
 		----------
@@ -452,8 +455,7 @@ class GSGraph(nx.DiGraph):
 
 		"""
 		node_properties.update({'text-outline-color': color})
-		node_properties = GSGraph.set_node_border_color_property(node_properties, color)
-		# also make outline thicker and text larger
+		# also make outline thicker making the text look larger
 		node_properties.update({'text-outline-width': 4})
 		if whitetext:
 			node_properties.update({'color': 'white'})

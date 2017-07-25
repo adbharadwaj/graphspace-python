@@ -20,6 +20,9 @@ class Layouts(object):
 		Returns:
 		 	Layout: Saved layout on GraphSpace.
 
+		Raises:
+			GraphSpaceError: If error response is received from the GraphSpace API.
+
 		Example:
 			>>> # Connecting to GraphSpace
 			>>> from graphspace_python.api.client import GraphSpace
@@ -33,6 +36,9 @@ class Layouts(object):
 			>>> L.set_is_shared(1)
 			>>> # Saving layout on GraphSpace
 			>>> graphspace.post_graph_layout(graph_id=65390, layout=L)
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#creating-a-layout>`_ for more about posting layouts.
 		"""
 		data = layout.json()
 		data.update({'graph_id': graph_id, 'owner_email': self.client.username})
@@ -56,6 +62,7 @@ class Layouts(object):
 
 		Raises:
 			Exception: If both 'name' and 'layout_id' are None or if layout doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Updating a layout by creating a new layout and replacing the existing layout:
@@ -86,6 +93,9 @@ class Layouts(object):
 			You can update a layout by id as well:
 
 			>>> graphspace.update_graph_layout(graph_id=65390, layout=L, layout_id=1087)
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#updating-a-layout-on-graphspace>`_ for more about updating layouts.
 		"""
 		if layout_id is not None:
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
@@ -118,6 +128,7 @@ class Layouts(object):
 
 		Raises:
 			Exception: If both 'name' and 'layout_id' are None or if layout doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Deleting a layout by name:
@@ -133,6 +144,9 @@ class Layouts(object):
 
 			>>> graphspace.delete_graph_layout(graph_id=65930, layout_id=1087)
 			u'Successfully deleted layout with id=1087'
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#deleting-a-layout-on-graphspace>`_ for more about deleting layouts.
 		"""
 		if layout_id is not None:
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
@@ -164,6 +178,7 @@ class Layouts(object):
 
 		Raises:
 			Exception: If both 'name' and 'layout_id' are None.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Getting a layout by name:
@@ -181,6 +196,9 @@ class Layouts(object):
 			>>> layout = graphspace.get_graph_layout(graph_id=65390, layout_id=1087)
 			>>> layout.get_name()
 			u'My Sample Layout'
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#fetching-a-layout-from-graphspace>`_ for more about fetching layouts.
 		"""
 		if layout_id is not None:
 			layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout_id)
@@ -217,6 +235,9 @@ class Layouts(object):
 		Returns:
 		 	List[Layout]: List of layouts owned by the requesting user.
 
+		Raises:
+			GraphSpaceError: If error response is received from the GraphSpace API.
+
 		Example:
 			>>> # Connecting to GraphSpace
 			>>> from graphspace_python.api.client import GraphSpace
@@ -247,6 +268,9 @@ class Layouts(object):
 
 		Returns:
 		 	List[Layout]: List of layouts shared with the requesting user.
+
+		Raises:
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Example:
 			>>> # Connecting to GraphSpace

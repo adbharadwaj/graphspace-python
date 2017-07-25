@@ -19,6 +19,9 @@ class Graphs(object):
 		Returns:
 			Graph: Saved graph on GraphSpace.
 
+		Raises:
+			GraphSpaceError: If error response is received from the GraphSpace API.
+
 		Example:
 			>>> # Connecting to GraphSpace
 			>>> from graphspace_python.api.client import GraphSpace
@@ -34,6 +37,9 @@ class Graphs(object):
 			>>> G.add_edge_style('a', 'b', directed=True, edge_style='dotted')
 			>>> # Saving graph on GraphSpace
 			>>> graphspace.post_graph(G)
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#creating-a-graph>`_ for more about posting graphs.
 		"""
 		data = graph.json()
 		data.update({'owner_email': self.client.username})
@@ -54,6 +60,7 @@ class Graphs(object):
 
 		Raises:
 			Exception: If both 'name' and 'graph_id' are None.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Getting a graph by name:
@@ -71,6 +78,9 @@ class Graphs(object):
 			>>> graph = graphspace.get_graph(graph_id=65930)
 			>>> graph.get_name()
 			u'My Sample Graph'
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#fetching-a-graph-from-graphspace>`_ for more about fetching graphs.
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -107,6 +117,9 @@ class Graphs(object):
 
 		Returns:
 		 	List[Graph]: List of public graphs.
+
+		Raises:
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Getting public graphs:
@@ -151,6 +164,9 @@ class Graphs(object):
 		Returns:
 		 	List[Graph]: List of shared graphs.
 
+		Raises:
+			GraphSpaceError: If error response is received from the GraphSpace API.
+
 		Examples:
 			Getting shared graphs:
 
@@ -194,6 +210,9 @@ class Graphs(object):
 		Returns:
 		 	List[Graph]: List of graphs owned by the requesting user.
 
+		Raises:
+			GraphSpaceError: If error response is received from the GraphSpace API.
+
 		Examples:
 			Getting your graphs:
 
@@ -236,6 +255,7 @@ class Graphs(object):
 
 		Raises:
 			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Deleting a graph by name:
@@ -251,6 +271,9 @@ class Graphs(object):
 
 			>>> graphspace.delete_graph(graph_id=65930)
 			u'Successfully deleted graph with id=65930'
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#deleting-a-graph-on-graphspace>`_ for more about deleting graphs.
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -282,6 +305,7 @@ class Graphs(object):
 
 		Raises:
 			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Updating a graph by creating a new graph and replacing the existing graph:
@@ -315,6 +339,9 @@ class Graphs(object):
 			You can update a graph by id as well:
 
 			>>> graphspace.update_graph(graph=G, graph_id=65930)
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#updating-a-graph-on-graphspace>`_ for more about updating graphs.
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -346,6 +373,7 @@ class Graphs(object):
 
 		Raises:
 			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Make graph public by name:
@@ -363,6 +391,9 @@ class Graphs(object):
 			>>> graph = graphspace.make_graph_public(graph_id=65930)
 			>>> graph.get_is_public()
 			1
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#making-a-graph-public-on-graphspace>`_ for more about making a graph public.
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)
@@ -394,6 +425,7 @@ class Graphs(object):
 
 		Raises:
 			Exception: If both 'name' and 'graph_id' are None or if graph doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Make graph private by name:
@@ -411,6 +443,9 @@ class Graphs(object):
 			>>> graph = graphspace.make_graph_private(graph_id=65930)
 			>>> graph.get_is_public()
 			0
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#making-a-graph-private-on-graphspace>`_ for more about making a graph private.
 		"""
 		if graph_id is not None:
 			graph_by_id_path = GRAPHS_PATH + str(graph_id)

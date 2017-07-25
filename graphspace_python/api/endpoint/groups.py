@@ -22,6 +22,9 @@ class Groups(object):
 		Returns:
 		 	Group: Saved group on GraphSpace.
 
+		Raises:
+			GraphSpaceError: If error response is received from the GraphSpace API.
+
 		Example:
 			>>> # Connecting to GraphSpace
 			>>> from graphspace_python.api.client import GraphSpace
@@ -31,6 +34,9 @@ class Groups(object):
 			>>> group = GSGroup(name='My Sample Group', description='sample group')
 			>>> # Saving group on GraphSpace
 			>>> graphspace.post_graph(group)
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#creating-a-group>`_ for more about posting groups.
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -54,6 +60,7 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Getting a group by name:
@@ -71,6 +78,9 @@ class Groups(object):
 			>>> group = graphspace.get_group(group_id=198)
 			>>> group.get_name()
 			u'My Sample Graph'
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#fetching-a-group-from-graphspace>`_ for more about fetching groups.
 		"""
 		if group_id is not None:
 			group_by_id_path = GROUPS_PATH + str(group_id)
@@ -105,6 +115,7 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Updating a group by creating a new group and replacing the existing group:
@@ -133,6 +144,9 @@ class Groups(object):
 			You can update a group by id as well:
 
 			>>> graphspace.update_group(group, group_id=198)
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#updating-a-group-on-graphspace>`_ for more about updating groups.
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -169,6 +183,7 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Deleting a group by name:
@@ -184,6 +199,9 @@ class Groups(object):
 
 			>>> graphspace.delete_group(group_id=198)
 			u'Successfully deleted group with id=198'
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#deleting-a-group-on-graphspace>`_ for more about deleting groups.
 		"""
 		if group_id is not None:
 			group_by_id_path = GROUPS_PATH + str(group_id)
@@ -210,6 +228,9 @@ class Groups(object):
 
 		Returns:
 			List[Group]: List of groups owned by the requesting user.
+
+		Raises:
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Example:
 			>>> # Connecting to GraphSpace
@@ -239,6 +260,9 @@ class Groups(object):
 
 		Returns:
 		 	List[Group]: List of groups where the requesting user is a member.
+
+		Raises:
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Example:
 			>>> # Connecting to GraphSpace
@@ -271,6 +295,7 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Getting members of a group when group name is known:
@@ -288,6 +313,9 @@ class Groups(object):
 			>>> members = graphspace.get_group_members(group_id=198)
 			>>> members[0].email
 			u'user1@example.com'
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#fetching-members-of-a-group-from-graphspace>`_ for more about fetching group members.
 		"""
 		if group_id is not None:
 			group_members_path = GROUPS_PATH + str(group_id) + '/members'
@@ -320,6 +348,7 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Adding a member to a group when group name is known:
@@ -335,6 +364,9 @@ class Groups(object):
 
 			>>> graphspace.add_group_member(member_email='user2@example.com', group_id=198)
 			{u'group_id': u'198', u'user_id': 2}
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#adding-a-member-to-a-group-on-graphspace>`_ for more about adding group members.
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -368,6 +400,7 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Deleting a member from a group when group name is known:
@@ -383,6 +416,9 @@ class Groups(object):
 
 			>>> graphspace.delete_group_member(member_id=2, group_id=198)
 			u'Successfully deleted member with id=2 from group with id=198'
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#deleting-a-member-from-a-group-on-graphspace>`_ for more about deleting group members.
 		"""
 		if group_id is not None:
 			group_members_path = GROUPS_PATH + str(group_id) + '/members/' + str(member_id)
@@ -412,6 +448,7 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Getting graphs of a group when group name is known:
@@ -429,6 +466,9 @@ class Groups(object):
 			>>> graphs = graphspace.get_group_graphs(group_id=198)
 			>>> graphs[0].get_name()
 			u'My Sample Graph'
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#fetching-graphs-of-a-group-from-graphspace>`_ for more about fetching graphs of a group.
 		"""
 		if group_id is not None:
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs'
@@ -461,6 +501,7 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Adding a graph to a group when group name is known:
@@ -478,6 +519,9 @@ class Groups(object):
 			>>> graphspace.add_group_graph(graph_id=65390, group_id=198)
 			{u'created_at': u'2017-07-20T18:40:36.267052', u'group_id': u'198', u'graph_id':
 			65390, u'updated_at': u'2017-07-20T18:40:36.267052'}
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#adding-a-graph-to-a-group-on-graphspace>`_ for more about adding graph to a group.
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -511,6 +555,7 @@ class Groups(object):
 
 		Raises:
 			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
 			Deleting a graph from a group when group name is known:
@@ -526,6 +571,9 @@ class Groups(object):
 
 			>>> graphspace.delete_group_graph(graph_id=65390, group_id=198)
 			u'Successfully deleted graph with id=65390 from group with id=198'
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#deleting-a-graph-from-a-group-on-graphspace>`_ for more about deleting graph from a group.
 		"""
 		if group_id is not None:
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs/' + str(graph_id)

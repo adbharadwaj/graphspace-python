@@ -18,6 +18,10 @@ class GraphSpace(object):
 
 	Makes request to the GraphSpace REST APIs and returns the response.
 
+	Args:
+		username (str): Email of the user.
+		password (str): Password of the user.
+
 	Example:
 		Initialising a GraphSpace client can be done in the following way:
 

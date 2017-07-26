@@ -4,7 +4,9 @@ Start here to begin working with `graphspace-python`.
 
 Connecting to GraphSpace
 ------------------------
-You can connect to GraphSpace using your username and password. You can also set the api host using the **set_api_host** method if you are using a different server.
+You can connect to GraphSpace using your username and password. You can also set the api host using the
+`set_api_host() <../reference/index.html#graphspace_python.api.client.GraphSpace.set_api_host>`_ method
+if you are using a different server.
 
 >>> from graphspace_python.api.client import GraphSpace
 >>> graphspace = GraphSpace('user1@example.com', 'user1')
@@ -24,7 +26,8 @@ Create an empty graph with no nodes and no edges.
 Nodes
 -----
 
-You can add one node at a time.
+You can add one node at a time using the `add_node()
+<../reference/index.html#graphspace_python.graphs.classes.gsgraph.GSGraph.add_node>`_ method.
 
 >>> # Adding a node 'a' with a given popup and label
 >>> G.add_node('a', popup='sample node popup text', label='A')
@@ -41,7 +44,8 @@ You can add one node at a time.
 Edges
 -----
 
-You can also add one edge at a time using the **add_edge** method.
+You can also add one edge at a time using the `add_edge()
+<../reference/index.html#graphspace_python.graphs.classes.gsgraph.GSGraph.add_edge>`_ method.
 
 >>> G.add_edge('a', 'b', directed=True, popup='sample edge popup')
 >>> G.add_edge_style('a', 'b', directed=True, edge_style='dotted')
@@ -60,7 +64,8 @@ You can add more meaningful information about the graph like name, description a
 
 Saving a graph on GraphSpace
 ----------------------------
-You can save your graph online using the **post_graph** method.
+You can save your graph online using the `post_graph()
+<../reference/index.html#graphspace_python.api.endpoint.graphs.Graphs.post_graph>`_ method.
 
 >>> graphspace.post_graph(G)
 
@@ -72,15 +77,22 @@ The saved graph will look like this on GraphSpace:
 Fetching a graph from GraphSpace
 --------------------------------
 
-You can retrieve your saved graph anytime from GraphSpace using the **get_graph** method.
+You can retrieve your saved graph anytime from GraphSpace using the `get_graph()
+<../reference/index.html#graphspace_python.api.endpoint.graphs.Graphs.get_graph>`_ method.
 
 >>> graph = graphspace.get_graph(name='My Sample Graph')
->>> # You can retrieve a graph by id as well - graphspace.get_graph(graph_id=29824)
+>>> graph.get_name()
+u'My Sample Graph'
+
+You can retrieve a graph by id as well.
+
+>>> graph = graphspace.get_graph(graph_id=29824)
 
 
 Updating a graph on GraphSpace
 ------------------------------
-You can also update your graph anytime using the **update_graph** method.
+You can also update your graph anytime using the `update_graph()
+<../reference/index.html#graphspace_python.api.endpoint.graphs.Graphs.update_graph>`_ method.
 
 >>> G = GSGraph()
 >>> G.add_node('a', popup='sample node popup text', label='A updated')
@@ -95,7 +107,10 @@ You can also update your graph anytime using the **update_graph** method.
 ... })
 >>> G.set_is_public(1)
 >>> graphspace.update_graph(graph=G, name='My Sample Graph')
->>> # You can update a graph by id as well - graphspace.update_graph(graph=G, graph_id=29824)
+
+You can update a graph by id as well.
+
+>>> graphspace.update_graph(graph=G, graph_id=29824)
 
 The updated graph will look like this on GraphSpace:
 
@@ -122,30 +137,45 @@ The updated graph in this case will look like this on GraphSpace:
 Making a graph public on GraphSpace
 -----------------------------------
 
-You can also make a graph public using the **make_graph_public** method.
+You can also make a graph public using the `make_graph_public()
+<../reference/index.html#graphspace_python.api.endpoint.graphs.Graphs.make_graph_public>`_ method.
 
 >>> graphspace.make_graph_public(name='My Sample Graph')
 >>> assert graphspace.get_graph(name='My Sample Graph').is_public == 1
+
+You can make a graph public by id as well.
+
+>>> graphspace.make_graph_public(graph_id=29824)
 
 
 Making a graph private on GraphSpace
 ------------------------------------
 
-You can also make a graph private using the **make_graph_private** method.
+You can also make a graph private using the `make_graph_private()
+<../reference/index.html#graphspace_python.api.endpoint.graphs.Graphs.make_graph_private>`_ method.
 
 >>> graphspace.make_graph_private(name='My Sample Graph')
 >>> assert graphspace.get_graph(name='My Sample Graph').is_public == 0
+
+You can make a graph private by id as well.
+
+>>> graphspace.make_graph_private(graph_id=29824)
 
 
 Deleting a graph on GraphSpace
 ------------------------------
 
-You can also delete your graph anytime using the **delete_graph** method.
+You can also delete your graph anytime using the `delete_graph()
+<../reference/index.html#graphspace_python.api.endpoint.graphs.Graphs.delete_graph>`_ method.
 
->>> print graphspace.delete_graph(name='My Sample Graph')
->>> # You can delete a graph by id as well - graphspace.delete_graph(graph_id=29824)
-Successfully deleted graph with id=29824
+>>> graphspace.delete_graph(name='My Sample Graph')
+u'Successfully deleted graph with id=29824'
 >>> assert graphspace.get_graph(name='My Sample Graph') is None
+
+You can delete a graph by id as well.
+
+>>> graphspace.delete_graph(graph_id=29824)
+u'Successfully deleted graph with id=29824'
 
 
 Creating a layout
@@ -160,7 +190,8 @@ Create an empty layout with no node positions and style properties.
 Node Positions
 --------------
 
-You can set position of one node at a time.
+You can set position of one node at a time using the `set_node_position()
+<../reference/index.html#graphspace_python.graphs.classes.gslayout.GSLayout.set_node_position>`_ method.
 
 >>> # Setting position of a node 'a' with y and x coordinates
 >>> L.set_node_position('a', y=38.5, x=67.3)
@@ -190,7 +221,8 @@ You can add more meaningful information about the layout like name, sharing stat
 
 Saving a layout on GraphSpace
 -----------------------------
-You can save your layout online using the **post_graph_layout** method.
+You can save your layout online using the `post_graph_layout()
+<../reference/index.html#graphspace_python.api.endpoint.layouts.Layouts.post_graph_layout>`_ method.
 
 >>> graphspace.post_graph_layout(graph_id=21722, layout=L)
 
@@ -202,15 +234,22 @@ The saved layout will look like this on GraphSpace:
 Fetching a layout from GraphSpace
 ---------------------------------
 
-You can retrieve your saved layout anytime from GraphSpace using the **get_graph_layout** method.
+You can retrieve your saved layout anytime from GraphSpace using the `get_graph_layout()
+<../reference/index.html#graphspace_python.api.endpoint.layouts.Layouts.get_graph_layout>`_ method.
 
 >>> layout = graphspace.get_graph_layout(graph_id=21722, name='My Sample Layout')
->>> # You can retrieve a layout by id as well - graphspace.get_graph_layout(graph_id=21722, layout_id=1068)
+>>> layout.get_name()
+u'My Sample Layout'
+
+You can retrieve a layout by id as well.
+
+>>> layout = graphspace.get_graph_layout(graph_id=21722, layout_id=1068)
 
 
 Updating a layout on GraphSpace
 -------------------------------
-You can also update your layout anytime using the **update_graph_layout** method.
+You can also update your layout anytime using the `update_graph_layout()
+<../reference/index.html#graphspace_python.api.endpoint.layouts.Layouts.update_graph_layout>`_ method.
 
 >>> L = GSLayout()
 >>> L.set_node_position('b', y=38.5, x=67.3)
@@ -220,7 +259,10 @@ You can also update your layout anytime using the **update_graph_layout** method
 >>> L.set_name('My Sample Layout')
 >>> L.set_is_shared(1)
 >>> graphspace.update_graph_layout(graph_id=21722, name='My Sample Layout', layout=L)
->>> # You can update a layout by id as well - graphspace.update_graph_layout(graph_id=21722, layout_id=1068, layout=L)
+
+You can update a layout by id as well.
+
+>>> graphspace.update_graph_layout(graph_id=21722, layout_id=1068, layout=L)
 
 The updated layout will look like this on GraphSpace:
 
@@ -247,22 +289,30 @@ The updated layout in this case will look like this on GraphSpace:
 Deleting a layout on GraphSpace
 -------------------------------
 
-You can also delete your layout anytime using the **delete_graph_layout** method.
+You can also delete your layout anytime using the `delete_graph_layout()
+<../reference/index.html#graphspace_python.api.endpoint.layouts.Layouts.delete_graph_layout>`_ method.
 
->>> print graphspace.delete_graph_layout(graph_id=21722, name='My Sample Layout')
->>> # You can delete a layout by id as well - graphspace.delete_graph_layout(graph_id=21722, layout_id=1068)
-Successfully deleted layout with id=1068
+>>> graphspace.delete_graph_layout(graph_id=21722, name='My Sample Layout')
+u'Successfully deleted layout with id=1068'
+>>> assert graphspace.get_graph_layout(graph_id=21722, name='My Sample Layout') is None
+
+You can delete a layout by id as well.
+
+>>> graphspace.delete_graph_layout(graph_id=21722, layout_id=1068)
+u'Successfully deleted layout with id=1068'
 
 
 Creating a group
 ----------------
 
-You can a create a group using the **GSGroup** class.
+Create a group providing the name and description.
 
 >>> from graphspace_python.graphs.classes.gsgroup import GSGroup
 >>> group = GSGroup(name='My first group', description='sample group')
 
-You can also set name and description of the group using the **set_name** and **set_description** methods.
+You can also set name and description of the group using the `set_name()
+<../reference/index.html#graphspace_python.graphs.classes.gsgroup.GSGroup.set_name>`_ and `set_description()
+<../reference/index.html#graphspace_python.graphs.classes.gsgroup.GSGroup.set_description>`_ methods.
 
 >>> group = GSGroup()
 >>> group.set_name('My first group')
@@ -271,7 +321,8 @@ You can also set name and description of the group using the **set_name** and **
 
 Saving a group on GraphSpace
 ----------------------------
-You can save your group online using the **post_group** method.
+You can save your group online using the `post_group()
+<../reference/index.html#graphspace_python.api.endpoint.groups.Groups.post_group>`_ method.
 
 >>> graphspace.post_group(group)
 
@@ -283,19 +334,29 @@ You can also view your saved group on GraphSpace.
 Fetching a group from GraphSpace
 --------------------------------
 
-You can retrieve your saved group anytime from GraphSpace using the **get_group** method.
+You can retrieve your saved group anytime from GraphSpace using the `get_group()
+<../reference/index.html#graphspace_python.api.endpoint.groups.Groups.get_group>`_ method.
 
 >>> group = graphspace.get_group(name='My first group')
->>> # You can retrieve a group by id as well - graphspace.get_group(group_id=318)
+>>> group.get_name()
+u'My first group'
+
+You can retrieve a group by id as well.
+
+>>> group = graphspace.get_group(group_id=318)
 
 
 Updating a group on GraphSpace
 ------------------------------
-You can also update your group anytime using the **update_group** method.
+You can also update your group anytime using the `update_group()
+<../reference/index.html#graphspace_python.api.endpoint.groups.Groups.update_group>`_ method.
 
 >>> group = GSGroup(name='My first group', description='updated description')
 >>> graphspace.update_group(group, name='My first group')
->>> # You can update a group by id as well - graphspace.update_group(group, group_id=318)
+
+You can update a group by id as well.
+
+>>> graphspace.update_group(group, group_id=318)
 
 Here is another example.
 
@@ -310,19 +371,30 @@ You can also view your updated group on GraphSpace.
 
 Fetching members of a group from GraphSpace
 -------------------------------------------
-You can retrieve the members of your group anytime using the **get_group_members** method.
+You can retrieve the members of your group anytime using the `get_group_members()
+<../reference/index.html#graphspace_python.api.endpoint.groups.Groups.get_group_members>`_ method.
 
 >>> members = graphspace.get_group_members(name='My first group')
->>> # You can retrieve group members by group_id as well - graphspace.get_group_members(group_id=318)
+>>> members[0].email
+u'user1@example.com'
+
+You can retrieve group members by group_id as well.
+
+>>> members = graphspace.get_group_members(group_id=318)
 
 
 Adding a member to a group on GraphSpace
 ----------------------------------------
-You can add a member to your group anytime using the **add_group_member** method.
+You can add a member to your group anytime using the `add_group_member()
+<../reference/index.html#graphspace_python.api.endpoint.groups.Groups.add_group_member>`_ method.
 
 >>> response = graphspace.add_group_member(member_email='user3@example.com', name='My first group')
->>> # You can add a group member by group_id as well - graphspace.add_group_member(member_email='user3@example.com', group_id=318)
->>> member_id = response['user_id']
+>>> response['user_id']
+2
+
+You can add a group member by group_id as well.
+
+>>> response =  graphspace.add_group_member(member_email='user3@example.com', group_id=318)
 
 You can also view the added member on GraphSpace.
 
@@ -331,11 +403,16 @@ You can also view the added member on GraphSpace.
 
 Deleting a member from a group on GraphSpace
 --------------------------------------------
-You can delete a member from your group anytime using the **delete_group_member** method.
+You can delete a member from your group anytime using the `delete_group_member()
+<../reference/index.html#graphspace_python.api.endpoint.groups.Groups.delete_group_member>`_ method.
 
->>> print graphspace.delete_group_member(member_id=47, name='My first group')
->>> # You can delete a group member by group_id as well - graphspace.delete_group_member(member_id=47, group_id=318)
-Successfully deleted member with id=47 from group with id=318
+>>> graphspace.delete_group_member(member_id=2, name='My first group')
+u'Successfully deleted member with id=2 from group with id=318'
+
+You can delete a group member by group_id as well.
+
+>>> graphspace.delete_group_member(member_id=2, group_id=318)
+u'Successfully deleted member with id=2 from group with id=318'
 
 You can also view the change on GraphSpace.
 
@@ -344,18 +421,30 @@ You can also view the change on GraphSpace.
 
 Fetching graphs of a group from GraphSpace
 ------------------------------------------
-You can retrieve the graphs of your group anytime using the **get_group_graphs** method.
+You can retrieve the graphs of your group anytime using the `get_group_graphs()
+<../reference/index.html#graphspace_python.api.endpoint.groups.Groups.get_group_graphs>`_ method.
 
 >>> graphs = graphspace.get_group_graphs(name='My first group')
->>> # You can retrieve group graphs by group_id as well - graphspace.get_group_graphs(group_id=318)
+>>> graphs[0].get_name()
+u'My Sample Graph'
+
+You can retrieve graphs of a group by group_id as well.
+
+>>> graphs = graphspace.get_group_graphs(group_id=318)
 
 
 Adding a graph to a group on GraphSpace
 ----------------------------------------
-You can add a graph to your group anytime using the **add_group_graph** method.
+You can add a graph to your group anytime using the `add_group_graph()
+<../reference/index.html#graphspace_python.api.endpoint.groups.Groups.add_group_graph>`_ method.
 
->>> graphspace.add_group_graph(graph_id=34786, name='My first group')
->>> # You can add a group graph by group_id as well - graphspace.add_group_graph(graph_id=34786, group_id=318)
+>>> response = graphspace.add_group_graph(graph_id=34786, name='My first group')
+>>> response['graph_id']
+34786
+
+You can add a graph to a group by group_id as well.
+
+>>> response = graphspace.add_group_graph(graph_id=34786, group_id=318)
 
 You can also view the added graph on GraphSpace.
 
@@ -364,11 +453,16 @@ You can also view the added graph on GraphSpace.
 
 Deleting a graph from a group on GraphSpace
 -------------------------------------------
-You can delete a graph from your group anytime using the **delete_group_graph** method.
+You can delete a graph from your group anytime using the `delete_group_graph()
+<../reference/index.html#graphspace_python.api.endpoint.groups.Groups.delete_group_graph>`_ method.
 
->>> print graphspace.delete_group_graph(graph_id=34786, name='My first group')
->>> # You can delete a group graph by group_id as well - graphspace.delete_group_graph(graph_id=34786, group_id=318)
-Successfully deleted graph with id=34786 from group with id=318
+>>> graphspace.delete_group_graph(graph_id=34786, name='My first group')
+u'Successfully deleted graph with id=34786 from group with id=318'
+
+You can delete a graph from a group by group_id as well.
+
+>>> graphspace.delete_group_graph(graph_id=34786, group_id=318)
+u'Successfully deleted graph with id=34786 from group with id=318'
 
 You can also view the change on GraphSpace.
 
@@ -378,11 +472,17 @@ You can also view the change on GraphSpace.
 Deleting a group on GraphSpace
 ------------------------------
 
-You can also delete your group anytime using the **delete_group** method.
+You can also delete your group anytime using the `delete_group()
+<../reference/index.html#graphspace_python.api.endpoint.groups.Groups.delete_group>`_ method.
 
->>> print graphspace.delete_group(name='My first group')
->>> # You can delete a group by id as well - graphspace.delete_group(group_id=318)
-Successfully deleted group with id=318
+>>> graphspace.delete_group(name='My first group')
+u'Successfully deleted group with id=318'
+>>> assert graphspace.get_group(name='My first group') is None
+
+You can delete a group by id as well.
+
+>>> graphspace.delete_group(group_id=318)
+u'Successfully deleted group with id=318'
 
 You can also view the change on GraphSpace.
 
@@ -397,13 +497,13 @@ Responses from the API are parsed into the respective object types.
 Graphs endpoint responses
 -------------------------
 
-When response has a single **Graph** object:
+When response is a single `Graph <../_modules/graphspace_python.api.obj.html#graphspace_python.api.obj.graph.Graph>`_ object:
 
 >>> graph = graphspace.get_graph('My Sample Graph')
 >>> graph.name
 u'My Sample Graph'
 
-When response has multiple **Graph** objects:
+When response is a list of `Graph <../_modules/graphspace_python.api.obj.html#graphspace_python.api.obj.graph.Graph>`_ objects:
 
 >>> graphs = graphspace.get_my_graphs()
 >>> graphs
@@ -414,13 +514,13 @@ u'My Sample Graph'
 Layouts endpoint responses
 --------------------------
 
-When response has a single **Layout** object:
+When response is a single `Layout <../_modules/graphspace_python.api.obj.html#graphspace_python.api.obj.layout.Layout>`_ object:
 
 >>> layout = graphspace.get_graph_layout(graph_id=21722, name='My Sample Layout')
 >>> layout.name
 u'My Sample Layout'
 
-When response has multiple **Layout** objects:
+When response is a list of `Layout <../_modules/graphspace_python.api.obj.html#graphspace_python.api.obj.layout.Layout>`_ objects:
 
 >>> layouts = graphspace.get_my_graph_layouts(graph_id=21722)
 >>> layouts
@@ -431,13 +531,13 @@ u'My Sample Layout'
 Groups endpoint responses
 -------------------------
 
-When response has a single **Group** object:
+When response is a single `Group <../_modules/graphspace_python.api.obj.html#graphspace_python.api.obj.group.Group>`_ object:
 
 >>> group = graphspace.get_group(name='My first group')
 >>> group.name
 u'My first group'
 
-When response has multiple **Group** objects:
+When response is a list of `Group <../_modules/graphspace_python.api.obj.html#graphspace_python.api.obj.group.Group>`_ objects:
 
 >>> groups = graphspace.get_my_groups()
 >>> groups
@@ -448,7 +548,7 @@ u'My first group'
 Groups member response
 ----------------------
 
-Group member response consists of an array of **Member** objects.
+Group member response is a list of `Member <../_modules/graphspace_python.api.obj.html#graphspace_python.api.obj.member.Member>`_ objects.
 
 >>> members = graphspace.get_group_members(name='My first group')
 >>> members

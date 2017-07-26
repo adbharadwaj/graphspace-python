@@ -1,7 +1,7 @@
 Overview
 ========
 
-**graphspace_python** is a Python client library for the GraphSpace REST API. It simplifies the process of authentication, request construction, and response parsing for Python developers using the GraphSpace API. This client library is built and tested on Python 2.7.
+**graphspace_python** is a Python client library for the `GraphSpace <http://www.graphspace.org/>`_ REST API. It simplifies the process of authentication, request construction, and response parsing for Python developers using the GraphSpace API. This client library is built and tested on Python 2.7.
 
 Why use graphspace_python?
 --------------------------
@@ -20,5 +20,3 @@ Install graphspace_python from PyPI using:
 ::
 
    pip install graphspace_python
-
-

@@ -5,18 +5,10 @@ Overview
 
 Why use graphspace_python?
 --------------------------
+
 **graphspace_python**  allows a user to rapidly construct a network, add nodes and edges, modify their visual styles, and then upload the network, all within tens of lines of code. Moreover, the user need not know the details of the REST API to use this module. It is very easy to integrate this library into a user’s software pipeline.
 
 Who uses graphspace_python?
 ---------------------------
 
 The potential audience for **graphspace_python** includes  biologists, computer scientists and data scientists.
-
-Installation
-------------
-
-Install graphspace_python from PyPI using:
-
-::
-
-   pip install graphspace_python

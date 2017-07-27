@@ -350,11 +350,11 @@ class Graphs(object):
 			).graph
 
 		if name is not None:
-			graph = self.get_graph(name=name, owner_email=owner_email)
-			if graph is None or graph.id is None:
+			graph1 = self.get_graph(name=name, owner_email=owner_email)
+			if graph1 is None or graph1.id is None:
 				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				graph_by_id_path = GRAPHS_PATH + str(graph.id)
+				graph_by_id_path = GRAPHS_PATH + str(graph1.id)
 				return APIResponse('graph',
 					self.client._make_request("PUT", graph_by_id_path, data=graph.json())
 				).graph

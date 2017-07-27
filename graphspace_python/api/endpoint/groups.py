@@ -160,11 +160,11 @@ class Groups(object):
 			).group
 
 		if name is not None:
-			group = self.get_group(name=name)
-			if group is None or group.id is None:
+			group1 = self.get_group(name=name)
+			if group1 is None or group1.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
-				group_by_id_path = GROUPS_PATH + str(group.id)
+				group_by_id_path = GROUPS_PATH + str(group1.id)
 				return APIResponse('group',
 					self.client._make_request("PUT", group_by_id_path, data=group.json(), headers=headers)
 				).group

@@ -104,11 +104,11 @@ class Layouts(object):
 			).layout
 
 		if name is not None:
-			layout = self.get_graph_layout(graph_id=graph_id, name=name, owner_email=owner_email)
-			if layout is None or layout.id is None:
+			layout1 = self.get_graph_layout(graph_id=graph_id, name=name, owner_email=owner_email)
+			if layout1 is None or layout1.id is None:
 				raise Exception('Layout with name `%s` of graph with graph_id=%s doesnt exist for user `%s`!' % (name, graph_id, self.client.username))
 			else:
-				layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout.id)
+				layout_by_id_path = LAYOUTS_PATH.format(graph_id) + str(layout1.id)
 				return APIResponse('layout',
 					self.client._make_request("PUT", layout_by_id_path, data=layout.json())
 				).layout

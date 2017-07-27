@@ -500,7 +500,7 @@ u'My first group'
 
 You can also view your saved group on GraphSpace.
 
-.. image:: images/post_group.gif
+.. image:: images/post_group.png
 
 
 Fetching a group from GraphSpace
@@ -546,7 +546,7 @@ u'updated description'
 
 You can also view your updated group on GraphSpace.
 
-.. image:: images/update_group.gif
+.. image:: images/update_group.png
 
 
 Fetching members of a group from GraphSpace
@@ -578,7 +578,7 @@ You can add a group member by group_id as well.
 
 You can also view the added member on GraphSpace.
 
-.. image:: images/add_group_member.gif
+.. image:: images/add_group_member.png
 
 
 Deleting a member from a group on GraphSpace
@@ -624,7 +624,7 @@ You can add a graph to a group by group_id as well.
 
 You can also view the added graph on GraphSpace.
 
-.. image:: images/add_group_graph.gif
+.. image:: images/add_group_graph.png
 
 
 Deleting a graph from a group on GraphSpace

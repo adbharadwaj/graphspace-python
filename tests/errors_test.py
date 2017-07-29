@@ -14,7 +14,7 @@ def test_error_handling():
 def test_error_handler_raises_error_from_api_response():
     graphspace = GraphSpace('user1@example.com', 'user1')
     with pytest.raises(GraphSpaceError) as err:
-        graphspace.get_graph_by_id(3242312)
+        graphspace.get_graph(graph_id=3242312)
 
 def test_error_handler_raises_correct_graphspace_error():
     error = mock.Mock()

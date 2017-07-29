@@ -21,17 +21,17 @@ def test_groups_endpoint(graph_id):
 	test_delete_group_member(member_id=member['user_id'], group_id=group.id)
 	test_member_doesnt_exist_error(member_id=member['user_id'], group_id=group.id)
 	test_get_group_graphs(name='MyTestGroup')
-	test_add_group_graph(graph_id=graph_id, name='MyTestGroup')
-	test_graph_already_exists_for_group_error(graph_id=graph_id, name='MyTestGroup')
-	test_delete_group_graph(graph_id=graph_id, name='MyTestGroup')
-	test_graph_doesnt_exist_for_group_error(graph_id=graph_id, name='MyTestGroup')
+	test_add_group_graph(graph_id=graph_id, group_id=group.id)
+	test_graph_already_exists_for_group_error(graph_id=graph_id, group_id=group.id)
+	test_delete_group_graph(graph_id=graph_id, group_id=group.id)
+	test_graph_doesnt_exist_for_group_error(graph_id=graph_id, group_id=group.id)
 	test_delete_group(name='MyTestGroup')
 	test_user_not_authorised_error(group_id=group.id)
 
 
 def test_group_already_exists_error(name):
 	with pytest.raises(errors.BadRequest) as err:
-		test_post_graph(name=name)
+		test_post_group(name=name)
 
 
 def test_user_already_exists_error(member_email, group_id):
@@ -42,7 +42,7 @@ def test_user_already_exists_error(member_email, group_id):
 def test_user_doesnt_exist_error(member_email, group_id):
 	with pytest.raises(errors.BadRequest) as err:
 		test_add_group_member(member_email=member_email, group_id=group_id)
-        assert err.error_message == "User does not exit."
+        assert str(err.value) == "User does not exit."
 
 
 def test_member_doesnt_exist_error(member_id, group_id):

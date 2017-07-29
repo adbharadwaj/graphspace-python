@@ -210,7 +210,7 @@ class Groups(object):
 
 		if name is not None:
 			group = self.get_group(name=name)
-			if group is None or rgroup.id is None:
+			if group is None or group.id is None:
 				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
 			else:
 				group_by_id_path = GROUPS_PATH + str(group.id)

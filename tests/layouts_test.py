@@ -102,4 +102,4 @@ def test_delete_graph_layout(graph_id, name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graphspace.set_api_host('localhost:8000')
 	graphspace.delete_graph_layout(graph_id=graph_id, name=name)
-	assert graphspace.get_graph(graph_id=graph_id, name=name) is None
+	assert graphspace.get_graph_layout(graph_id=graph_id, name=name) is None

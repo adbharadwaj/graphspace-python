@@ -143,7 +143,7 @@ def test_get_public_graphs():
 	graphspace.set_api_host('localhost:8000')
 	graphs = graphspace.get_public_graphs(tags=['Kegg-networks'])
 	assert all(isinstance(x, Graph) for x in graphs)
-	assert len(graphs) > 0
+	assert len(graphs) >= 0
 
 
 def test_get_shared_graphs():
@@ -152,7 +152,7 @@ def test_get_shared_graphs():
 	# response = graphspace.get_public_graphs(tags=['2015-bioinformatics-xtalk', 'kegg-curated-top-rank-FPs'])
 	graphs = graphspace.get_shared_graphs()
 	assert all(isinstance(x, Graph) for x in graphs)
-	assert len(graphs) > 0
+	assert len(graphs) >= 0
 
 
 def test_get_my_graphs():

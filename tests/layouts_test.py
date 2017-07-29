@@ -19,7 +19,6 @@ def test_layouts_endpoint(graph_id):
 
 def test_user_not_authorised_error(graph_id, layout_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	with pytest.raises(errors.UserNotAuthorised) as err:
 		graphspace.get_graph_layout(graph_id, layout_id=layout_id)
 
@@ -31,7 +30,6 @@ def test_layout_name_already_exists_error(graph_id, name):
 
 def test_get_my_graph_layouts(graph_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	layouts = graphspace.get_my_graph_layouts(graph_id=graph_id)
 	assert all(isinstance(x, Layout) for x in layouts)
 	assert len(layouts) >= 0
@@ -39,7 +37,6 @@ def test_get_my_graph_layouts(graph_id):
 
 def test_get_shared_graph_layouts(graph_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	layouts = graphspace.get_shared_graph_layouts(graph_id=graph_id)
 	assert all(isinstance(x, Layout) for x in layouts)
 	assert len(layouts) >= 0
@@ -47,7 +44,6 @@ def test_get_shared_graph_layouts(graph_id):
 
 def test_post_graph_layout(graph_id, name=None):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	layout1 = GSLayout()
 	if name is not None:
 		layout1.set_name(name)
@@ -63,7 +59,6 @@ def test_post_graph_layout(graph_id, name=None):
 
 def test_get_graph_layout(graph_id, name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	layout = graphspace.get_graph_layout(graph_id=graph_id, name=name)
 	assert type(layout) is Layout
 	assert layout.get_name() == name
@@ -71,7 +66,6 @@ def test_get_graph_layout(graph_id, name):
 
 def test_update_graph_layout(graph_id, layout_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	layout = graphspace.get_graph_layout(graph_id=graph_id, layout_id=layout_id)
 	layout.set_node_position('z',74,37)
 	layout.set_is_shared()
@@ -84,7 +78,6 @@ def test_update_graph_layout(graph_id, layout_id):
 
 def test_update_graph_layout2(graph_id, name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	L = GSLayout()
 	L.set_node_position('b', y=38.5, x=67.3)
 	L.set_node_position('a', y=102, x=238.1)
@@ -100,6 +93,5 @@ def test_update_graph_layout2(graph_id, name):
 
 def test_delete_graph_layout(graph_id, name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	graphspace.delete_graph_layout(graph_id=graph_id, name=name)
 	assert graphspace.get_graph_layout(graph_id=graph_id, name=name) is None

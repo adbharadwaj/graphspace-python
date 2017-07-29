@@ -62,14 +62,12 @@ def test_graph_doesnt_exist_for_group_error(graph_id, group_id):
 
 def test_user_not_authorised_error(group_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	with pytest.raises(errors.UserNotAuthorised) as err:
 		graphspace.get_group(group_id=group_id)
 
 
 def test_update_group(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	group = graphspace.get_group(name=name)
 	group.set_description('A sample group for testing purpose')
 	group1 = graphspace.update_group(group, name=name)
@@ -79,14 +77,12 @@ def test_update_group(name):
 
 def test_delete_group(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	graphspace.delete_group(name=name)
 	assert graphspace.get_group(name=name) is None
 
 
 def test_post_group(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	group = GSGroup(name, 'Sample group')
 	group1 = graphspace.post_group(group)
 	assert type(group1) is Group
@@ -96,7 +92,6 @@ def test_post_group(name):
 
 def test_get_group(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	group = graphspace.get_group(name=name)
 	assert type(group) is Group
 	assert group.get_name() == name
@@ -104,7 +99,6 @@ def test_get_group(name):
 
 def test_get_my_groups():
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	groups = graphspace.get_my_groups()
 	assert all(isinstance(x, Group) for x in groups)
 	assert len(groups) > 0
@@ -112,7 +106,6 @@ def test_get_my_groups():
 
 def test_get_all_groups():
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	groups = graphspace.get_all_groups()
 	assert all(isinstance(x, Group) for x in groups)
 	assert len(groups) > 0
@@ -120,7 +113,6 @@ def test_get_all_groups():
 
 def test_get_group_members(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	members = graphspace.get_group_members(name=name)
 	assert all(isinstance(x, Member) for x in members)
 	assert len(members) > 0
@@ -128,7 +120,6 @@ def test_get_group_members(name):
 
 def test_add_group_member(member_email, group_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	response = graphspace.add_group_member(member_email, group_id=group_id)
 	assert 'user_id' in response
 	assert 'group_id' in response and response['group_id'] == str(group_id)
@@ -137,14 +128,12 @@ def test_add_group_member(member_email, group_id):
 
 def test_delete_group_member(member_id, group_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	response = graphspace.delete_group_member(member_id, group_id=group_id)
 	assert response == "Successfully deleted member with id=%s from group with id=%s" % (member_id, group_id)
 
 
 def test_get_group_graphs(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	graphs = graphspace.get_group_graphs(name=name)
 	assert all(isinstance(x, Graph) for x in graphs)
 	assert len(graphs) >= 0
@@ -152,7 +141,6 @@ def test_get_group_graphs(name):
 
 def test_add_group_graph(graph_id, group_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	response = graphspace.add_group_graph(graph_id, group_id=group_id)
 	assert 'graph_id' in response and response['graph_id'] == graph_id
 	assert 'group_id' in response and response['group_id'] == str(group_id)
@@ -160,6 +148,5 @@ def test_add_group_graph(graph_id, group_id):
 
 def test_delete_group_graph(graph_id, group_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	response = graphspace.delete_group_graph(graph_id, group_id=group_id)
 	assert response == "Successfully deleted graph with id=%s from group with id=%s" % (graph_id, group_id)

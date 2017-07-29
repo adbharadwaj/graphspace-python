@@ -33,28 +33,24 @@ def test_graph_already_exists_error(name):
 
 def test_user_not_authorised_error(graph_id):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	with pytest.raises(errors.UserNotAuthorised) as err:
 		graphspace.get_graph(graph_id=graph_id)
 
 
 def test_user_not_authenticated_error():
 	graphspace = GraphSpace('user1@example.com', 'WrongPassword')
-	graphspace.set_api_host('localhost:8000')
 	with pytest.raises(errors.UserNotAuthenticated) as err:
 		graphspace.get_my_graphs()
 
 
 def test_make_graph_public(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	graph = graphspace.make_graph_public(name=name)
 	assert type(graph) is Graph and graph.is_public == 1
 
 
 def test_update_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 
 	graph1 = GSGraph()
 	if name is not None:
@@ -77,7 +73,6 @@ def test_update_graph(name):
 
 def test_update_graph2(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	# Retrieving graph
 	graph = graphspace.get_graph(name=name)
 	# Modifying the retrieved graph
@@ -94,14 +89,12 @@ def test_update_graph2(name):
 
 def test_delete_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	graphspace.delete_graph(name=name)
 	assert graphspace.get_graph(name=name) is None
 
 
 def test_post_graph(name=None):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	graph1 = GSGraph()
 	if name is not None:
 		graph1.set_name(name)
@@ -124,7 +117,6 @@ def test_post_graph(name=None):
 
 def test_get_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	graph = graphspace.get_graph(name=name)
 	assert type(graph) is Graph
 	assert graph.get_name() == name
@@ -140,7 +132,6 @@ def test_get_graph_by_id():
 
 def test_get_public_graphs():
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	graphs = graphspace.get_public_graphs(tags=['Kegg-networks'])
 	assert all(isinstance(x, Graph) for x in graphs)
 	assert len(graphs) >= 0
@@ -148,7 +139,6 @@ def test_get_public_graphs():
 
 def test_get_shared_graphs():
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	# response = graphspace.get_public_graphs(tags=['2015-bioinformatics-xtalk', 'kegg-curated-top-rank-FPs'])
 	graphs = graphspace.get_shared_graphs()
 	assert all(isinstance(x, Graph) for x in graphs)
@@ -157,7 +147,6 @@ def test_get_shared_graphs():
 
 def test_get_my_graphs():
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.set_api_host('localhost:8000')
 	# response = graphspace.get_public_graphs(tags=['2015-bioinformatics-xtalk', 'kegg-curated-top-rank-FPs'])
 	graphs = graphspace.get_my_graphs()
 	assert all(isinstance(x, Graph) for x in graphs)

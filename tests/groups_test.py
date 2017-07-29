@@ -42,7 +42,7 @@ def test_user_already_exists_error(member_email, group_id):
 def test_user_doesnt_exist_error(member_email, group_id):
 	with pytest.raises(errors.BadRequest) as err:
 		test_add_group_member(member_email=member_email, group_id=group_id)
-        assert str(err.value) == "User does not exit."
+		assert err.error_message == "User does not exit."
 
 
 def test_member_doesnt_exist_error(member_id, group_id):

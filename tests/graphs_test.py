@@ -162,3 +162,6 @@ def test_get_my_graphs():
 	graphs = graphspace.get_my_graphs()
 	assert all(isinstance(x, Graph) for x in graphs)
 	assert len(graphs) > 0
+
+
+test_graphs_endpoint()

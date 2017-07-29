@@ -27,3 +27,5 @@ def test_error_handler_raises_correct_graphspace_error():
     }
     with pytest.raises(UserNotAuthenticated) as err:
         error_handler.raise_error(error, response)
+
+test_error_handling()

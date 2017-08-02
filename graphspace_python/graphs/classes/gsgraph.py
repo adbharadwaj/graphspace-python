@@ -134,8 +134,8 @@ class GSGraph(nx.DiGraph):
 		self.graph_json = {
 			'data': self.get_data(),
 			'elements': {
-				'nodes': [node[1] if 'data' in node[1] else {'id': node[0], 'name': node[0]} for node in self.nodes(data=True)],
-				'edges': [edge[2] if 'data' in edge[2] else {'source': edge[0], 'target': edge[1], 'is_directed': False} for edge in self.edges(data=True)],
+				'nodes': [node[1] if 'data' in node[1] else {'data': {'id': node[0], 'name': node[0]}} for node in self.nodes(data=True)],
+				'edges': [edge[2] if 'data' in edge[2] else {'data': {'source': edge[0], 'target': edge[1], 'is_directed': False}} for edge in self.edges(data=True)],
 			}
 		}
 		return self.graph_json

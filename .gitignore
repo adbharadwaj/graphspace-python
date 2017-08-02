@@ -12,3 +12,4 @@ venv-*
 .idea
 _build
 _templates
+venv

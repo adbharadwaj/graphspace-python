@@ -1,5 +1,5 @@
-graphspace_python.graphs package
-================================
+graphspace\_python\.graphs package
+==================================
 
 Subpackages
 -----------

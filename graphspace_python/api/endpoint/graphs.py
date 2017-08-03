@@ -273,6 +273,12 @@ class Graphs(object):
 			>>> graphspace.delete_graph(graph_id=65930)
 			u'Successfully deleted graph with id=65930'
 
+			Deleting a graph by passing graph object itself as param:
+
+			>>> graph = graphspace.get_graph(graph_name='My Sample Graph')
+			>>> graphspace.delete_graph(graph=graph)
+			u'Successfully deleted graph with id=65930'
+
 		Note:
 			Refer to the `tutorial <../tutorial/tutorial.html#deleting-a-graph-on-graphspace>`_ for more about deleting graphs.
 		"""
@@ -400,6 +406,11 @@ class Graphs(object):
 			>>> graph.get_is_public()
 			1
 
+			Make graph public by passing graph object itself as param:
+
+			>>> graph = graphspace.get_graph(graph_name='My Sample Graph')
+			>>> graphspace.make_graph_public(graph=graph)
+
 		Note:
 			Refer to the `tutorial <../tutorial/tutorial.html#making-a-graph-public-on-graphspace>`_ for more about making a graph public.
 		"""
@@ -458,6 +469,11 @@ class Graphs(object):
 			>>> graph = graphspace.make_graph_private(graph_id=65930)
 			>>> graph.get_is_public()
 			0
+
+			Make graph private by passing graph object itself as param:
+
+			>>> graph = graphspace.get_graph(graph_name='My Sample Graph')
+			>>> graphspace.make_graph_private(graph=graph)
 
 		Note:
 			Refer to the `tutorial <../tutorial/tutorial.html#making-a-graph-private-on-graphspace>`_ for more about making a graph private.

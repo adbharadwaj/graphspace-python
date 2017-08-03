@@ -37,7 +37,7 @@ class Graph(ResponseObject, GSGraph):
     ]
 
     def __init__(self, response):
-        """Construct a new 'Graph' object having the attributes specified in '_fields'
+        """Construct a new 'Graph' object having the attributes specified in '_fields'.
 
         Sets the graph data and also creates the nodes and edges for the GSGraph class.
 

@@ -218,6 +218,15 @@ class GSGraph(nx.DiGraph):
 			'tags': ['sample', 'tutorial']}}
 		"""
 		self.graph_json = graph_json
+		self.remove_nodes_from(self.nodes())
+		if 'data' in graph_json:
+			self.set_data(graph_json['data'])
+		nodes = graph_json['elements']['nodes']
+		for node in nodes:
+		    self.add_node(node['data']['id'], node)
+		edges = graph_json['elements']['edges']
+		for edge in edges:
+		    self.add_edge(edge['data']['source'], edge['data']['target'], edge)
 
 	def set_style_json(self, style_json):
 		"""Set the json representation for the graph style.
@@ -388,8 +397,13 @@ class GSGraph(nx.DiGraph):
 			target (str): Target node.
 			attr_dict (dict, optional): Json representation of edge data. Defaults to None.
 			directed (bool, optional): True if edge is directed, else False. Defaults to False.
-			popup (str, optional): Edge popup text. Defaults to None.
-			k (int, optional): k value of edge. Defaults to None.
+			popup (str, optional): A string that will be displayed in a popup window when
+				the user clicks the edge. This string can be HTML-formatted information,
+				e.g., Gene Ontology annotations and database links for a protein; or types,
+				mechanism, and database sources for an interaction.
+			k (int, optional): An integer-valued attribute for the edge, which denotes a
+				rank. Through this attribute, GraphSpace allows the user to filter nodes
+				and edges in a network visualization.
 			**attr: Arbitrary keyword arguments.
 
 		Example:
@@ -428,8 +442,13 @@ class GSGraph(nx.DiGraph):
 			node_name (str): Name of node.
 			attr_dict (dict, optional): Json representation of node data. Defaults to None.
 			label (str, optional): Label of node. Defaults to None.
-			popup (str, optional): Node popup text. Defaults to None.
-			k (int, optional): k value of node. Defaults to None.
+			popup (str, optional): A string that will be displayed in a popup window when
+				the user clicks the node. This string can be HTML-formatted information,
+				e.g., Gene Ontology annotations and database links for a protein; or types,
+				mechanism, and database sources for an interaction.
+			k (int, optional): An integer-valued attribute for the node, which denotes a
+				rank. Through this attribute, GraphSpace allows the user to filter nodes
+				and edges in a network visualization.
 			**attr: Arbitrary keyword arguments.
 
 		Example:
@@ -467,14 +486,14 @@ class GSGraph(nx.DiGraph):
 		Args:
 			node_name (str): Name of node.
 			attr_dict (dict, optional): Json representation of style of node. Defaults to None.
-			shape (str, optional): Shape of node. Defaults to 'ellipse'.
+			shape (str, optional): Shape of node. Defaults to 'ellipse'. See :data:`ALLOWED_NODE_SHAPES` for more details.
 			color (str, optional): Hexadecimal representation of the color (e.g., #FFFFFF) or color name. Defaults to white.
 			height (int, optional): Height of the node's body, or None to determine height from the number of lines in the label. Defaults to None.
 			width (int, optional): Width of the node's body, or None to determine width from length of label. Defaults to None.
 			bubble (str, optional): Color of the text outline. Using this option gives a "bubble" effect; see the bubbleeffect() function. Defaults to None.
-			valign (str, optional): Vertical alignment. Defaults to 'center'.
-			halign (str, optional): Horizontal alignment. Defaults to 'center'.
-			style (str, optional): Style of border. Defaults to 'solid'. If 'bubble' is specified, then style is overwritten.
+			valign (str, optional): Vertical alignment. Defaults to 'center'. See :data:`ALLOWED_TEXT_VALIGN` for more details.
+			halign (str, optional): Horizontal alignment. Defaults to 'center'. See :data:`ALLOWED_TEXT_HALIGN` for more details.
+			style (str, optional): Style of border. Defaults to 'solid'. If 'bubble' is specified, then style is overwritten. See :data:`ALLOWED_NODE_BORDER_STYLES` for more details.
 			border_color (str, optional): Color of border. Defaults to '#000000'. If 'bubble' is specified, then style is overwritten.
 			border_width (int, optional): Width of border. Defaults to 1. If 'bubble' is specified, then style is overwritten.
 
@@ -533,10 +552,10 @@ class GSGraph(nx.DiGraph):
 			attr_dict (dict, optional): Json representation of style of edge. Defaults to None.
 			color (str, optional): Hexadecimal representation of the color (e.g., #000000), or the color name. Defaults to black.
 			directed (bool, optional): If True, draw the edge as directed. Defaults to False.
-			width (float, optional): Width of the edge.  Defaults to 1.0.
-			arrow_shape (str, optional): Shape of arrow head. Defaults to 'triangle'.
-			edge_style (str, optional): Style of edge. Defaults to 'solid'.
-			arrow_fill (str, optional): Fill of arrow. Defaults to 'filled'.
+			width (float, optional): Width of the edge. Defaults to 1.0.
+			arrow_shape (str, optional): Shape of arrow head. Defaults to 'triangle'. See :data:`ALLOWED_ARROW_SHAPES` for more details.
+			edge_style (str, optional): Style of edge. Defaults to 'solid'. See :data:`ALLOWED_EDGE_STYLES` for more details.
+			arrow_fill (str, optional): Fill of arrow. Defaults to 'filled'. See :data:`ALLOWED_ARROW_FILL` for more details.
 
 		Examples:
 			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph

@@ -8,6 +8,7 @@ from graphspace_python.api import errors
 def test_layouts_endpoint(graph_id):
 	layout = test_post_graph_layout(graph_id=graph_id, name='MyTestLayout')
 	test_layout_name_already_exists_error(graph_id=graph_id, name='MyTestLayout')
+	test_set_default_graph_layout(layout)
 	test_get_graph_layout(graph_id=graph_id, name='MyTestLayout')
 	test_update_graph_layout(graph_id=graph_id, layout_id=layout.id)
 	test_update_graph_layout2(graph_id=graph_id, name='MyTestLayout')
@@ -26,6 +27,12 @@ def test_user_not_authorised_error(graph_id, layout_id):
 def test_layout_name_already_exists_error(graph_id, name):
 	with pytest.raises(errors.LayoutNameAlreadyExists) as err:
 		test_post_graph_layout(graph_id=graph_id, name=name)
+
+
+def test_set_default_graph_layout(layout):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graph = graphspace.set_default_graph_layout(layout=layout)
+	assert graph.default_layout_id == layout.id
 
 
 def test_get_my_graph_layouts(graph_id):

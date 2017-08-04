@@ -27,7 +27,7 @@ class Layouts(object):
 				'name' or 'id' attribute; or if graph doesnot exist.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
-		Example:
+		Examples:
 			Saving a layout when graph id is known:
 
 			>>> # Connecting to GraphSpace
@@ -371,7 +371,7 @@ class Layouts(object):
 				'name' or 'id' attribute; or if graph doesnot exist.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
-		Example:
+		Examples:
 			Getting your graph layouts by graph id:
 
 			>>> # Connecting to GraphSpace
@@ -436,7 +436,7 @@ class Layouts(object):
 				'name' or 'id' attribute; or if graph doesnot exist.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
-		Example:
+		Examples:
 			Getting shared graph layouts by graph id:
 
 			>>> # Connecting to GraphSpace

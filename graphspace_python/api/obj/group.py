@@ -17,6 +17,7 @@ class Group(ResponseObject, GSGroup):
         created_at (str): Timestamp of group creation.
         updated_at (str): Timestamp of group updation.
         url (str): URL of group on GraphSpace.
+        invite_link (str): Invite link for joining the group.
     """
 
     _fields = [
@@ -40,3 +41,4 @@ class Group(ResponseObject, GSGroup):
         GSGroup.__init__(self)
         ResponseObject.__init__(self, response)
         self.url = 'http://graphspace.org/groups/' + str(self.id)
+        self.invite_link = self.url + '/join/?code=' + self.invite_code

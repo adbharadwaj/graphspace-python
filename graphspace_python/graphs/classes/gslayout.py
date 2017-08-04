@@ -302,14 +302,14 @@ class GSLayout(object):
 		Args:
 			node_name (str): Name of node.
 			attr_dict (dict, optional): Json representation of style of node. Defaults to None.
-			shape (str, optional): Shape of node. Defaults to 'ellipse'.
+			shape (str, optional): Shape of node. Defaults to 'ellipse'. See :data:`ALLOWED_NODE_SHAPES` for more details.
 			color (str, optional): Hexadecimal representation of the color (e.g., #FFFFFF) or color name. Defaults to white.
 			height (int, optional): Height of the node's body, or None to determine height from the number of lines in the label. Defaults to None.
 			width (int, optional): Width of the node's body, or None to determine width from length of label. Defaults to None.
 			bubble (str, optional): Color of the text outline. Using this option gives a "bubble" effect; see the bubbleeffect() function. Defaults to None.
-			valign (str, optional): Vertical alignment. Defaults to 'center'.
-			halign (str, optional): Horizontal alignment. Defaults to 'center'.
-			style (str, optional): Style of border. Defaults to 'solid'. If 'bubble' is specified, then style is overwritten.
+			valign (str, optional): Vertical alignment. Defaults to 'center'. See :data:`ALLOWED_TEXT_VALIGN` for more details.
+			halign (str, optional): Horizontal alignment. Defaults to 'center'. See :data:`ALLOWED_TEXT_HALIGN` for more details.
+			style (str, optional): Style of border. Defaults to 'solid'. If 'bubble' is specified, then style is overwritten. See :data:`ALLOWED_NODE_BORDER_STYLES` for more details.
 			border_color (str, optional): Color of border. Defaults to '#000000'. If 'bubble' is specified, then style is overwritten.
 			border_width (int, optional): Width of border. Defaults to 1. If 'bubble' is specified, then style is overwritten.
 
@@ -366,10 +366,10 @@ class GSLayout(object):
 			attr_dict (dict, optional): Json representation of style of edge. Defaults to None.
 			color (str, optional): Hexadecimal representation of the color (e.g., #000000), or the color name. Defaults to black.
 			directed (bool, optional): If True, draw the edge as directed. Defaults to False.
-			width (float, optional): Width of the edge.  Defaults to 1.0.
-			arrow_shape (str, optional): Shape of arrow head. Defaults to 'triangle'.
-			edge_style (str, optional): Style of edge. Defaults to 'solid'.
-			arrow_fill (str, optional): Fill of arrow. Defaults to 'filled'.
+			width (float, optional): Width of the edge. Defaults to 1.0.
+			arrow_shape (str, optional): Shape of arrow head. Defaults to 'triangle'. See :data:`ALLOWED_ARROW_SHAPES` for more details.
+			edge_style (str, optional): Style of edge. Defaults to 'solid'. See :data:`ALLOWED_EDGE_STYLES` for more details.
+			arrow_fill (str, optional): Fill of arrow. Defaults to 'filled'. See :data:`ALLOWED_ARROW_FILL` for more details.
 
 		Examples:
 			>>> from graphspace_python.graphs.classes.gslayout import GSLayout

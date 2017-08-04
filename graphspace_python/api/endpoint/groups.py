@@ -48,18 +48,18 @@ class Groups(object):
 			self.client._make_request("POST", GROUPS_PATH, data=data, headers=headers)
 		).group
 
-	def get_group(self, name=None, group_id=None):
-		"""Get a group with the given name or group_id, where the requesting user is a member.
+	def get_group(self, group_name=None, group_id=None):
+		"""Get a group with the given group_name or group_id, where the requesting user is a member.
 
 		Args:
-			name (str, optional): Name of the group to be fetched. Defaults to None.
+			group_name (str, optional): Name of the group to be fetched. Defaults to None.
 			group_id (int, optional): ID of the group to be fetched. Defaults to None.
 
 		Returns:
-		 	Group or None: Group object, if group with the given 'name' or 'group_id' exists; otherwise None.
+		 	Group or None: Group object, if group with the given 'group_name' or 'group_id' exists; otherwise None.
 
 		Raises:
-			Exception: If both 'name' and 'group_id' are None.
+			Exception: If both 'group_name' and 'group_id' are None.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
@@ -69,7 +69,7 @@ class Groups(object):
 			>>> from graphspace_python.api.client import GraphSpace
 			>>> graphspace = GraphSpace('user1@example.com', 'user1')
 			>>> # Fetching a group
-			>>> group = graphspace.get_group(name='My Sample Group')
+			>>> group = graphspace.get_group(group_name='My Sample Group')
 			>>> group.get_name()
 			u'My Sample Group'
 
@@ -88,10 +88,10 @@ class Groups(object):
 				self.client._make_request("GET", group_by_id_path)
 			).group
 
-		if name is not None:
+		if group_name is not None:
 			response = self.client._make_request("GET", GROUPS_PATH, url_params={
 				'member_email': self.client.username,
-				'name': name
+				'name': group_name
 			})
 			if response.get('total', 0) > 0:
 				return APIResponse('group',
@@ -100,21 +100,23 @@ class Groups(object):
 			else:
 				return None
 
-		raise Exception('Both group_id and name can\'t be none!')
+		raise Exception('Both group_id and group_name can\'t be none!')
 
-	def update_group(self, group, name=None, group_id=None):
-		"""Update a group with the given name or group_id, where the requesting user is the owner.
+	def update_group(self, group, group_name=None, group_id=None):
+		"""Update a group on GraphSpace with the provided group object. If group_name or group_id
+		is also provided then the update will be performed for that group having the given name or id.
 
 		Args:
 			group (GSGroup or Group): Object having group details, such as name, description.
-			name (str, optional): Name of the group to be updated. Defaults to None.
+			group_name (str, optional): Name of the group to be updated. Defaults to None.
 			group_id (int, optional): ID of the group to be updated. Defaults to None.
 
 		Returns:
 		 	Group: Updated group on GraphSpace.
 
 		Raises:
-			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			Exception: If both 'group_name' and 'group_id' are None and group object has
+				no 'name' or 'id' attribute; or if group doesnot exist.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
@@ -124,24 +126,25 @@ class Groups(object):
 			>>> from graphspace_python.api.client import GraphSpace
 			>>> graphspace = GraphSpace('user1@example.com', 'user1')
 			>>> # Creating the new group
-			>>> group = GSGroup(name='My Sample Group (updated)', description='sample group')
+			>>> group = GSGroup(name='My Sample Group', description='updated sample group')
 			>>> # Updating to replace the existing group
-			>>> group = graphspace.update_group(group, name='My Sample Group')
-			>>> group.get_name()
-			u'My Sample Group (updated)'
+			>>> group = graphspace.update_group(group)
+			>>> group.get_description()
+			u'updated sample group'
 
 			Another way of updating a group by fetching and editing the existing group:
 
 			>>> # Fetching the group
-			>>> group = graphspace.get_group(name='My Sample Group')
+			>>> group = graphspace.get_group(group_name='My Sample Group')
 			>>> # Modifying the fetched group
 			>>> group.set_description('updated sample group')
 			>>> # Updating group
-			>>> group = graphspace.update_group(group, name='My Sample Group')
+			>>> group = graphspace.update_group(group)
 			>>> group.get_description()
 			u'updated sample group'
 
-			You can update a group by id as well:
+			If you also provide 'group_name' or 'group_id' as param then the update will
+			be performed for that group having the given name or id:
 
 			>>> graphspace.update_group(group, group_id=198)
 
@@ -153,36 +156,41 @@ class Groups(object):
 			'Content-Type': 'application/x-www-form-urlencoded'
 		}
 
-		if group_id is not None:
+		if group_id is not None or hasattr(group, 'id'):
+			group_id = group_id if group_id is not None else group.id
 			group_by_id_path = GROUPS_PATH + str(group_id)
 			return APIResponse('group',
 				self.client._make_request("PUT", group_by_id_path, data=group.json(), headers=headers)
 			).group
 
-		if name is not None:
-			group1 = self.get_group(name=name)
+		if group_name is not None or hasattr(group, 'name'):
+			group_name = group_name if group_name is not None else group.name
+			group1 = self.get_group(group_name=group_name)
 			if group1 is None or group1.id is None:
-				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (group_name, self.client.username))
 			else:
 				group_by_id_path = GROUPS_PATH + str(group1.id)
 				return APIResponse('group',
 					self.client._make_request("PUT", group_by_id_path, data=group.json(), headers=headers)
 				).group
 
-		raise Exception('Both group_id and name can\'t be none!')
+		raise Exception('Both group_id and group_name can\'t be none when group object has no \'name\' or \'id\' attribute!')
 
-	def delete_group(self, name=None, group_id=None):
-		"""Delete a group with the given name or group_id, where the requesting user is the owner.
+	def delete_group(self, group_name=None, group_id=None, group=None):
+		"""Delete a group from GraphSpace provided the group_name, group_id or the group
+		object itself, where the requesting user is the owner.
 
 		Args:
-			name (str, optional): Name of the group to be deleted. Defaults to None.
+			group_name (str, optional): Name of the group to be deleted. Defaults to None.
 			group_id (int, optional): ID of the group to be deleted. Defaults to None.
+			group (GSGroup or Group, optional): Object having group details, such as name, description. Defaults to None.
 
 		Returns:
 		 	str: Success/Error Message from GraphSpace.
 
 		Raises:
-			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			Exception: If both 'group_name' and 'group_id' are None and group object has no
+				'name' or 'id' attribute; or if group doesnot exist.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
@@ -192,7 +200,7 @@ class Groups(object):
 			>>> from graphspace_python.api.client import GraphSpace
 			>>> graphspace = GraphSpace('user1@example.com', 'user1')
 			>>> # Deleting a group
-			>>> graphspace.delete_group(name='My Sample Group')
+			>>> graphspace.delete_group(group_name='My Sample Group')
 			u'Successfully deleted group with id=198'
 
 			Deleting a group by id:
@@ -200,24 +208,36 @@ class Groups(object):
 			>>> graphspace.delete_group(group_id=198)
 			u'Successfully deleted group with id=198'
 
+			Deleting a group by passing group object itself as param:
+
+			>>> group = graphspace.get_group(group_name='My Sample Group')
+			>>> graphspace.delete_group(group=group)
+			u'Successfully deleted group with id=198'
+
 		Note:
 			Refer to the `tutorial <../tutorial/tutorial.html#deleting-a-group-on-graphspace>`_ for more about deleting groups.
 		"""
+		if group is not None:
+			if hasattr(group, 'id'):
+				group_id = group.id
+			elif hasattr(group, 'name'):
+				group_name = group.name
+
 		if group_id is not None:
 			group_by_id_path = GROUPS_PATH + str(group_id)
 			response = self.client._make_request("DELETE", group_by_id_path)
 			return response['message']
 
-		if name is not None:
-			group = self.get_group(name=name)
+		if group_name is not None:
+			group = self.get_group(group_name=group_name)
 			if group is None or group.id is None:
-				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (group_name, self.client.username))
 			else:
 				group_by_id_path = GROUPS_PATH + str(group.id)
 				response = self.client._make_request("DELETE", group_by_id_path)
 				return response['message']
 
-		raise Exception('Both group_id and name can\'t be none!')
+		raise Exception('Both group_id and group_name can\'t be none when group object has no \'name\' or \'id\' attribute!')
 
 	def get_my_groups(self, limit=20, offset=0):
 		"""Get groups created by the requesting user.
@@ -283,18 +303,20 @@ class Groups(object):
 			self.client._make_request("GET", GROUPS_PATH, url_params=query)
 		).groups
 
-	def get_group_members(self, name=None, group_id=None):
-		"""Get members of a group with given group_id or name.
+	def get_group_members(self, group_name=None, group_id=None, group=None):
+		"""Get members of a group provided the group_name, group_id or the group object itself.
 
 		Args:
-			name (str, optional): Name of the group. Defaults to None.
+			group_name (str, optional): Name of the group. Defaults to None.
 			group_id (int, optional): ID of the group. Defaults to None.
+			group (GSGroup or Group, optional): Object having group details, such as name, description. Defaults to None.
 
 		Returns:
 			List[Member]: List of members belonging to the group.
 
 		Raises:
-			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			Exception: If both 'group_name' and 'group_id' are None and group object has no
+				'name' or 'id' attribute; or if group doesnot exist.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
@@ -304,7 +326,7 @@ class Groups(object):
 			>>> from graphspace_python.api.client import GraphSpace
 			>>> graphspace = GraphSpace('user1@example.com', 'user1')
 			>>> # Fetching group members
-			>>> members = graphspace.get_group_members(name='My Sample Group')
+			>>> members = graphspace.get_group_members(group_name='My Sample Group')
 			>>> members[0].email
 			u'user1@example.com'
 
@@ -314,40 +336,55 @@ class Groups(object):
 			>>> members[0].email
 			u'user1@example.com'
 
+			Getting members of a group by passing group object itself as param:
+
+			>>> group = graphspace.get_group(group_name='My Sample Group')
+			>>> members = graphspace.get_group_members(group=group)
+			>>> members[0].email
+			u'user1@example.com'
+
 		Note:
 			Refer to the `tutorial <../tutorial/tutorial.html#fetching-members-of-a-group-from-graphspace>`_ for more about fetching group members.
 		"""
+		if group is not None:
+			if hasattr(group, 'id'):
+				group_id = group.id
+			elif hasattr(group, 'name'):
+				group_name = group.name
+
 		if group_id is not None:
 			group_members_path = GROUPS_PATH + str(group_id) + '/members'
 			return APIResponse('member',
 				self.client._make_request("GET", group_members_path)
 			).members
 
-		if name is not None:
-			group = self.get_group(name=name)
+		if group_name is not None:
+			group = self.get_group(group_name=group_name)
 			if group is None or group.id is None:
-				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (group_name, self.client.username))
 			else:
 				group_members_path = GROUPS_PATH + str(group.id) + '/members'
 				return APIResponse('member',
 					self.client._make_request("GET", group_members_path)
 				).members
 
-		raise Exception('Both group_id and name can\'t be none!')
+		raise Exception('Both group_id and group_name can\'t be none when group object has no \'name\' or \'id\' attribute!')
 
-	def add_group_member(self, member_email, name=None, group_id=None):
-		"""Add a member to a group with given group_id or name.
+	def add_group_member(self, member_email, group_name=None, group_id=None, group=None):
+		"""Add a member to a group provided the group_name, group_id or the group object itself.
 
 		Args:
 			member_email (str): Email of the member to be added to the group.
-			name (str, optional): Name of the group. Defaults to None.
+			group_name (str, optional): Name of the group. Defaults to None.
 			group_id (int, optional): ID of the group. Defaults to None.
+			group (GSGroup or Group, optional): Object having group details, such as name, description. Defaults to None.
 
 		Returns:
 			dict: Dict containing 'group_id' and 'user_id' of the added member.
 
 		Raises:
-			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			Exception: If both 'group_name' and 'group_id' are None and group object has no
+				'name' or 'id' attribute; or if group doesnot exist.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
@@ -357,12 +394,18 @@ class Groups(object):
 			>>> from graphspace_python.api.client import GraphSpace
 			>>> graphspace = GraphSpace('user1@example.com', 'user1')
 			>>> # Adding a member to group
-			>>> graphspace.add_group_member(member_email='user2@example.com', name='My Sample Group')
+			>>> graphspace.add_group_member(member_email='user2@example.com', group_name='My Sample Group')
 			{u'group_id': u'198', u'user_id': 2}
 
 			Adding a member to a group when group id is known:
 
 			>>> graphspace.add_group_member(member_email='user2@example.com', group_id=198)
+			{u'group_id': u'198', u'user_id': 2}
+
+			Adding a member to a group by passing group object itself as param:
+
+			>>> group = graphspace.get_group(group_name='My Sample Group')
+			>>> graphspace.add_group_member(member_email='user2@example.com', group=group)
 			{u'group_id': u'198', u'user_id': 2}
 
 		Note:
@@ -373,33 +416,44 @@ class Groups(object):
 			'Content-Type': 'application/x-www-form-urlencoded'
 		}
 
+		if group is not None:
+			if hasattr(group, 'id'):
+				group_id = group.id
+			elif hasattr(group, 'name'):
+				group_name = group.name
+
 		if group_id is not None:
 			group_members_path = GROUPS_PATH + str(group_id) + '/members'
 			return self.client._make_request("POST", group_members_path, data={'member_email': member_email}, headers=headers)
 
-		if name is not None:
-			group = self.get_group(name=name)
+		if group_name is not None:
+			group = self.get_group(group_name=group_name)
 			if group is None or group.id is None:
-				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (group_name, self.client.username))
 			else:
 				group_members_path = GROUPS_PATH + str(group.id) + '/members'
 				return self.client._make_request("POST", group_members_path, data={'member_email': member_email}, headers=headers)
 
-		raise Exception('Both group_id and name can\'t be none!')
+		raise Exception('Both group_id and group_name can\'t be none when group object has no \'name\' or \'id\' attribute!')
 
-	def delete_group_member(self, member_id, name=None, group_id=None):
-		"""Delete a member from a group with given group_id or name.
+	def delete_group_member(self, member_id=None, member=None, group_name=None, group_id=None, group=None):
+		"""Delete a member with given member_id or member object from a group provided
+		the group_name, group_id or the group object itself.
 
 		Args:
-			member_id (int): ID of the member to be deleted from the group.
-			name (str, optional): Name of the group. Defaults to None.
+			member_id (int, optional): ID of the member to be deleted from the group. Defaults to None.
+			member (Member, optional): Object having member details, such as id, email. Defaults to None.
+			group_name (str, optional): Name of the group. Defaults to None.
 			group_id (int, optional): ID of the group. Defaults to None.
+			group (GSGroup or Group, optional): Object having group details, such as name, description. Defaults to None.
 
 		Returns:
 		 	str: Success/Error Message from GraphSpace.
 
 		Raises:
-			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			Exception: If both 'group_name' and 'group_id' are None and group object has no
+				'name' or 'id' attribute; or if 'member_id' is None and member object has no
+				'id' attribute; or if group doesnot exist.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
@@ -409,7 +463,7 @@ class Groups(object):
 			>>> from graphspace_python.api.client import GraphSpace
 			>>> graphspace = GraphSpace('user1@example.com', 'user1')
 			>>> # Deleting a member from group
-			>>> graphspace.delete_group_member(member_id=2, name='My Sample Group')
+			>>> graphspace.delete_group_member(member_id=2, group_name='My Sample Group')
 			u'Successfully deleted member with id=2 from group with id=198'
 
 			Deleting a member from a group when group id is known:
@@ -417,37 +471,64 @@ class Groups(object):
 			>>> graphspace.delete_group_member(member_id=2, group_id=198)
 			u'Successfully deleted member with id=2 from group with id=198'
 
+			Deleting a member from a group by passing group object itself as param:
+
+			>>> group = graphspace.get_group(group_name='My Sample Group')
+			>>> graphspace.delete_group_member(member_id=2, group=group)
+			u'Successfully deleted member with id=2 from group with id=198'
+
+			Deleting a member from a group by passing member object as param:
+
+			>>> members = graphspace.get_group_members(group_name='My Sample Group')
+			>>> graphspace.delete_group_member(member=members[0], group_name='My Sample Group')
+			u'Successfully deleted member with id=2 from group with id=198'
+
 		Note:
 			Refer to the `tutorial <../tutorial/tutorial.html#deleting-a-member-from-a-group-on-graphspace>`_ for more about deleting group members.
 		"""
+		if group is not None:
+			if hasattr(group, 'id'):
+				group_id = group.id
+			elif hasattr(group, 'name'):
+				group_name = group.name
+
+		if member is not None:
+			if hasattr(member, 'id'):
+				member_id = member.id
+
+		if member_id is None:
+			raise Exception('member_id can\'t be none when member object has no \'id\' attribute!')
+
 		if group_id is not None:
 			group_members_path = GROUPS_PATH + str(group_id) + '/members/' + str(member_id)
 			response = self.client._make_request("DELETE", group_members_path)
 			return response['message']
 
-		if name is not None:
-			group = self.get_group(name=name)
+		if group_name is not None:
+			group = self.get_group(group_name=group_name)
 			if group is None or group.id is None:
-				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (group_name, self.client.username))
 			else:
 				group_members_path = GROUPS_PATH + str(group.id) + '/members/' + str(member_id)
 				response = self.client._make_request("DELETE", group_members_path)
 				return response['message']
 
-		raise Exception('Both group_id and name can\'t be none!')
+		raise Exception('Both group_id and group_name can\'t be none when group object has no \'name\' or \'id\' attribute!')
 
-	def get_group_graphs(self, name=None, group_id=None):
-		"""Get graphs of a group with given group_id or name.
+	def get_group_graphs(self, group_name=None, group_id=None, group=None):
+		"""Get graphs shared with a group provided the group_name, group_id or the group object itself.
 
 		Args:
-			name (str, optional): Name of the group. Defaults to None.
+			group_name (str, optional): Name of the group. Defaults to None.
 			group_id (int, optional): ID of the group. Defaults to None.
+			group (GSGroup or Group, optional): Object having group details, such as name, description. Defaults to None.
 
 		Returns:
 			List[Graph]: List of graphs belonging to the group.
 
 		Raises:
-			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			Exception: If both 'group_name' and 'group_id' are None and group object has no
+				'name' or 'id' attribute; or if group doesnot exist.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
@@ -457,7 +538,7 @@ class Groups(object):
 			>>> from graphspace_python.api.client import GraphSpace
 			>>> graphspace = GraphSpace('user1@example.com', 'user1')
 			>>> # Fetching group graphs
-			>>> graphs = graphspace.get_group_graphs(name='My Sample Group')
+			>>> graphs = graphspace.get_group_graphs(group_name='My Sample Group')
 			>>> graphs[0].get_name()
 			u'My Sample Graph'
 
@@ -467,56 +548,95 @@ class Groups(object):
 			>>> graphs[0].get_name()
 			u'My Sample Graph'
 
+			Getting graphs of a group by passing group object itself as param:
+
+			>>> group = graphspace.get_group(group_name='My Sample Group')
+			>>> graphs = graphspace.get_group_graphs(group=group)
+			>>> graphs[0].get_name()
+			u'My Sample Graph'
+
 		Note:
 			Refer to the `tutorial <../tutorial/tutorial.html#fetching-graphs-of-a-group-from-graphspace>`_ for more about fetching graphs of a group.
 		"""
+		if group is not None:
+			if hasattr(group, 'id'):
+				group_id = group.id
+			elif hasattr(group, 'name'):
+				group_name = group.name
+
 		if group_id is not None:
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs'
 			return APIResponse('graph',
 				self.client._make_request("GET", group_graphs_path)
 			).graphs
 
-		if name is not None:
-			group = self.get_group(name=name)
+		if group_name is not None:
+			group = self.get_group(group_name=group_name)
 			if group is None or group.id is None:
-				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (group_name, self.client.username))
 			else:
 				group_graphs_path = GROUPS_PATH + str(group.id) + '/graphs'
 				return APIResponse('graph',
 					self.client._make_request("GET", group_graphs_path)
 				).graphs
 
-		raise Exception('Both group_id and name can\'t be none!')
+		raise Exception('Both group_id and group_name can\'t be none when group object has no \'name\' or \'id\' attribute!')
 
-	def add_group_graph(self, graph_id, name=None, group_id=None):
-		"""Add a graph to a group with given group_id or name.
+	def share_graph(self, graph_name=None, graph_id=None, graph=None, group_name=None, group_id=None, group=None):
+		"""Share a graph with a group by providing any of graph_name, graph_id or graph object
+		 along with any of group_name, group_id or group object.
 
 		Args:
-			graph_id (int): ID of the graph to be added to the group.
-			name (str, optional): Name of the group. Defaults to None.
+			graph_name (str, optional): Name of the graph. Defaults to None.
+			graph_id (int, optional): ID of the graph. Defaults to None.
+			graph (GSGraph or Graph, optional): Object having graph details, such as name, graph_json, style_json, is_public, tags. Defaults to None.
+			group_name (str, optional): Name of the group. Defaults to None.
 			group_id (int, optional): ID of the group. Defaults to None.
+			group (GSGroup or Group, optional): Object having group details, such as name, description. Defaults to None.
 
 		Returns:
-			dict: Dict containing 'group_id', 'graph_id', 'created_at', 'updated_at' details of the added graph.
+			dict: Dict containing 'group_id', 'graph_id', 'created_at', 'updated_at' details of the shared graph.
 
 		Raises:
-			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			Exception: If both 'group_name' and 'group_id' are None and group object has no
+				'name' or 'id' attribute; or if both 'graph_name' and 'graph_id' are None and
+				graph object has no 'name' or 'id' attribute; or if the group or graph doesnot exist.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
-			Adding a graph to a group when group name is known:
+			Sharing a graph with a group when group name is known:
 
 			>>> # Connecting to GraphSpace
 			>>> from graphspace_python.api.client import GraphSpace
 			>>> graphspace = GraphSpace('user1@example.com', 'user1')
-			>>> # Adding a graph to group
-			>>> graphspace.add_group_graph(graph_id=65390, name='My Sample Group')
+			>>> # Sharing a graph with a group
+			>>> graphspace.share_graph(graph_id=65390, group_name='My Sample Group')
 			{u'created_at': u'2017-07-20T18:40:36.267052', u'group_id': u'198', u'graph_id':
 			65390, u'updated_at': u'2017-07-20T18:40:36.267052'}
 
-			Adding a graph to a group when group id is known:
+			Sharing a graph with a group when group id is known:
 
-			>>> graphspace.add_group_graph(graph_id=65390, group_id=198)
+			>>> graphspace.share_graph(graph_id=65390, group_id=198)
+			{u'created_at': u'2017-07-20T18:40:36.267052', u'group_id': u'198', u'graph_id':
+			65390, u'updated_at': u'2017-07-20T18:40:36.267052'}
+
+			Sharing a graph with a group by passing group object itself as param:
+
+			>>> group = graphspace.get_group(group_name='My Sample Group')
+			>>> graphspace.share_graph(graph_id=65390, group=group)
+			{u'created_at': u'2017-07-20T18:40:36.267052', u'group_id': u'198', u'graph_id':
+			65390, u'updated_at': u'2017-07-20T18:40:36.267052'}
+
+			Sharing a graph with a group by providing graph name:
+
+			>>> graphspace.share_graph(graph_name='My Sample Graph', group_id=198)
+			{u'created_at': u'2017-07-20T18:40:36.267052', u'group_id': u'198', u'graph_id':
+			65390, u'updated_at': u'2017-07-20T18:40:36.267052'}
+
+			Sharing a graph with a group by providing graph object:
+
+			>>> graph = graphspace.get_graph(graph_name='My Sample Graph')
+			>>> graphspace.share_graph(graph=graph, group_id=198)
 			{u'created_at': u'2017-07-20T18:40:36.267052', u'group_id': u'198', u'graph_id':
 			65390, u'updated_at': u'2017-07-20T18:40:36.267052'}
 
@@ -528,65 +648,132 @@ class Groups(object):
 			'Content-Type': 'application/x-www-form-urlencoded'
 		}
 
+		if group is not None:
+			if hasattr(group, 'id'):
+				group_id = group.id
+			elif hasattr(group, 'name'):
+				group_name = group.name
+
+		if graph is not None:
+			if hasattr(graph, 'id'):
+				graph_id = graph.id
+			elif hasattr(graph, 'name'):
+				graph_name = graph.name
+
+		if graph_id is None and graph_name is None:
+			raise Exception('Both graph_id and graph_name can\'t be none when graph object has no \'name\' or \'id\' attribute!')
+
+		if graph_id is None:
+			graph = self.get_graph(graph_name=graph_name)
+			if graph is None or graph.id is None:
+				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (graph_name, self.client.username))
+			else:
+				graph_id = graph.id
+
 		if group_id is not None:
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs'
 			return self.client._make_request("POST", group_graphs_path, data={'graph_id': graph_id}, headers=headers)
 
-		if name is not None:
-			group = self.get_group(name=name)
+		if group_name is not None:
+			group = self.get_group(group_name=group_name)
 			if group is None or group.id is None:
-				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (group_name, self.client.username))
 			else:
 				group_graphs_path = GROUPS_PATH + str(group.id) + '/graphs'
 				return self.client._make_request("POST", group_graphs_path, data={'graph_id': graph_id}, headers=headers)
 
-		raise Exception('Both group_id and name can\'t be none!')
+		raise Exception('Both group_id and group_name can\'t be none when group object has no \'name\' or \'id\' attribute!')
 
-	def delete_group_graph(self, graph_id, name=None, group_id=None):
-		"""Delete a graph from a group with given group_id or name.
+	def unshare_graph(self, graph_name=None, graph_id=None, graph=None, group_name=None, group_id=None, group=None):
+		"""Unshare a graph with a group by providing any of graph_name, graph_id or graph object
+		 along with any of group_name, group_id or group object.
 
 		Args:
-			graph_id (int): ID of the group to be deleted from the group.
-			name (str, optional): Name of the group. Defaults to None.
+			graph_name (str, optional): Name of the graph. Defaults to None.
+			graph_id (int, optional): ID of the graph. Defaults to None.
+			graph (GSGraph or Graph, optional): Object having graph details, such as name, graph_json, style_json, is_public, tags. Defaults to None.
+			group_name (str, optional): Name of the group. Defaults to None.
 			group_id (int, optional): ID of the group. Defaults to None.
+			group (GSGroup or Group, optional): Object having group details, such as name, description. Defaults to None.
 
 		Returns:
 		 	str: Success/Error Message from GraphSpace.
 
 		Raises:
-			Exception: If both 'name' and 'group_id' are None or if group doesnot exist.
+			Exception: If both 'group_name' and 'group_id' are None and group object has no
+				'name' or 'id' attribute; or if both 'graph_name' and 'graph_id' are None and
+				graph object has no 'name' or 'id' attribute; or if the group or graph doesnot exist.
 			GraphSpaceError: If error response is received from the GraphSpace API.
 
 		Examples:
-			Deleting a graph from a group when group name is known:
+			Unshare a graph with a group when group name is known:
 
 			>>> # Connecting to GraphSpace
 			>>> from graphspace_python.api.client import GraphSpace
 			>>> graphspace = GraphSpace('user1@example.com', 'user1')
-			>>> # Deleting a graph from group
-			>>> graphspace.delete_group_graph(graph_id=65390, name='My Sample Group')
+			>>> # Unsharing a graph with a group
+			>>> graphspace.unshare_graph(graph_id=65390, group_name='My Sample Group')
 			u'Successfully deleted graph with id=65390 from group with id=198'
 
-			Deleting a graph from a group when group id is known:
+			Unshare a graph with a group when group id is known:
 
-			>>> graphspace.delete_group_graph(graph_id=65390, group_id=198)
+			>>> graphspace.unshare_graph(graph_id=65390, group_id=198)
+			u'Successfully deleted graph with id=65390 from group with id=198'
+
+			Unshare a graph with a group by passing group object itself as param:
+
+			>>> group = graphspace.get_group(group_name='My Sample Group')
+			>>> graphspace.unshare_graph(graph_id=65390, group=group)
+			u'Successfully deleted graph with id=65390 from group with id=198'
+
+			Unshare a graph with a group by providing graph name:
+
+			>>> graphspace.unshare_graph(graph_name='My Sample Graph', group_id=198)
+			u'Successfully deleted graph with id=65390 from group with id=198'
+
+			Unshare a graph with a group by providing graph object:
+
+			>>> graph = graphspace.get_graph(graph_name='My Sample Graph')
+			>>> graphspace.unshare_graph(graph=graph, group_id=198)
 			u'Successfully deleted graph with id=65390 from group with id=198'
 
 		Note:
 			Refer to the `tutorial <../tutorial/tutorial.html#deleting-a-graph-from-a-group-on-graphspace>`_ for more about deleting graph from a group.
 		"""
+		if group is not None:
+			if hasattr(group, 'id'):
+				group_id = group.id
+			elif hasattr(group, 'name'):
+				group_name = group.name
+
+		if graph is not None:
+			if hasattr(graph, 'id'):
+				graph_id = graph.id
+			elif hasattr(graph, 'name'):
+				graph_name = graph.name
+
+		if graph_id is None and graph_name is None:
+			raise Exception('Both graph_id and graph_name can\'t be none when graph object has no \'name\' or \'id\' attribute!')
+
+		if graph_id is None:
+			graph = self.get_graph(graph_name=graph_name)
+			if graph is None or graph.id is None:
+				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (graph_name, self.client.username))
+			else:
+				graph_id = graph.id
+
 		if group_id is not None:
 			group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs/' + str(graph_id)
 			response = self.client._make_request("DELETE", group_graphs_path)
 			return response['message']
 
-		if name is not None:
-			group = self.get_group(name=name)
+		if group_name is not None:
+			group = self.get_group(group_name=group_name)
 			if group is None or group.id is None:
-				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (name, self.client.username))
+				raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (group_name, self.client.username))
 			else:
 				group_graphs_path = GROUPS_PATH + str(group.id) + '/graphs/' + str(graph_id)
 				response = self.client._make_request("DELETE", group_graphs_path)
 				return response['message']
 
-		raise Exception('Both group_id and name can\'t be none!')
+		raise Exception('Both group_id and group_name can\'t be none when group object has no \'name\' or \'id\' attribute!')

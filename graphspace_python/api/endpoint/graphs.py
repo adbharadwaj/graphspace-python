@@ -611,3 +611,62 @@ class Graphs(object):
 				return APIResponse('graph',
 					self.client._make_request("PUT", graph_by_id_path, data={'default_layout_id': layout_id})
 				).graph
+
+	def unset_default_graph_layout(self, graph_name=None, graph_id=None, graph=None):
+		"""Unsets the current default layout of a graph provided the graph_name, graph_id or graph object itself.
+
+		Args:
+			graph_name (str, optional): Name of the graph. Defaults to None.
+			graph_id (int, optional): ID of the graph. Defaults to None.
+			graph (GSGraph or Graph, optional): Object having graph details, such as name, graph_json, style_json, is_public, tags. Defaults to None.
+
+		Returns:
+		 	Graph: Updated graph on GraphSpace.
+
+		Raises:
+			Exception: If both 'graph_name' and 'graph_id' are None and graph object has no
+				'name' or 'id' attribute; or if graph doesnot exist.
+			GraphSpaceError: If error response is received from the GraphSpace API.
+
+		Examples:
+			Unset default graph layout by graph name:
+
+			>>> # Connecting to GraphSpace
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			>>> # Unset the default graph layout
+			>>> graph = graphspace.unset_default_graph_layout(graph_name='My Sample Graph')
+			>>> assert graph.default_layout_id is None
+
+			Unset default graph layout by graph id:
+
+			>>> graph = graphspace.unset_default_graph_layout(graph_id=65930)
+
+			Unset default graph layout by graph object:
+
+			>>> graph = graphspace.get_graph(graph_name='My Sample Graph')
+			>>> graph = graphspace.unset_default_graph_layout(graph=graph)
+		"""
+		if graph is not None:
+			if hasattr(graph, 'id'):
+				graph_id = graph.id
+			elif hasattr(graph, 'name'):
+				graph_name = graph.name
+
+		if graph_id is not None:
+			graph_by_id_path = GRAPHS_PATH + str(graph_id)
+			return APIResponse('graph',
+				self.client._make_request("PUT", graph_by_id_path, data={'default_layout_id': 0})
+			).graph
+
+		if graph_name is not None:
+			graph = self.get_graph(graph_name=graph_name)
+			if graph is None or graph.id is None:
+				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (graph_name, self.client.username))
+			else:
+				graph_by_id_path = GRAPHS_PATH + str(graph.id)
+				return APIResponse('graph',
+					self.client._make_request("PUT", graph_by_id_path, data={'default_layout_id': 0})
+				).graph
+
+		raise Exception('Both graph_id and graph_name can\'t be none when graph object has no \'name\' or \'id\' attribute!')

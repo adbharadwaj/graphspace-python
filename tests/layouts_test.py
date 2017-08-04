@@ -9,6 +9,7 @@ def test_layouts_endpoint(graph_id):
 	layout = test_post_graph_layout(graph_id=graph_id, name='MyTestLayout')
 	test_layout_name_already_exists_error(graph_id=graph_id, name='MyTestLayout')
 	test_set_default_graph_layout(layout)
+	test_unset_default_graph_layout(graph_id)
 	test_get_graph_layout(graph_id=graph_id, name='MyTestLayout')
 	test_update_graph_layout(graph_id=graph_id, layout_id=layout.id)
 	test_update_graph_layout2(graph_id=graph_id, name='MyTestLayout')
@@ -33,6 +34,12 @@ def test_set_default_graph_layout(layout):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	graph = graphspace.set_default_graph_layout(layout=layout)
 	assert graph.default_layout_id == layout.id
+
+
+def test_unset_default_graph_layout(graph_id):
+	graphspace = GraphSpace('user1@example.com', 'user1')
+	graph = graphspace.unset_default_graph_layout(graph_id=graph_id)
+	assert graph.default_layout_id is None
 
 
 def test_get_my_graph_layouts(graph_id):

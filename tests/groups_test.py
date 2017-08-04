@@ -52,12 +52,12 @@ def test_member_doesnt_exist_error(member_id, group_id):
 
 def test_graph_already_exists_for_group_error(graph_id, group_id):
 	with pytest.raises(errors.BadRequest) as err:
-		test_add_group_graph(graph_id=graph_id, group_id=group_id)
+		test_share_graph(graph_id=graph_id, group_id=group_id)
 
 
 def test_graph_doesnt_exist_for_group_error(graph_id, group_id):
 	with pytest.raises(errors.BadRequest) as err:
-		test_delete_group_graph(graph_id=graph_id, group_id=group_id)
+		test_unshare_graph(graph_id=graph_id, group_id=group_id)
 
 
 def test_user_not_authorised_error(group_id):

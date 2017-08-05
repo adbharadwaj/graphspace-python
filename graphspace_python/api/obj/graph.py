@@ -54,11 +54,13 @@ class Graph(ResponseObject, GSGraph):
         """Adds the nodes and edges of the fetched graph to the GSGraph class' nodes and edges.
 
         This will ensure that the nodes and edges of the fetched graph are not lost when
-        compute_graph_json() is called.
+        get_graph_json() is called.
         """
         nodes = self.graph_json['elements']['nodes']
         for node in nodes:
             self.add_node(node['data']['id'], node['data'])
+            if 'position' in node:
+                self.positions_json.update({node['data']['id']: node['position']})
         edges = self.graph_json['elements']['edges']
         for edge in edges:
             self.add_edge(edge['data']['source'], edge['data']['target'], edge['data'])

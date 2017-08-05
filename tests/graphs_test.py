@@ -14,7 +14,7 @@ def test_graphs_endpoint():
 	test_layouts_endpoint(graph.id)
 	test_groups_endpoint(graph.id)
 	test_get_graph(name='MyTestGraph')
-	test_make_graph_public(name='MyTestGraph')
+	test_publish_graph(name='MyTestGraph')
 	test_update_graph(name='MyTestGraph')
 	test_update_graph2(name='MyTestGraph')
 	test_get_public_graphs()
@@ -43,9 +43,9 @@ def test_user_not_authenticated_error():
 		graphspace.get_my_graphs()
 
 
-def test_make_graph_public(name):
+def test_publish_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graph = graphspace.make_graph_public(name=name)
+	graph = graphspace.publish_graph(graph_name=name)
 	assert type(graph) is Graph and graph.is_public == 1
 
 
@@ -64,7 +64,7 @@ def test_update_graph(name):
 		'description': 'my sample graph'
 	})
 
-	graph = graphspace.update_graph(graph=graph1, name=name)
+	graph = graphspace.update_graph(graph1)
 	assert type(graph) is Graph
 	assert graph.get_name() == graph1.get_name() and graph.is_public == 1
 	assert len(graph.graph_json['elements']['edges']) == 0
@@ -74,13 +74,13 @@ def test_update_graph(name):
 def test_update_graph2(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
 	# Retrieving graph
-	graph = graphspace.get_graph(name=name)
+	graph = graphspace.get_graph(graph_name=name)
 	# Modifying the retrieved graph
 	graph.set_name(name)
 	graph.add_node('z', popup='sample node popup text', label='Z')
 	graph.set_is_public()
 	# Updating graph
-	graph1 = graphspace.update_graph(graph=graph, name=name)
+	graph1 = graphspace.update_graph(graph)
 	assert type(graph1) is Graph
 	assert graph1.get_name() == graph.get_name()
 	assert 'z' in graph1.node
@@ -89,8 +89,8 @@ def test_update_graph2(name):
 
 def test_delete_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graphspace.delete_graph(name=name)
-	assert graphspace.get_graph(name=name) is None
+	graphspace.delete_graph(graph_name=name)
+	assert graphspace.get_graph(graph_name=name) is None
 
 
 def test_post_graph(name=None):
@@ -117,7 +117,7 @@ def test_post_graph(name=None):
 
 def test_get_graph(name):
 	graphspace = GraphSpace('user1@example.com', 'user1')
-	graph = graphspace.get_graph(name=name)
+	graph = graphspace.get_graph(graph_name=name)
 	assert type(graph) is Graph
 	assert graph.get_name() == name
 

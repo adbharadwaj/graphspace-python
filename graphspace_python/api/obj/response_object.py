@@ -15,9 +15,10 @@ class ResponseObject(object):
         Args:
             response (dict): Response dict received from API call.
         """
-        for field in self._fields:
-            value = response[field] if field in response else None
-            self.__setattr__(field, value)
+        if response is not None:
+            for field in self._fields:
+                value = response[field] if field in response else None
+                self.__setattr__(field, value)
 
     def _parse(self, field_name, cls_name, response):
         """Parses the response from API call and produces the desired object.

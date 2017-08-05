@@ -70,6 +70,7 @@ class GSGraph(nx.DiGraph):
 		self.set_name('Graph ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
 		self.tags = []
 		self.data = {}
+		self.positions_json = {}
 		self.graph_json = self.get_graph_json()
 		self.style_json = {'style': []}
 		self.is_public = 0
@@ -141,17 +142,19 @@ class GSGraph(nx.DiGraph):
 		}
 
 		for node in self.nodes(data=True):
-			node_attr = node[1]
-			node_attr.update({'id': node[1].get('id', node[0])})
-			node_attr.update({'name': node[1].get('name', node[0])})
-			self.graph_json['elements']['nodes'].append({'data': node_attr})
+			node_attr = {'data': node[1]}
+			if node[0] in self.positions_json:
+				node_attr.update({'position': self.positions_json[node[0]]})
+			node_attr['data'].update({'id': node[1].get('id', node[0])})
+			node_attr['data'].update({'name': node[1].get('name', node[0])})
+			self.graph_json['elements']['nodes'].append(node_attr)
 
 		for edge in self.edges(data=True):
-			edge_attr = edge[2]
-			edge_attr.update({'source': edge[2].get('source', edge[0])})
-			edge_attr.update({'target': edge[2].get('target', edge[1])})
-			edge_attr.update({'is_directed': edge[2].get('is_directed', False)})
-			self.graph_json['elements']['edges'].append({'data': edge_attr})
+			edge_attr = {'data': edge[2]}
+			edge_attr['data'].update({'source': edge[2].get('source', edge[0])})
+			edge_attr['data'].update({'target': edge[2].get('target', edge[1])})
+			edge_attr['data'].update({'is_directed': edge[2].get('is_directed', False)})
+			self.graph_json['elements']['edges'].append(edge_attr)
 
 		return self.graph_json
 
@@ -239,6 +242,8 @@ class GSGraph(nx.DiGraph):
 		nodes = graph_json['elements']['nodes']
 		for node in nodes:
 			self.add_node(node['data']['id'], node['data'])
+			if 'position' in node:
+				self.positions_json.update({node['data']['id']: node['position']})
 		edges = graph_json['elements']['edges']
 		for edge in edges:
 			self.add_edge(edge['data']['source'], edge['data']['target'], edge['data'])
@@ -617,6 +622,46 @@ class GSGraph(nx.DiGraph):
 			}]
 		})
 
+	def get_node_position(self, node_name):
+		"""Get the position of a node.
+
+		Args:
+			node_name (str): Name of the node.
+
+		Returns:
+		 	dict or None: Dict of x,y co-ordinates of the node, if node position is defined; otherwise None.
+
+		"""
+		return self.positions_json.get(node_name, None)
+
+	def set_node_position(self, node_name, y, x):
+		"""Sets the position of a node.
+
+		Args:
+			node_name (str): Name of the node.
+			y (float): y co-ordinate of node.
+			x (float): x co-ordinate of node.
+		"""
+		self.positions_json.update({
+			node_name: {
+				'y': y,
+				'x': x
+			}
+		})
+
+	def remove_node_position(self, node_name):
+		"""Remove the position of a node.
+
+		Args:
+			node_name (str): Name of the node.
+
+		Raises:
+			Exception: If node positions are undefined.
+		"""
+		if node_name not in self.positions_json.keys():
+			raise Exception("Positions of node '%s' is undefined." % (node_name))
+		else:
+			del self.positions_json[node_name]
 
 	####################################################################
 	### NODE PROPERTY FUNCTIONS #################################################

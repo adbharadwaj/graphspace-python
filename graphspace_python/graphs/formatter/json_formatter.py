@@ -21,12 +21,6 @@ class CyJSFormat:
 		"""
 		graph_json = CyJSFormat.clean_graph_json(CyJSFormat.validate_json(json_string))
 		G = GSGraph()
-		G.graph = graph_json["data"]
-		for node in graph_json["elements"]["nodes"]:
-			G.add_node(node["data"]["name"], attr_dict=node)
-		for edge in graph_json["elements"]["edges"]:
-			G.add_edge(edge["data"]["source"], edge["data"]["target"], attr_dict=edge)
-
 		G.set_graph_json(graph_json)
 		return G
 

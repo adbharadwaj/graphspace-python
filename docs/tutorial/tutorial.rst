@@ -35,8 +35,8 @@ You can add one node at a time using the
 >>> # Adding a node 'a' with a given popup and label
 >>> G.add_node('a', popup='sample node popup text', label='A')
 >>> G.nodes(data=True)
-[('a', {'data': {'id': 'a', 'popup': 'sample node popup text', 'name': 'a',
-'label': 'A'}})]
+[('a', {'id': 'a', 'popup': 'sample node popup text', 'name': 'a',
+'label': 'A'})]
 >>> # Adding style information for node 'a'
 >>> G.add_node_style('a', shape='ellipse', color='red', width=90, height=90)
 >>> G.get_style_json()
@@ -48,9 +48,9 @@ You can add one node at a time using the
 >>> # Adding a node 'b' with a given popup and label
 >>> G.add_node('b', popup='sample node popup text', label='B')
 >>> G.nodes(data=True)
-[('a', {'data': {'id': 'a', 'popup': 'sample node popup text', 'name': 'a',
-'label': 'A'}}), ('b', {'data': {'id': 'b', 'popup': 'sample node popup text',
-'name': 'b', 'label': 'B'}})]
+[('a', {'id': 'a', 'popup': 'sample node popup text', 'name': 'a',
+'label': 'A'}), ('b', {'id': 'b', 'popup': 'sample node popup text',
+'name': 'b', 'label': 'B'})]
 >>> # Adding style information for node 'b'
 >>> G.add_node_style('b', shape='ellipse', color='blue', width=40, height=40)
 >>> G.get_style_json()
@@ -72,15 +72,15 @@ You can also add one edge at a time using the
 >>> G.add_edge('a', 'b', directed=True, popup='sample edge popup')
 >>> # Accessing edges
 >>> G.edges(data=True)
-[('a', 'b', {'data': {'source': 'a', 'popup': 'sample edge popup', 'is_directed':
-True, 'target': 'b'}})]
+[('a', 'b', {'source': 'a', 'popup': 'sample edge popup', 'is_directed':
+True, 'target': 'b'})]
 >>> # Direct access using subscript notation
 >>> G['a']
-{'b': {'data': {'source': 'a', 'popup': 'sample edge popup', 'is_directed': True,
-'target': 'b'}}}
->>> G['a']['b']
-{'data': {'source': 'a', 'popup': 'sample edge popup', 'is_directed': True,
+{'b': {'source': 'a', 'popup': 'sample edge popup', 'is_directed': True,
 'target': 'b'}}
+>>> G['a']['b']
+{'source': 'a', 'popup': 'sample edge popup', 'is_directed': True,
+'target': 'b'}
 >>> # Adding style information for edge
 >>> G.add_edge_style('a', 'b', directed=True, edge_style='dotted')
 >>> G.get_style_json()
@@ -232,15 +232,15 @@ u'My Sample Graph'
 >>> graph1.get_is_public()
 1
 >>> graph1.nodes(data=True)
-[(u'a', {u'data': {u'popup': u'sample node popup text', u'name': u'a', u'id': u'a',
-u'label': u'A'}}), (u'b', {u'data': {u'popup': u'sample node popup text', u'name':
-u'b', u'id': u'b', u'label': u'B'}}), (u'z', {u'data': {u'popup': u'sample node
-popup text', u'name': u'z', u'id': u'z', u'label': u'Z'}})]
+[(u'a', {u'popup': u'sample node popup text', u'name': u'a', u'id': u'a',
+u'label': u'A'}), (u'b', {u'popup': u'sample node popup text', u'name':
+u'b', u'id': u'b', u'label': u'B'}), (u'z', {u'popup': u'sample node
+popup text', u'name': u'z', u'id': u'z', u'label': u'Z'})]
 >>> graph1.edges(data=True)
-[(u'a', u'b', {u'data': {u'source': u'a', u'popup': u'sample edge popup',
-u'is_directed': True, u'target': u'b', u'name': u'a-b'}, u'is_directed': 1}),
-(u'a', u'z', {u'data': {u'source': u'a', u'popup': u'sample edge popup',
-u'is_directed': True, u'target': u'z', u'name': u'a-z'}, u'is_directed': 0})]
+[(u'a', u'b', {u'source': u'a', u'popup': u'sample edge popup',
+u'is_directed': True, u'target': u'b', u'name': u'a-b'}),
+(u'a', u'z', {u'source': u'a', u'popup': u'sample edge popup',
+u'is_directed': True, u'target': u'z', u'name': u'a-z'})]
 
 The updated graph in this case will look like this on GraphSpace:
 

@@ -376,6 +376,10 @@ class GSGraph(nx.DiGraph):
 			'My sample graph', 'tags': ['sample']}
 		"""
 		self.data.update(data)
+		if 'name' in data:
+			self.set_name(self.data.get('name'))
+		if 'tags' in data:
+			self.set_tags(self.data.get('tags'))
 
 	def get_tags(self):
 		"""Get the tags for the graph.

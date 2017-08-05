@@ -2,6 +2,7 @@ import datetime
 import networkx as nx
 import re
 from six import string_types
+from networkx.exception import NetworkXError
 
 
 class GSGraph(nx.DiGraph):
@@ -21,8 +22,8 @@ class GSGraph(nx.DiGraph):
 	"""
 
 	ALLOWED_NODE_SHAPES = ['rectangle', 'roundrectangle', 'ellipse', 'triangle',
-	                       'pentagon', 'hexagon', 'heptagon', 'octagon', 'star',
-	                       'diamond', 'vee', 'rhomboid']
+						   'pentagon', 'hexagon', 'heptagon', 'octagon', 'star',
+						   'diamond', 'vee', 'rhomboid']
 
 	ALLOWED_NODE_BORDER_STYLES = ['solid', 'dotted', 'dashed', 'double']
 
@@ -43,7 +44,7 @@ class GSGraph(nx.DiGraph):
 
 	## See http://js.cytoscape.org/#style/edge-arrow
 	ALLOWED_ARROW_SHAPES = ['tee', 'triangle', 'triangle-tee', 'triangle-backcurve',
-	                        'square', 'circle', 'diamond', 'none']
+							'square', 'circle', 'diamond', 'none']
 
 	## See http://js.cytoscape.org/#style/edge-line
 	ALLOWED_EDGE_STYLES = ['solid', 'dotted', 'dashed']
@@ -51,19 +52,19 @@ class GSGraph(nx.DiGraph):
 	ALLOWED_ARROW_FILL = ['filled', 'hollow']
 
 	NODE_COLOR_ATTRIBUTES = ['background-color', 'border-color', 'color',
-	                         'text-outline-color', 'text-shadow-color',
-	                         'text-border-color']
+							 'text-outline-color', 'text-shadow-color',
+							 'text-border-color']
 
 	EDGE_COLOR_ATTRIBUTES = ['line-color', 'source-arrow-color',
-	                         'mid-source-arrow-color', 'target-arrow-color',
-	                         'mid-target-arrow-color']
+							 'mid-source-arrow-color', 'target-arrow-color',
+							 'mid-target-arrow-color']
 
 	def __init__(self, *args, **kwargs):
 		"""Construct a new 'GSGraph' object.
 
 		Args:
-		    *args: Variable length argument list.
-		    **kwargs: Arbitrary keyword arguments.
+			*args: Variable length argument list.
+			**kwargs: Arbitrary keyword arguments.
 		"""
 		super(GSGraph, self).__init__(*args, **kwargs)
 		self.set_name('Graph ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
@@ -134,10 +135,24 @@ class GSGraph(nx.DiGraph):
 		self.graph_json = {
 			'data': self.get_data(),
 			'elements': {
-				'nodes': [node[1] if 'data' in node[1] else {'data': {'id': node[0], 'name': node[0]}} for node in self.nodes(data=True)],
-				'edges': [edge[2] if 'data' in edge[2] else {'data': {'source': edge[0], 'target': edge[1], 'is_directed': False}} for edge in self.edges(data=True)],
+				'nodes': [],
+				'edges': [],
 			}
 		}
+
+		for node in self.nodes(data=True):
+			node_attr = node[1]
+			node_attr.update({'id': node[1].get('id', node[0])})
+			node_attr.update({'name': node[1].get('name', node[0])})
+			self.graph_json['elements']['nodes'].append({'data': node_attr})
+
+		for edge in self.edges(data=True):
+			edge_attr = edge[2]
+			edge_attr.update({'source': edge[2].get('source', edge[0])})
+			edge_attr.update({'target': edge[2].get('target', edge[1])})
+			edge_attr.update({'is_directed': edge[2].get('is_directed', False)})
+			self.graph_json['elements']['edges'].append({'data': edge_attr})
+
 		return self.graph_json
 
 	def get_data(self):
@@ -223,10 +238,10 @@ class GSGraph(nx.DiGraph):
 			self.set_data(graph_json['data'])
 		nodes = graph_json['elements']['nodes']
 		for node in nodes:
-		    self.add_node(node['data']['id'], node)
+			self.add_node(node['data']['id'], node['data'])
 		edges = graph_json['elements']['edges']
 		for edge in edges:
-		    self.add_edge(edge['data']['source'], edge['data']['target'], edge)
+			self.add_edge(edge['data']['source'], edge['data']['target'], edge['data'])
 
 	def set_style_json(self, style_json):
 		"""Set the json representation for the graph style.
@@ -361,7 +376,7 @@ class GSGraph(nx.DiGraph):
 		"""Get the tags for the graph.
 
 		Returns:
-		 	List[str]: List of tags of graph.
+			List[str]: List of tags of graph.
 
 		Examples:
 			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
@@ -378,7 +393,7 @@ class GSGraph(nx.DiGraph):
 		"""Set the tags for the graph.
 
 		Args:
-		 	tags (List[str]): List of tags of graph.
+			tags (List[str]): List of tags of graph.
 
 		Example:
 			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
@@ -413,26 +428,31 @@ class GSGraph(nx.DiGraph):
 			>>> G.add_node('b', popup='sample node popup text', label='B')
 			>>> G.add_edge('a', 'b', directed=True, popup='sample edge popup')
 			>>> G.edges(data=True)
-			[('a', 'b', {'data': {'source': 'a', 'popup': 'sample edge popup',
-			'is_directed': True, 'target': 'b'}})]
+			[('a', 'b', {'source': 'a', 'popup': 'sample edge popup',
+			'is_directed': True, 'target': 'b'})]
 		"""
-		attr_dict = attr_dict if attr_dict is not None else dict()
-		if 'data' not in attr_dict:
-			attr_dict.update({"data": dict()})
+		# set up attribute dict
+		if attr_dict is None:
+			attr_dict = attr
+		else:
+			try:
+				attr_dict.update(attr)
+			except AttributeError:
+				raise NetworkXError("The attr_dict argument must be a dictionary.")
 
 		if popup is not None:
-			attr_dict['data'].update({"popup": popup})
+			attr_dict.update({"popup": popup})
 		if k is not None:
-			attr_dict['data'].update({"k": k})
+			attr_dict.update({"k": k})
 
-		if attr_dict.get('data').get('is_directed', False) or directed:
-			attr_dict.get('data').update({'is_directed': True})
+		if attr_dict.get('is_directed', False) or directed:
+			attr_dict.update({'is_directed': True})
 		else:
-			attr_dict.get('data').update({'is_directed': False})
+			attr_dict.update({'is_directed': False})
 
-		attr_dict.get('data').update({"source": source, "target": target})
+		attr_dict.update({"source": source, "target": target})
 
-		GSGraph.validate_edge_data_properties(data_properties=attr_dict.get('data', dict()), nodes_list=self.nodes())
+		GSGraph.validate_edge_data_properties(data_properties=attr_dict, nodes_list=self.nodes())
 		super(GSGraph, self).add_edge(source, target, attr_dict)
 
 	def add_node(self, node_name, attr_dict=None, label=None, popup=None, k=None, **attr):
@@ -457,30 +477,34 @@ class GSGraph(nx.DiGraph):
 			>>> G.add_node('a', popup='sample node popup text', label='A')
 			>>> G.add_node('b', popup='sample node popup text', label='B')
 			>>> G.nodes(data=True)
-			[('a', {'data': {'id': 'a', 'popup': 'sample node popup text', 'name': 'a',
-			'label': 'A'}}), ('b', {'data': {'id': 'b', 'popup': 'sample node popup text',
-			'name': 'b', 'label': 'B'}})]
+			[('a', {'id': 'a', 'popup': 'sample node popup text', 'name': 'a',
+			'label': 'A'}), ('b', {'id': 'b', 'popup': 'sample node popup text',
+			'name': 'b', 'label': 'B'})]
 		"""
-		attr_dict = attr_dict if attr_dict is not None else dict()
-
-		if 'data' not in attr_dict:
-			attr_dict.update({"data": dict()})
+		# set up attribute dict
+		if attr_dict is None:
+			attr_dict = attr
+		else:
+			try:
+				attr_dict.update(attr)
+			except AttributeError:
+				raise NetworkXError("The attr_dict argument must be a dictionary.")
 
 		if popup is not None:
-			attr_dict['data'].update({"popup": popup})
+			attr_dict.update({"popup": popup})
 		if k is not None:
-			attr_dict['data'].update({"k": k})
+			attr_dict.update({"k": k})
 		if label is not None:
-			attr_dict['data'].update({"label": label})
+			attr_dict.update({"label": label})
 
-		attr_dict['data'].update({"name": node_name, "id": node_name})
+		attr_dict.update({"name": node_name, "id": node_name})
 
-		GSGraph.validate_node_data_properties(data_properties=attr_dict.get('data', dict()), nodes_list=self.nodes())
+		GSGraph.validate_node_data_properties(data_properties=attr_dict, nodes_list=self.nodes())
 		super(GSGraph, self).add_node(node_name, attr_dict)
 
 	def add_node_style(self, node_name, attr_dict=None, content=None, shape='ellipse', color='#FFFFFF', height=None,
-	                                   width=None, bubble=None, valign='center', halign='center', style="solid",
-	                                   border_color='#000000', border_width=1):
+									   width=None, bubble=None, valign='center', halign='center', style="solid",
+									   border_color='#000000', border_width=1):
 		"""Add the style for the given node in the style json.
 
 		Args:
@@ -543,7 +567,7 @@ class GSGraph(nx.DiGraph):
 		})
 
 	def add_edge_style(self, source, target, attr_dict=None, directed=False, color='#000000', width=1.0, arrow_shape='triangle',
-	                   edge_style='solid', arrow_fill='filled'):
+					   edge_style='solid', arrow_fill='filled'):
 		"""Add the style for the given edge in the style json.
 
 		Args:
@@ -956,7 +980,7 @@ class GSGraph(nx.DiGraph):
 		"""
 		if property_name in element and element[property_name] not in valid_property_values:
 			return element_selector + " contains illegal value for property: " + property_name + ".  Value given for this property was: " + \
-			       element[property_name] + ".  Accepted values for property: " + property_name + " are: [" + valid_property_values + "]"
+				   element[property_name] + ".  Accepted values for property: " + property_name + " are: [" + valid_property_values + "]"
 
 		return None
 

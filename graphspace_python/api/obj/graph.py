@@ -58,7 +58,7 @@ class Graph(ResponseObject, GSGraph):
         """
         nodes = self.graph_json['elements']['nodes']
         for node in nodes:
-            self.add_node(node['data']['id'], node)
+            self.add_node(node['data']['id'], node['data'])
         edges = self.graph_json['elements']['edges']
         for edge in edges:
-            self.add_edge(edge['data']['source'], edge['data']['target'], edge)
+            self.add_edge(edge['data']['source'], edge['data']['target'], edge['data'])

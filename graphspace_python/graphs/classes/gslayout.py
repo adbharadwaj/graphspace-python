@@ -5,7 +5,15 @@ from graphspace_python.graphs.classes.gsgraph import GSGraph
 class GSLayout(object):
 	"""GSLayout class.
 
-	Encapsulates details of a GraphSpace layout and provides methods to read and manipulate the details.
+	A GSLayout stores the details of a layout that is understood by GraphSpace.
+
+	It stores the X,Y positions of nodes of a graph in an organised json structure.
+
+	It also stores the style attributes of the respective nodes and edges in an organised json structure.
+
+	It holds the information about the layout such as name and sharing status.
+
+	It provides methods to define, modify and delete the details of the layout.
 
 	Attributes:
 		name (str): Name of layout.

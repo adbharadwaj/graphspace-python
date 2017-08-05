@@ -7,7 +7,15 @@ from six import string_types
 class GSGraph(nx.DiGraph):
 	"""GSGraph class.
 
-	Encapsulates details of a GraphSpace graph and provides methods to read and manipulate the details.
+	A GSGraph stores the details of a graph that is understood by GraphSpace.
+
+	It stores nodes and edges of a graph with some data attributes in an organised json structure.
+
+	It also stores the style attributes of the respective nodes and edges in an organised json structure.
+
+	It holds the information about the graph such as name, tags and viewability status.
+
+	It provides methods to define, modify and delete the details of the graph.
 
 	Attributes:
 		name (str): Name of graph.

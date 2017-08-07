@@ -567,6 +567,9 @@ class Graphs(object):
 			>>> graph = graphspace.set_default_graph_layout(layout=layout)
 			>>> graph.default_layout_id
 			1087
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#setting-a-default-layout-for-a-graph>`_ for more about setting default graph layout.
 		"""
 		if graph is not None:
 			if hasattr(graph, 'id'):
@@ -646,6 +649,9 @@ class Graphs(object):
 
 			>>> graph = graphspace.get_graph(graph_name='My Sample Graph')
 			>>> graph = graphspace.unset_default_graph_layout(graph=graph)
+
+		Note:
+			Refer to the `tutorial <../tutorial/tutorial.html#unset-default-layout-for-a-graph>`_ for more about unsetting a default graph layout.
 		"""
 		if graph is not None:
 			if hasattr(graph, 'id'):

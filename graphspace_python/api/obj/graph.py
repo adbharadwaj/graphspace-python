@@ -55,7 +55,7 @@ class Graph(ResponseObject, GSGraph):
 		"""Adds the nodes and edges of the fetched graph to the GSGraph class' nodes and edges.
 
         This will ensure that the nodes and edges of the fetched graph are not lost when
-        compute_graph_json() is called.
+        get_graph_json() is called.
         """
 		nodes = self.graph_json['elements']['nodes']
 		for node in nodes:

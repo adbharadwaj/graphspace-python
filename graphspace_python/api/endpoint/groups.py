@@ -556,7 +556,7 @@ class Groups(object):
 			u'My Sample Graph'
 
 		Note:
-			Refer to the `tutorial <../tutorial/tutorial.html#fetching-graphs-of-a-group-from-graphspace>`_ for more about fetching graphs of a group.
+			Refer to the `tutorial <../tutorial/tutorial.html#fetching-graphs-shared-with-a-group>`_ for more about fetching graphs of a group.
 		"""
 		if group is not None:
 			if hasattr(group, 'id'):
@@ -641,7 +641,7 @@ class Groups(object):
 			65390, u'updated_at': u'2017-07-20T18:40:36.267052'}
 
 		Note:
-			Refer to the `tutorial <../tutorial/tutorial.html#adding-a-graph-to-a-group-on-graphspace>`_ for more about adding graph to a group.
+			Refer to the `tutorial <../tutorial/tutorial.html#sharing-a-graph-with-a-group>`_ for more about adding graph to a group.
 		"""
 		headers = {
 			'Accept': 'application/json',
@@ -738,7 +738,7 @@ class Groups(object):
 			u'Successfully deleted graph with id=65390 from group with id=198'
 
 		Note:
-			Refer to the `tutorial <../tutorial/tutorial.html#deleting-a-graph-from-a-group-on-graphspace>`_ for more about deleting graph from a group.
+			Refer to the `tutorial <../tutorial/tutorial.html#unsharing-a-graph-with-a-group>`_ for more about deleting graph from a group.
 		"""
 		if group is not None:
 			if hasattr(group, 'id'):

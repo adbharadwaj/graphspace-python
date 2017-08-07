@@ -566,12 +566,12 @@ class GSGraph(nx.DiGraph):
 		if bubble:
 			style_properties = GSGraph.set_node_bubble_effect_property(style_properties, bubble, whitetext=False)
 
-		attr_dict.update(style_properties)
+		style_properties.update(attr_dict)
 
 		self.set_style_json({
 			'style': self.get_style_json().get('style') + [{
 				'selector': selector,
-				'style': attr_dict
+				'style': style_properties
 			}]
 		})
 
@@ -603,9 +603,7 @@ class GSGraph(nx.DiGraph):
 			'target-arrow-fill': 'hollow', 'target-arrow-color': '#000000'}, 'selector':
 			'edge[source="b"][target="c"]'}]}
 		"""
-		data_properties = {}
 		style_properties = {}
-		data_properties.update({"source": source, "target": target})
 		style_properties = GSGraph.set_edge_color_property(style_properties, color)
 		style_properties = GSGraph.set_edge_width_property(style_properties, width)
 		style_properties = GSGraph.set_edge_target_arrow_shape_property(style_properties, arrow_shape)
@@ -617,12 +615,12 @@ class GSGraph(nx.DiGraph):
 
 		selector = 'edge[source="%s"][target="%s"]' % (source, target)
 
-		attr_dict.update(style_properties)
+		style_properties.update(attr_dict)
 
 		self.set_style_json({
 			'style': self.get_style_json().get('style') + [{
 				'selector': selector,
-				'style': attr_dict
+				'style': style_properties
 			}]
 		})
 

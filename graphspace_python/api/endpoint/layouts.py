@@ -215,6 +215,17 @@ class Layouts(object):
 			>>> graphspace.delete_graph_layout(layout=layout)
 			u'Successfully deleted layout with id=1087'
 
+			Deleting a layout by passing graph name instead of id:
+
+			>>> graphspace.delete_graph_layout(layout_id=1087, graph_name='My Sample Graph')
+			u'Successfully deleted layout with id=1087'
+
+			Deleting a layout by passing graph object as param:
+
+			>>> graph = graphspace.get_graph(graph_name='My Sample Graph')
+			>>> graphspace.delete_graph_layout(layout_id=1087, graph=graph)
+			u'Successfully deleted layout with id=1087'
+
 		Note:
 			Refer to the `tutorial <../tutorial/tutorial.html#deleting-a-layout-on-graphspace>`_ for more about deleting layouts.
 		"""

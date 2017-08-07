@@ -4,7 +4,11 @@ import datetime
 class GSGroup(object):
 	"""GSGroup class.
 
-	Encapsulates details of a GraphSpace group and provides methods to read and manipulate the details.
+	A GSGroup stores the details of a group that is understood by GraphSpace.
+
+	It holds the information about the group such as name and description.
+
+	It provides methods to define, modify and delete the details of the group.
 
 	Attributes:
 		name (str): Name of group.

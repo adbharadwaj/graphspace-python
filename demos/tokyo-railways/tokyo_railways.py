@@ -15,12 +15,13 @@ with open('style.json') as style_json_file:
 
 # Initialize graph
 G = GSGraph()
-# Set name and tags
-G.set_name('tokyo Railways')
+# Set name, tags and visibility status
+G.set_name('Tokyo Railways')
 G.set_tags(['tokyo-railways'])
+G.set_is_public()
 # Define and set data
 data = {
-    'description': 'Graphical representation of railway network of Tokyo.<br>View cytoscape.js demo of this graph at:\
+    'description': 'Graphical representation of railway network of Tokyo.<br>View functional demo of this graph at:\
  <a href=\"http://js.cytoscape.org/demos/tokyo-railways/\">http://js.cytoscape.org/demos/tokyo-railways/</a>',
     'directed': False
 }

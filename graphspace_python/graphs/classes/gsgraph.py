@@ -362,10 +362,10 @@ class GSGraph(nx.DiGraph):
 			>>> G.get_is_public()
 			0
 		"""
-		if is_public not in [0,1]:
-			raise Exception("is_public should have value either 0 or 1.")
+		if is_public not in [0, 1, True, False]:
+			raise Exception("is_public should have value either 0 or 1 or should be boolean.")
 		else:
-			self.is_public = is_public
+			self.is_public = int(is_public)
 
 	def set_data(self, data):
 		"""Set the metadata of the graph.

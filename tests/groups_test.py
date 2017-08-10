@@ -17,7 +17,7 @@ def test_groups_endpoint(graph_id):
 	test_get_group_members(name='MyTestGroup')
 	member = test_add_group_member(member_email='user3@example.com', group_id=group.id)
 	test_user_already_exists_error(member_email='user3@example.com', group_id=group.id)
-	test_user_doesnt_exist_error(member_email='user5@example.com', group_id=group.id)
+	test_user_doesnt_exist_error(member_email='unregistereduser@example.com', group_id=group.id)
 	test_delete_group_member(member_id=member['user_id'], group_id=group.id)
 	test_member_doesnt_exist_error(member_id=member['user_id'], group_id=group.id)
 	test_get_group_graphs(name='MyTestGroup')

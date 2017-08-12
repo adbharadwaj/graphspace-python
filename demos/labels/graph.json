@@ -1,0 +1,117 @@
+{
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "label": "top left",
+          "type": "top-left",
+          "id": 1
+        }
+      },
+      {
+        "data": {
+          "label": "top center",
+          "type": "top-center",
+          "id": 2
+        }
+      },
+      {
+        "data": {
+          "label": "top right",
+          "type": "top-right",
+          "id": 3
+        }
+      },
+      {
+        "data": {
+          "label": "center left",
+          "type": "center-left",
+          "id": 4
+        }
+      },
+      {
+        "data": {
+          "label": "center center",
+          "type": "center-center",
+          "id": 5
+        }
+      },
+      {
+        "data": {
+          "label": "center right",
+          "type": "center-right",
+          "id": 6
+        }
+      },
+      {
+        "data": {
+          "label": "bottom left",
+          "type": "bottom-left",
+          "id": 7
+        }
+      },
+      {
+        "data": {
+          "label": "bottom center",
+          "type": "bottom-center",
+          "id": 8
+        }
+      },
+      {
+        "data": {
+          "label": "bottom right",
+          "type": "bottom-right",
+          "id": 9
+        }
+      },
+      {
+        "data": {
+          "label": "multiline manual\nfoo\nbar\nbaz",
+          "type": "multiline-manual",
+          "id": 10
+        }
+      },
+      {
+        "data": {
+          "label": "multiline auto foo bar baz",
+          "type": "multiline-auto",
+          "id": 11
+        }
+      },
+      {
+        "data": {
+          "label": "outline",
+          "type": "outline",
+          "id": 12
+        }
+      },
+      {
+        "data": {
+          "label": "background",
+          "type": "background",
+          "id": 13
+        }
+      },
+      {
+        "data": {
+          "id": "ar-tgt"
+        }
+      },
+      {
+        "data": {
+          "id": "ar-src"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "source": "ar-src",
+          "target": "ar-tgt",
+          "type": "autorotate",
+          "label": "autorotate (move my nodes)"
+        }
+      }
+    ]
+  }
+}

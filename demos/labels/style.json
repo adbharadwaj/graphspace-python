@@ -1,0 +1,124 @@
+{
+  "style": [
+    {
+      "style": {
+        "width": 40,
+        "height": 40,
+        "background-color": "#ccc",
+        "label": "data(label)"
+      },
+      "selector": "node"
+    },
+    {
+      "style": {
+        "width": 3,
+        "line-color": "#ccc",
+        "label": "data(label)"
+      },
+      "selector": "edge"
+    },
+    {
+      "style": {
+        "text-halign": "left",
+        "text-valign": "top"
+      },
+      "selector": "node[type = \"top-left\"]"
+    },
+    {
+      "style": {
+        "text-halign": "center",
+        "text-valign": "top"
+      },
+      "selector": "node[type = \"top-center\"]"
+    },
+    {
+      "style": {
+        "text-halign": "right",
+        "text-valign": "top"
+      },
+      "selector": "node[type = \"top-right\"]"
+    },
+    {
+      "style": {
+        "text-halign": "left",
+        "text-valign": "center"
+      },
+      "selector": "node[type = \"center-left\"]"
+    },
+    {
+      "style": {
+        "text-halign": "center",
+        "text-valign": "center"
+      },
+      "selector": "node[type = \"center-center\"]"
+    },
+    {
+      "style": {
+        "text-halign": "right",
+        "text-valign": "center"
+      },
+      "selector": "node[type = \"center-right\"]"
+    },
+    {
+      "style": {
+        "text-halign": "left",
+        "text-valign": "bottom"
+      },
+      "selector": "node[type = \"bottom-left\"]"
+    },
+    {
+      "style": {
+        "text-halign": "center",
+        "text-valign": "bottom"
+      },
+      "selector": "node[type = \"bottom-center\"]"
+    },
+    {
+      "style": {
+        "text-halign": "right",
+        "text-valign": "bottom"
+      },
+      "selector": "node[type = \"bottom-right\"]"
+    },
+    {
+      "style": {
+        "text-wrap": "wrap"
+      },
+      "selector": "node[type = \"multiline-manual\"]"
+    },
+    {
+      "style": {
+        "text-max-width": 80,
+        "text-wrap": "wrap"
+      },
+      "selector": "node[type = \"multiline-auto\"]"
+    },
+    {
+      "style": {
+        "edge-text-rotation": "autorotate"
+      },
+      "selector": "edge[type = \"autorotate\"]"
+    },
+    {
+      "style": {
+        "text-border-width": 1,
+        "text-border-color": "#000",
+        "text-background-shape": "roundrectangle",
+        "text-background-opacity": 1,
+        "text-background-color": "#ccc",
+        "text-border-opacity": 1
+      },
+      "selector": "node[type = \"background\"]"
+    },
+    {
+      "style": {
+        "text-outline-color": "#ccc",
+        "text-outline-width": 3
+      },
+      "selector": "node[type = \"outline\"]"
+    }
+  ],
+  "target_cytoscapejs_version": "~2.7",
+  "generated_by": "graphspace-2.0.0",
+  "format_version": "1.0"
+}

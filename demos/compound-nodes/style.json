@@ -1,0 +1,44 @@
+{
+  "style": [
+    {
+      "selector": "node",
+      "style": {
+        "content": "data(id)",
+        "text-valign": "center",
+        "text-halign": "center",
+        "background-color": "grey"
+      }
+    },
+    {
+      "selector": "$node > node",
+      "style": {
+        "padding-top": "10px",
+        "padding-left": "10px",
+        "padding-bottom": "10px",
+        "padding-right": "10px",
+        "text-valign": "top",
+        "text-halign": "center",
+        "background-color": "#bbb"
+      }
+    },
+    {
+      "selector": "edge",
+      "style": {
+        "target-arrow-shape": "triangle",
+        "line-color": "grey"
+      }
+    },
+    {
+      "selector": ":selected",
+      "style": {
+        "background-color": "black",
+        "line-color": "black",
+        "target-arrow-color": "black",
+        "source-arrow-color": "black"
+      }
+    }
+  ],
+  "target_cytoscapejs_version": "~2.7",
+  "generated_by": "graphspace-2.0.0",
+  "format_version": "1.0"
+}

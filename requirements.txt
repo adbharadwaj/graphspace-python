@@ -4,3 +4,5 @@ requests==2.10.0
 sphinx-rtd-theme
 sphinx
 recommonmark
+pytest
+mock

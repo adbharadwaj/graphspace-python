@@ -2,15 +2,36 @@ import datetime
 import networkx as nx
 import re
 from six import string_types
+from networkx.exception import NetworkXError
 
 
 class GSGraph(nx.DiGraph):
-	"""GSGraph Class
+	"""GSGraph class.
 
+	A GSGraph stores the details of a graph that is understood by GraphSpace.
+
+	It stores nodes and edges of a graph with some data attributes in an organised json structure.
+
+	It also stores the style attributes of the respective nodes and edges in an organised json structure.
+
+	It holds the information about the graph such as name, tags and viewability status.
+
+	It provides methods to define, modify and delete the details of the graph.
+
+	Attributes:
+		name (str): Name of graph.
+		is_public (int): Visibility status of graph. Has value 0 if graph is private, 1 if graph is public.
+		style_json (dict): Json representation for graph style.
+		graph_json (dict): Json representation for graph structure.
+		tags (List[str]): Tags of graph.
+		data (dict): Metadata of graph.
+		node (dict): Json representation for nodes of graph.
+		edge (dict): Json representation for edges of graph.
 	"""
+
 	ALLOWED_NODE_SHAPES = ['rectangle', 'roundrectangle', 'ellipse', 'triangle',
-	                       'pentagon', 'hexagon', 'heptagon', 'octagon', 'star',
-	                       'diamond', 'vee', 'rhomboid']
+						   'pentagon', 'hexagon', 'heptagon', 'octagon', 'star',
+						   'diamond', 'vee', 'rhomboid']
 
 	ALLOWED_NODE_BORDER_STYLES = ['solid', 'dotted', 'dashed', 'double']
 
@@ -31,7 +52,7 @@ class GSGraph(nx.DiGraph):
 
 	## See http://js.cytoscape.org/#style/edge-arrow
 	ALLOWED_ARROW_SHAPES = ['tee', 'triangle', 'triangle-tee', 'triangle-backcurve',
-	                        'square', 'circle', 'diamond', 'none']
+							'square', 'circle', 'diamond', 'none']
 
 	## See http://js.cytoscape.org/#style/edge-line
 	ALLOWED_EDGE_STYLES = ['solid', 'dotted', 'dashed']
@@ -39,155 +60,467 @@ class GSGraph(nx.DiGraph):
 	ALLOWED_ARROW_FILL = ['filled', 'hollow']
 
 	NODE_COLOR_ATTRIBUTES = ['background-color', 'border-color', 'color',
-	                         'text-outline-color', 'text-shadow-color',
-	                         'text-border-color']
+							 'text-outline-color', 'text-shadow-color',
+							 'text-border-color']
 
 	EDGE_COLOR_ATTRIBUTES = ['line-color', 'source-arrow-color',
-	                         'mid-source-arrow-color', 'target-arrow-color',
-	                         'mid-target-arrow-color']
+							 'mid-source-arrow-color', 'target-arrow-color',
+							 'mid-target-arrow-color']
 
 	def __init__(self, *args, **kwargs):
+		"""Construct a new 'GSGraph' object.
+
+		Args:
+			*args: Variable length argument list.
+			**kwargs: Arbitrary keyword arguments.
+		"""
 		super(GSGraph, self).__init__(*args, **kwargs)
-		self.graph_json = self.compute_graph_json()
-		self.style_json = {'style': []}
 		self.set_name('Graph ' + datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
+		self.tags = []
+		self.data = {}
+		self.positions_json = {}
+		self.graph_json = self.get_graph_json()
+		self.style_json = {'style': []}
+		self.is_public = 0
 
-	def compute_graph_json(self):
+	def json(self):
+		"""Get the json representation of graph details.
 
+		Returns:
+			dict: Json representation of graph details.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.json()
+			{'is_public': 0, 'style_json': {'style': []}, 'tags': [], 'name':
+			'Graph 12:10PM on July 20, 2017', 'graph_json': {'elements': {'nodes': [],
+			'edges': []}, 'data': {'name': 'Graph 12:10PM on July 20, 2017', 'tags': []}}}
+			>>> G.set_name('My sample graph')
+			>>> G.add_node('a', popup='sample node popup text', label='A')
+			>>> G.add_node_style('a', shape='ellipse', color='red', width=90, height=90)
+			>>> G.json()
+			{'is_public': 0, 'style_json': {'style': [{'style': {'border-color': '#000000',
+			'border-width': 1, 'height': 90, 'width': 90, 'shape': 'ellipse', 'border-style':
+			'solid', 'text-wrap': 'wrap', 'text-halign': 'center', 'text-valign': 'center',
+			'background-color': 'red'}, 'selector': 'node[name="a"]'}]}, 'tags': [], 'name':
+			'My sample graph', 'graph_json': {'elements': {'nodes': [{'data': {'id': 'a',
+			'popup': 'sample node popup text', 'name': 'a', 'label': 'A'}}], 'edges': []},
+			'data': {'name': 'My sample graph', 'tags': []}}}
+		"""
+		data = {
+			'name': self.get_name(),
+			'is_public': self.get_is_public(),
+			'graph_json': self.get_graph_json(),
+			'style_json': self.get_style_json(),
+			'tags': self.get_tags()
+		}
+		return data
+
+	def get_graph_json(self):
+		"""Computes the json representation for the graph structure from the graph
+		nodes and edges and returns it.
+
+		Returns:
+			dict: Json representation of graph structure.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_graph_json()
+			{'elements': {'nodes': [], 'edges': []}, 'data': {'name':
+			'Graph 12:10PM on July 20, 2017', 'tags': []}}
+			>>> G.set_name('My sample graph')
+			>>> G.add_node('a', popup='sample node popup text', label='A')
+			>>> G.add_node('b', popup='sample node popup text', label='B')
+			>>> G.add_edge('a', 'b', directed=True, popup='sample edge popup')
+			>>> G.get_graph_json()
+			{'elements': {'nodes': [{'data': {'id': 'a', 'popup': 'sample node popup text',
+			'name': 'a', 'label': 'A'}}, {'data': {'id': 'b', 'popup': 'sample node popup text',
+			'name': 'b', 'label': 'B'}}], 'edges': [{'data': {'source': 'a', 'popup':
+			'sample edge popup', 'is_directed': True, 'target': 'b'}}]}, 'data': {'name':
+			'My sample graph', 'tags': []}}
+		"""
 		self.graph_json = {
-			'data': self.graph,
+			'data': self.get_data(),
 			'elements': {
-				'nodes': [node[1]for node in self.nodes(data=True)],
-				'edges': [edge[2] for edge in self.edges(data=True)],
+				'nodes': [],
+				'edges': [],
 			}
 		}
 
+		for node in self.nodes(data=True):
+			node_attr = {'data': node[1]}
+			if node[0] in self.positions_json:
+				node_attr.update({'position': self.positions_json[node[0]]})
+			node_attr['data'].update({'id': node[1].get('id', node[0])})
+			node_attr['data'].update({'name': node[1].get('name', node[0])})
+			self.graph_json['elements']['nodes'].append(node_attr)
+
+		for edge in self.edges(data=True):
+			edge_attr = {'data': edge[2]}
+			edge_attr['data'].update({'source': edge[2].get('source', edge[0])})
+			edge_attr['data'].update({'target': edge[2].get('target', edge[1])})
+			edge_attr['data'].update({'is_directed': edge[2].get('is_directed', False)})
+			self.graph_json['elements']['edges'].append(edge_attr)
+
 		return self.graph_json
 
-	def get_graph_json(self):
-		"""
-		Get the json representation for the graph structure.
+	def get_data(self):
+		"""Computes the metadata of the graph and returns it.
 
-		:return: dict
+		Returns:
+			dict: Metadata of the graph.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_data()
+			{'name': 'Graph 12:10PM on July 20, 2017', 'tags': []}
+			>>> G.set_name('My sample graph')
+			>>> G.set_tags(['sample','tutorial'])
+			>>> G.get_data()
+			{'name': 'My sample graph', 'tags': ['sample', 'tutorial']}
 		"""
-		return self.graph_json
+		data = {
+			'name': self.name,
+			'tags': self.tags
+		}
+		self.data.update(data)
+		return self.data
 
 	def get_style_json(self):
-		"""
-		Get the json representation for the graph style.
+		"""Get the json representation for the graph style.
 
-		:return: dict
+		Returns:
+			dict: Json representation of graph style.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_style_json()
+			{'style': []}
+			>>> G.add_node_style('a', shape='ellipse', color='red', width=90, height=90)
+			>>> G.get_style_json()
+			{'style': [{'style': {'border-color': '#000000', 'border-width': 1, 'height': 90,
+			'width': 90, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap': 'wrap',
+			'text-halign': 'center', 'text-valign': 'center', 'background-color': 'red'},
+			'selector': 'node[name="a"]'}]}
 		"""
 		return self.style_json
 
 	def set_graph_json(self, graph_json):
-		"""
-		Set the json representation for the graph structure.
+		"""Set the json representation for the graph structure.
 
-		:param graph_json: dict - json representation for the graph structure
+		Args:
+			graph_json (dict): Json representation for the graph structure.
 
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> graph_json = {
+			... 	'elements': {
+			... 		'nodes': [
+			... 			{
+			... 				'data': {
+			... 					'id': 'a',
+			... 					'popup': 'sample node popup text',
+			... 					'name': 'a',
+			... 					'label': 'A'
+			... 				}
+			... 			}
+			... 		],
+			... 		'edges': []
+			... 	},
+			... 	'data': {
+			... 		'name': 'My sample graph',
+			... 		'tags': ['sample', 'tutorial']
+			... 	}
+			... }
+			>>> G.set_graph_json(graph_json)
+			>>> G.get_graph_json()
+			{'elements': {'nodes': [{'data': {'id': 'a', 'popup': 'sample node popup text',
+			'name': 'a', 'label': 'A'}}], 'edges': []}, 'data': {'name': 'My sample graph',
+			'tags': ['sample', 'tutorial']}}
 		"""
 		self.graph_json = graph_json
+		self.remove_nodes_from(self.nodes())
+		if 'data' in graph_json:
+			self.set_data(graph_json['data'])
+		nodes = graph_json['elements']['nodes']
+		for node in nodes:
+			self.add_node(node['data']['id'], node['data'])
+			if 'position' in node:
+				self.positions_json.update({node['data']['id']: node['position']})
+		edges = graph_json['elements']['edges']
+		for edge in edges:
+			self.add_edge(edge['data']['source'], edge['data']['target'], edge['data'])
 
 	def set_style_json(self, style_json):
-		"""
-		Set the json representation for the graph style.
+		"""Set the json representation for the graph style.
 
-		:param style_json: dict - json representation for the graph style
+		Args:
+			style_json (dict): Json representation for the graph style.
 
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> style_json = {
+			... 	'style': [
+			... 		{
+			... 			'style': {
+			... 				'border-color': '#000000',
+			... 				'border-width': 1,
+			... 				'height': 90,
+			... 				'width': 90,
+			... 				'shape': 'ellipse',
+			... 				'border-style': 'solid',
+			... 				'text-wrap': 'wrap',
+			... 				'text-halign': 'center',
+			... 				'text-valign': 'center',
+			... 				'background-color': 'red'
+			... 			},
+			... 			'selector': 'node[name="a"]'
+			... 		}
+			... 	]
+			... }
+			>>> G.set_style_json(style_json)
+			>>> G.get_style_json()
+			{'style': [{'style': {'border-color': '#000000', 'border-width': 1, 'height': 90,
+			'width': 90, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap': 'wrap',
+			'text-halign': 'center', 'text-valign': 'center', 'background-color': 'red'},
+			'selector': 'node[name="a"]'}]}
 		"""
 		GSGraph.validate_style_json(style_json)
 		self.style_json = style_json
 
 	def get_name(self):
-		"""
-		Get the name of graph.
+		"""Get the name of graph.
 
-		:return: string
+		Returns:
+			str: Name of graph.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_name()
+			'Graph 01:22PM on July 20, 2017'
+			>>> G.set_name('My sample graph')
+			>>> G.get_name()
+			'My sample graph'
 		"""
-		return self.graph.get("name", None)
+		return self.name
 
 	def set_name(self, name):
-		"""
-		Set the name of the graph.
+		"""Set the name of the graph.
 
-		:param name: name of the graph.
-		"""
-		return self.graph.update({"name": name})
+		Args:
+			name (str): Name of graph.
 
-	def get_data(self):
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.set_name('My sample graph')
+			>>> G.get_name()
+			'My sample graph'
 		"""
-		Get the metadata of the graph.
+		self.name = name
 
-		:return: dict
+	def get_is_public(self):
+		"""Get visibility status of the graph.
+
+		Returns:
+			int: Visibility status of graph. Either 0 or 1.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_is_public()
+			0
+			>>> G.set_is_public(1)
+			>>> G.get_is_public()
+			1
 		"""
-		return self.graph
+		return self.is_public
 
-	def set_data(self, data=dict()):
+	def set_is_public(self, is_public=1):
+		"""Set visibility status of the graph.
+
+		Args:
+			is_public (int, optional): Visibility status of graph. Defaults to 1.
+
+		Raises:
+			Exception: If 'is_public' is neither 0 nor 1.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.set_is_public() # By default takes param 'is_public' as 1.
+			>>> G.get_is_public()
+			1
+			>>> G.set_is_public(0)
+			>>> G.get_is_public()
+			0
 		"""
-		Set the metadata of the graph.
+		if is_public not in [0,1]:
+			raise Exception("is_public should have value either 0 or 1.")
+		else:
+			self.is_public = is_public
 
-		:param data: dict - key-value pairs describing the graph.
+	def set_data(self, data):
+		"""Set the metadata of the graph.
 
+		Args:
+			data (dict): Key-value pairs describing the graph.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.set_name('My sample graph')
+			>>> G.set_tags(['sample'])
+			>>> G.set_data({'description': 'A sample graph for demonstration purpose.'})
+			>>> G.get_data()
+			{'description': 'A sample graph for demonstration purpose.', 'name':
+			'My sample graph', 'tags': ['sample']}
 		"""
-		self.graph.update(data)
+		self.data.update(data)
+		if 'name' in data:
+			self.set_name(self.data.get('name'))
+		if 'tags' in data:
+			self.set_tags(self.data.get('tags'))
 
 	def get_tags(self):
-		"""
-		Get the tags for the graph.
+		"""Get the tags for the graph.
 
-		:return: list of strings
+		Returns:
+			List[str]: List of tags of graph.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.get_tags()
+			[]
+			>>> G.set_tags(['sample', 'tutorial'])
+			>>> G.get_tags()
+			['sample', 'tutorial']
 		"""
-		return self.graph.get("tags", [])
+		return self.tags
 
 	def set_tags(self, tags):
-		"""
-		Set the tags for the graph.
+		"""Set the tags for the graph.
 
-		:param tags: list of strings
+		Args:
+			tags (List[str]): List of tags of graph.
 
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.set_tags(['sample', 'tutorial'])
+			>>> G.get_tags()
+			['sample', 'tutorial']
 		"""
-		return self.graph.update({"tags": tags})
+		self.tags = tags
 
 	def add_edge(self, source, target, attr_dict=None, directed=False, popup=None, k=None, **attr):
-		attr_dict = attr_dict if attr_dict is not None else dict()
-		if 'data' not in attr_dict:
-			attr_dict.update({"data": dict()})
+		"""Add a edge to the graph.
+
+		Args:
+			source (str): Source node.
+			target (str): Target node.
+			attr_dict (dict, optional): Json representation of edge data. Defaults to None.
+			directed (bool, optional): True if edge is directed, else False. Defaults to False.
+			popup (str, optional): A string that will be displayed in a popup window when
+				the user clicks the edge. This string can be HTML-formatted information,
+				e.g., Gene Ontology annotations and database links for a protein; or types,
+				mechanism, and database sources for an interaction.
+			k (int, optional): An integer-valued attribute for the edge, which denotes a
+				rank. Through this attribute, GraphSpace allows the user to filter nodes
+				and edges in a network visualization.
+			**attr: Arbitrary keyword arguments.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.add_node('a', popup='sample node popup text', label='A')
+			>>> G.add_node('b', popup='sample node popup text', label='B')
+			>>> G.add_edge('a', 'b', directed=True, popup='sample edge popup')
+			>>> G.edges(data=True)
+			[('a', 'b', {'source': 'a', 'popup': 'sample edge popup',
+			'is_directed': True, 'target': 'b'})]
+		"""
+		# set up attribute dict
+		if attr_dict is None:
+			attr_dict = attr
+		else:
+			try:
+				attr_dict.update(attr)
+			except AttributeError:
+				raise NetworkXError("The attr_dict argument must be a dictionary.")
 
 		if popup is not None:
-			attr_dict['data'].update({"popup": popup})
+			attr_dict.update({"popup": popup})
 		if k is not None:
-			attr_dict['data'].update({"k": k})
+			attr_dict.update({"k": k})
 
-		if attr_dict.get('data').get('is_directed', False) or directed:
-			attr_dict.get('data').update({'is_directed': True})
+		if attr_dict.get('is_directed', False) or directed:
+			attr_dict.update({'is_directed': True})
 		else:
-			attr_dict.get('data').update({'is_directed': False})
+			attr_dict.update({'is_directed': False})
 
-		attr_dict.get('data').update({"source": source, "target": target})
+		attr_dict.update({"source": source, "target": target})
 
-		GSGraph.validate_edge_data_properties(data_properties=attr_dict.get('data', dict()), nodes_list=self.nodes())
+		GSGraph.validate_edge_data_properties(data_properties=attr_dict, nodes_list=self.nodes())
 		super(GSGraph, self).add_edge(source, target, attr_dict)
 
 	def add_node(self, node_name, attr_dict=None, label=None, popup=None, k=None, **attr):
-		attr_dict = attr_dict if attr_dict is not None else dict()
+		"""Add a node to the graph.
 
-		if 'data' not in attr_dict:
-			attr_dict.update({"data": dict()})
+		Args:
+			node_name (str): Name of node.
+			attr_dict (dict, optional): Json representation of node data. Defaults to None.
+			label (str, optional): Label of node. Defaults to None.
+			popup (str, optional): A string that will be displayed in a popup window when
+				the user clicks the node. This string can be HTML-formatted information,
+				e.g., Gene Ontology annotations and database links for a protein; or types,
+				mechanism, and database sources for an interaction.
+			k (int, optional): An integer-valued attribute for the node, which denotes a
+				rank. Through this attribute, GraphSpace allows the user to filter nodes
+				and edges in a network visualization.
+			**attr: Arbitrary keyword arguments.
+
+		Example:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.add_node('a', popup='sample node popup text', label='A')
+			>>> G.add_node('b', popup='sample node popup text', label='B')
+			>>> G.nodes(data=True)
+			[('a', {'id': 'a', 'popup': 'sample node popup text', 'name': 'a',
+			'label': 'A'}), ('b', {'id': 'b', 'popup': 'sample node popup text',
+			'name': 'b', 'label': 'B'})]
+		"""
+		# set up attribute dict
+		if attr_dict is None:
+			attr_dict = attr
+		else:
+			try:
+				attr_dict.update(attr)
+			except AttributeError:
+				raise NetworkXError("The attr_dict argument must be a dictionary.")
 
 		if popup is not None:
-			attr_dict['data'].update({"popup": popup})
+			attr_dict.update({"popup": popup})
 		if k is not None:
-			attr_dict['data'].update({"k": k})
+			attr_dict.update({"k": k})
 		if label is not None:
-			attr_dict['data'].update({"label": label})
+			attr_dict.update({"label": label})
 
-		attr_dict['data'].update({"name": node_name, "id": node_name})
+		attr_dict.update({"name": node_name, "id": node_name})
 
-		GSGraph.validate_node_data_properties(data_properties=attr_dict.get('data', dict()), nodes_list=self.nodes())
+		GSGraph.validate_node_data_properties(data_properties=attr_dict, nodes_list=self.nodes())
 		super(GSGraph, self).add_node(node_name, attr_dict)
 
 	def add_node_style(self, node_name, attr_dict=None, content=None, shape='ellipse', color='#FFFFFF', height=None,
+<<<<<<< HEAD
 	                                   width=None, bubble=None, valign='center', halign='center', style="solid",
 	                                   border_color='#000000', border_width=1):
 		"""
@@ -212,6 +545,41 @@ class GSGraph(nx.DiGraph):
 		-------
 		None
 
+=======
+									   width=None, bubble=None, valign='center', halign='center', style="solid",
+									   border_color='#000000', border_width=1):
+		"""Add the style for the given node in the style json.
+
+		Args:
+			node_name (str): Name of node.
+			attr_dict (dict, optional): Json representation of style of node. Defaults to None.
+			shape (str, optional): Shape of node. Defaults to 'ellipse'. See :data:`ALLOWED_NODE_SHAPES` for more details.
+			color (str, optional): Hexadecimal representation of the color (e.g., #FFFFFF) or color name. Defaults to white.
+			height (int, optional): Height of the node's body, or None to determine height from the number of lines in the label. Defaults to None.
+			width (int, optional): Width of the node's body, or None to determine width from length of label. Defaults to None.
+			bubble (str, optional): Color of the text outline. Using this option gives a "bubble" effect; see the bubbleeffect() function. Defaults to None.
+			valign (str, optional): Vertical alignment. Defaults to 'center'. See :data:`ALLOWED_TEXT_VALIGN` for more details.
+			halign (str, optional): Horizontal alignment. Defaults to 'center'. See :data:`ALLOWED_TEXT_HALIGN` for more details.
+			style (str, optional): Style of border. Defaults to 'solid'. If 'bubble' is specified, then style is overwritten. See :data:`ALLOWED_NODE_BORDER_STYLES` for more details.
+			border_color (str, optional): Color of border. Defaults to '#000000'. If 'bubble' is specified, then style is overwritten.
+			border_width (int, optional): Width of border. Defaults to 1. If 'bubble' is specified, then style is overwritten.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.add_node('a', popup='sample node popup text', label='A')
+			>>> G.add_node_style('a', shape='ellipse', color='red', width=90, height=90)
+			>>> G.add_node('b', popup='sample node popup text', label='B')
+			>>> G.add_node_style('b', color='blue', width=90, height=90, border_color='#4f4f4f')
+			>>> G.get_style_json()
+			{'style': [{'style': {'border-color': '#000000', 'border-width': 1, 'height': 90,
+			'width': 90, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap': 'wrap',
+			'text-halign': 'center', 'text-valign': 'center', 'background-color': 'red'},
+			'selector': 'node[name="a"]'}, {'style': {'border-color': '#4f4f4f', 'border-width': 1,
+			'height': 90, 'width': 90, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap':
+			'wrap', 'text-halign': 'center', 'text-valign': 'center', 'background-color': 'blue'},
+			'selector': 'node[name="b"]'}]}
+>>>>>>> upstream/master
 		"""
 		attr_dict = attr_dict if attr_dict is not None else dict()
 
@@ -233,39 +601,51 @@ class GSGraph(nx.DiGraph):
 		if bubble:
 			style_properties = GSGraph.set_node_bubble_effect_property(style_properties, bubble, whitetext=False)
 
+<<<<<<< HEAD
                 # if any of the properties were specified in the attr_dict, 
                 # then overwrite the default style_properties with the given attr_dict value
 		style_properties.update(attr_dict)
                 attr_dict = style_properties
+=======
+		style_properties.update(attr_dict)
+>>>>>>> upstream/master
 
 		self.set_style_json({
 			'style': self.get_style_json().get('style') + [{
 				'selector': selector,
-				'style': attr_dict
+				'style': style_properties
 			}]
 		})
 
 	def add_edge_style(self, source, target, attr_dict=None, directed=False, color='#000000', width=1.0, arrow_shape='triangle',
-	                   edge_style='solid', arrow_fill='filled'):
+					   edge_style='solid', arrow_fill='filled'):
 		"""Add the style for the given edge in the style json.
 
-		source: string -- unique ID of the source node
-		target: string -- unique ID of the target node
-		color: string -- hexadecimal representation of the color (e.g., #000000), or the color name. Default = black.
-		directed: bool - if True, draw the edge as directed. Default = False.
-		width: float -- width of the edge.  Default = 1.0
-		arrow_shape: string -- shape of arrow head. Default is "triangle"
-		edge_style: string -- style of edge. Default is "solid"
-		arrow_fill: string -- fill of arrow. Default is "filled"
+		Args:
+			source (str): Unique ID of the source node.
+			target (str): Unique ID of the target node.
+			attr_dict (dict, optional): Json representation of style of edge. Defaults to None.
+			color (str, optional): Hexadecimal representation of the color (e.g., #000000), or the color name. Defaults to black.
+			directed (bool, optional): If True, draw the edge as directed. Defaults to False.
+			width (float, optional): Width of the edge. Defaults to 1.0.
+			arrow_shape (str, optional): Shape of arrow head. Defaults to 'triangle'. See :data:`ALLOWED_ARROW_SHAPES` for more details.
+			edge_style (str, optional): Style of edge. Defaults to 'solid'. See :data:`ALLOWED_EDGE_STYLES` for more details.
+			arrow_fill (str, optional): Fill of arrow. Defaults to 'filled'. See :data:`ALLOWED_ARROW_FILL` for more details.
 
-		Returns
-		-------
-		None
-
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.add_edge_style('a', 'b', directed=True, edge_style='dotted')
+			>>> G.add_edge_style('b', 'c', arrow_shape='tee', arrow_fill='hollow')
+			>>> G.get_style_json()
+			{'style': [{'style': {'width': 1.0, 'line-color': '#000000', 'target-arrow-shape':
+			'triangle', 'line-style': 'dotted', 'target-arrow-fill': 'filled', 'target-arrow-color':
+			'#000000'}, 'selector': 'edge[source="a"][target="b"]'}, {'style': {'width': 1.0,
+			'line-color': '#000000', 'target-arrow-shape': 'none', 'line-style': 'solid',
+			'target-arrow-fill': 'hollow', 'target-arrow-color': '#000000'}, 'selector':
+			'edge[source="b"][target="c"]'}]}
 		"""
-		data_properties = {}
 		style_properties = {}
-		data_properties.update({"source": source, "target": target})
 		style_properties = GSGraph.set_edge_color_property(style_properties, color)
 		style_properties = GSGraph.set_edge_width_property(style_properties, width)
 		style_properties = GSGraph.set_edge_target_arrow_shape_property(style_properties, arrow_shape)
@@ -277,20 +657,62 @@ class GSGraph(nx.DiGraph):
 
 		selector = 'edge[source="%s"][target="%s"]' % (source, target)
 
+<<<<<<< HEAD
                 # if any of the properties were specified in the attr_dict, 
                 # then overwrite the default style_properties with the given attr_dict value
 		style_properties.update(attr_dict)
                 attr_dict = style_properties
+=======
+		style_properties.update(attr_dict)
+>>>>>>> upstream/master
 
 		self.set_style_json({
 			'style': self.get_style_json().get('style') + [{
 				'selector': selector,
-				'style': attr_dict
+				'style': style_properties
 			}]
 		})
 
+	def get_node_position(self, node_name):
+		"""Get the position of a node.
 
+		Args:
+			node_name (str): Name of the node.
 
+		Returns:
+		 	dict or None: Dict of x,y co-ordinates of the node, if node position is defined; otherwise None.
+
+		"""
+		return self.positions_json.get(node_name, None)
+
+	def set_node_position(self, node_name, y, x):
+		"""Sets the position of a node.
+
+		Args:
+			node_name (str): Name of the node.
+			y (float): y co-ordinate of node.
+			x (float): x co-ordinate of node.
+		"""
+		self.positions_json.update({
+			node_name: {
+				'y': y,
+				'x': x
+			}
+		})
+
+	def remove_node_position(self, node_name):
+		"""Remove the position of a node.
+
+		Args:
+			node_name (str): Name of the node.
+
+		Raises:
+			Exception: If node positions are undefined.
+		"""
+		if node_name not in self.positions_json.keys():
+			raise Exception("Positions of node '%s' is undefined." % (node_name))
+		else:
+			del self.positions_json[node_name]
 
 	####################################################################
 	### NODE PROPERTY FUNCTIONS #################################################
@@ -298,19 +720,15 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_label_property(node_properties, label):
-		"""
-		Set the label "label" to a "node_properties" dict and return the "node_properties" dict.
-		The label is stored under "content" in the node information. Also set wrap = 'wrap' so newlines are interpreted.
+		"""Set 'label' to 'node_properties' dict and return the 'node_properties' dict.
+		The label is stored under 'content' in the node information. Also set wrap = 'wrap' so newlines are interpreted.
 
-		Parameters
-		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		label - text to display on node. "\n" will be interpreted as a newline.
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			label (str): Text to display on node. Newline sequence will be interpreted as a line break.
 
-		Returns
-		-------
-		Dictionary of node attributes.
-
+		Returns:
+			dict: Dictionary of node attributes.
 		"""
 		if label is not None:
 			node_properties.update({'content': label})
@@ -320,23 +738,17 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_wrap_property(node_properties, wrap):
-		"""
-		Adding node wrap allows the newline '\n' to be interpreted as a line break for the node.
+		"""Adding node wrap allows the newline sequence to be interpreted as a line break for the node.
 
-		Parameters
-		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		wrap - string denoting the type of wrap: one of "wrap" or "none".
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			wrap (str): String denoting the type of wrap: one of "wrap" or "none".
 
-		Returns
-		-------
-		Dictionary of node attributes.
+		Returns:
+			dict: Dictionary of node attributes.
 
-		Raises
-		-------
-
-		Exception - if the wrap parameter is not one of the allowed wrap styles. See ALLOWED_NODE_TEXT_WRAP for more details.
-
+		Raises:
+			Exception: If the wrap parameter is not one of the allowed wrap styles. See ALLOWED_NODE_TEXT_WRAP for more details.
 		"""
 		if wrap not in GSGraph.ALLOWED_NODE_TEXT_WRAP:
 			raise Exception('"%s" is not an allowed text wrap style.' % (wrap))
@@ -345,23 +757,17 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_shape_property(node_properties, shape):
-		"""
-		Add a shape property "shape" to the node_properties.
+		"""Add a shape property "shape" to the node_properties.
 
-		Parameters
-		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		shape - string -- shape of node. Default = "ellipse".
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			shape (str): Shape of node.
 
-		Returns
-		-------
-		Dictionary of node attributes.
+		Returns:
+			dict: Dictionary of node attributes.
 
-		Raises
-		-------
-
-		Exception - if the shape is not one of the allowed node shapes. See ALLOWED_NODE_SHAPES global variable.
-
+		Raises:
+			Exception: If the shape is not one of the allowed node shapes. See ALLOWED_NODE_SHAPES global variable.
 		"""
 		if shape not in GSGraph.ALLOWED_NODE_SHAPES:
 			raise Exception('"%s" is not an allowed shape.' % (shape))
@@ -370,25 +776,18 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_color_property(node_properties, color):
-		"""
-		Add a background color to the node_properties.
+		"""Add a background color to the node_properties.
 		Color can be a name (e.g., 'black') or an HTML string (e.g., #00000).
 
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			color (str): Hexadecimal representation of the color (e.g., #FFFFFF) or color name.
 
-		Parameters
-		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		color - string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name.
+		Returns:
+			dict: Dictionary of node attributes.
 
-		Returns
-		-------
-		Dictionary of node attributes.
-
-		Raises
-		-------
-
-		Exception - if the color is improperly formatted.
-
+		Raises:
+			Exception: If the color is improperly formatted.
 		"""
 		error = GSGraph.check_color_hex(color)
 		if error is not None:
@@ -398,19 +797,15 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_height_property(node_properties, height):
-		"""
-		Add a node height property to the node_properties.
+		"""Add a node height property to the node_properties.
 		If the height is 'None', then the height of the node is determined by the number of newlines in the label that will be displayed.
 
-		Parameters
-		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		height - int -- height of the node's body. Use None to determine height from the number of lines in the label.
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			height (int or None): Height of the node's body, or None to determine height from the number of lines in the label.
 
-		Returns
-		-------
-		Dictionary of node attributes.
-
+		Returns:
+			dict: Dictionary of node attributes.
 		"""
 		if height == None:
 			height = 'label'
@@ -420,19 +815,15 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_width_property(node_properties, width):
-		"""
-		Add a node width property to the node_properties.
+		"""Add a node width property to the node_properties.
 		If the width is 'None', then the width of the node is determined by the length of the label.
 
-		Parameters
-		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-		width - int -- width of the node's body, or None to determine width from length of label.
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			width (int or None): Width of the node's body, or None to determine width from length of label.
 
-		Returns
-		-------
-		Dictionary of node attributes.
-
+		Returns:
+			dict: Dictionary of node attributes.
 		"""
 		if width == None:
 			## take the longest width of the label after interpreting newlines.
@@ -442,6 +833,7 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_bubble_effect_property(node_properties, color, whitetext=False):
+<<<<<<< HEAD
 		"""
 		Add a "bubble effect" to the node by adding a border or outline 
                 around the text ('text-outline-width': 4) with the given color ('text-outline-color': color)
@@ -451,11 +843,17 @@ class GSGraph(nx.DiGraph):
 		whitetext - Boolean -- if True, text is colored white instead of black. Default is False.
 		color - string -- hexadecimal representation of the text outline color (e.g., #FFFFFF) or a color name.
 		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+=======
+		"""Add a "bubble effect" to the node by making the border color the same as the text outline color.
+>>>>>>> upstream/master
 
-		Returns
-		-------
-		Dictionary of node attributes.
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			color (str): Hexadecimal representation of the text outline color (e.g., #FFFFFF) or a color name.
+			whitetext (bool, optional): If True, text is colored white instead of black. Defaults to False.
 
+		Returns:
+			dict: Dictionary of node attributes.
 		"""
 		node_properties.update({'text-outline-color': color})
 		# also make outline thicker making the text look larger
@@ -466,40 +864,31 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_border_width_property(node_properties, border_width):
-		"""
-		Set the border width in node_properties.
+		"""Set the border width in node_properties.
 
-		Parameters
-		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			border_width (int): Width of border.
 
-		Returns
-		-------
-		Dictionary of node attributes.
-
+		Returns:
+			dict: Dictionary of node attributes.
 		"""
 		node_properties.update({'border-width': border_width})
 		return node_properties
 
 	@staticmethod
 	def set_node_border_style_property(node_properties, border_style):
-		"""
-		Set the border width in node_properties.
+		"""Set the border width in node_properties.
 
-		Parameters
-		----------
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			border_style (str): Style of border.
 
-		Returns
-		-------
-		Dictionary of node attributes.
+		Returns:
+			dict: Dictionary of node attributes.
 
-		Raises
-		-------
-
-		Exception - if the border_style parameter is not one of the allowed border styles. See ALLOWED_NODE_BORDER_STYLES for more details.
-
-
+		Raises:
+			Exception: If the border_style parameter is not one of the allowed border styles. See ALLOWED_NODE_BORDER_STYLES for more details.
 		"""
 		if border_style not in GSGraph.ALLOWED_NODE_BORDER_STYLES:
 			raise Exception('"%s" is not an allowed node border style.' % (border_style))
@@ -508,24 +897,17 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_border_color_property(node_properties, border_color):
-		"""
-		Set the border_color in node_properties.
+		"""Set the border_color in node_properties.
 
-		Parameters
-		----------
-		color - string -- hexadecimal representation of the text outline color (e.g., #FFFFFF) or a color name.
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			border_color (str): Hexadecimal representation of the border color (e.g., #FFFFFF) or a color name.
 
-		Returns
-		-------
-		Dictionary of node attributes.
+		Returns:
+			dict: Dictionary of node attributes.
 
-		Raises
-		-------
-
-		Exception - if the border_color is improperly formatted.
-
-
+		Raises:
+			Exception: If the border_color is improperly formatted.
 		"""
 		error = GSGraph.check_color_hex(border_color)
 		if error is not None:
@@ -535,39 +917,29 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_vertical_alignment_property(node_properties, valign):
+		"""Set the vertical alignment of label in node_properties.
+
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			valign (str): Vertical alignment of text.
+
+		Returns:
+			dict: Dictionary of node attributes.
 		"""
-		Set the vertical alignment of label in node_properties.
-
-		Parameters
-		----------
-		valign - string -- alignment of text.
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-
-		Returns
-		-------
-		Dictionary of node attributes.
-
-		"""
-
 		node_properties.update({'text-valign': valign})
 		return node_properties
 
 	@staticmethod
 	def set_node_horizontal_alignment_property(node_properties, halign):
+		"""Set the horizontal alignment of label in node_properties.
+
+		Args:
+			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
+			halign (str): Horizontal alignment of text.
+
+		Returns:
+			dict: Dictionary of node attributes.
 		"""
-		Set the horizontal alignment of label in node_properties.
-
-		Parameters
-		----------
-		valign - halign -- alignment of text.
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-
-		Returns
-		-------
-		Dictionary of node attributes.
-
-		"""
-
 		node_properties.update({'text-halign': halign})
 		return node_properties
 
@@ -577,8 +949,7 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_edge_color_property(edge_properties, color):
-		"""
-		Add a edge color to the edge_properties.
+		"""Add a edge color to the edge_properties.
 
 		Color both the line and the target arrow; if the edge
 		is undirected, then the target arrow color doesn't matter.
@@ -586,20 +957,15 @@ class GSGraph(nx.DiGraph):
 
 		Color can be a name (e.g., 'black') or an HTML string (e.g., #00000).
 
-		Parameters
-		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
-		color - string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name.
+		Args:
+			edge_properties (dict): Dictionary of edge attributes. Key-value pairs will be used to set data associated with the edge.
+			color (str): Hexadecimal representation of the color (e.g., #FFFFFF) or color name.
 
-		Returns
-		-------
-		Dictionary of edge attributes.
+		Returns:
+			dict: Dictionary of edge attributes.
 
-		Raises
-		-------
-
-		Exception - if the color is improperly formatted.
-
+		Raises:
+			Exception: If the color is improperly formatted.
 		"""
 		error = GSGraph.check_color_hex(color)
 		if error is not None:
@@ -611,19 +977,15 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_edge_directionality_property(edge_properties, directed, arrow_shape='triangle'):
-		"""
-		Sets a target arrow shape.
+		"""Sets a target arrow shape.
 
-		Parameters
-		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
-		directed - bool - if True, draw the edge as directed.
-		arrow_shape - string -- shape of arrow. See ALLOWED_ARROW_SHAPES.
+		Args:
+			edge_properties (dict): Dictionary of edge attributes. Key-value pairs will be used to set data associated with the edge.
+			directed (bool): If True, draw the edge as directed.
+			arrow_shape (str): Shape of arrow. Defaults to 'triangle'. See ALLOWED_ARROW_SHAPES.
 
-		Returns
-		-------
-		Dictionary of edge attributes.
-
+		Returns:
+			dict: Dictionary of edge attributes.
 		"""
 		if directed:
 			edge_properties = GSGraph.set_edge_target_arrow_shape_property(edge_properties, arrow_shape)
@@ -633,85 +995,73 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_edge_width_property(edge_properties, width):
-		"""
-		Sets the width property of the edge.
+		"""Sets the width property of the edge.
 
-		Parameters
-		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
-		width - float -- width of the edge.  Default = 1.0
+		Args:
+			edge_properties (dict): Dictionary of edge attributes. Key-value pairs will be used to set data associated with the edge.
+			width (float): Width of the edge.
 
-		Returns
-		-------
-		Dictionary of edge attributes.
-
+		Returns:
+			dict: Dictionary of edge attributes.
 		"""
 		edge_properties.update({'width': width})
 		return edge_properties
 
 	@staticmethod
 	def set_edge_target_arrow_shape_property(edge_properties, arrow_shape):
-		"""
-		Assigns an arrow shape to edge
+		"""Assigns an arrow shape to edge.
 
-		Parameters
-		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
+		Args:
+			edge_properties (dict): Dictionary of edge attributes. Key-value pairs will be used to set data associated with the edge.
+			arrow_shape (str): Shape of arrow. See ALLOWED_ARROW_SHAPES.
 
-		Returns
-		-------
-		Dictionary of edge attributes.
-
+		Returns:
+			dict: Dictionary of edge attributes.
 		"""
 		edge_properties.update({'target-arrow-shape': arrow_shape})
 		return edge_properties
 
 	@staticmethod
 	def set_edge_line_style_property(edge_properties, style):
-		"""
-		Adds the edge line style to edge
+		"""Adds the edge line style to edge.
 
-		Parameters
-		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
-		style - string -- style of line
+		Args:
+			edge_properties (dict): Dictionary of edge attributes. Key-value pairs will be used to set data associated with the edge.
+			style (str): Style of line.
 
-		Returns
-		-------
-		Dictionary of edge attributes.
-
+		Returns:
+			dict: Dictionary of edge attributes.
 		"""
 		edge_properties.update({'line-style': style})
 		return edge_properties
 
 	@staticmethod
 	def set_edge_target_arrow_fill(edge_properties, fill):
-		"""
-		Adds the arrowhead fill to edge
+		"""Adds the arrowhead fill to edge.
 
-		Parameters
-		----------
-		edge_properties - Dictionary of edge attributes.  Key/value pairs will be used to set data associated with the edge.
-		fill - string -- fill of arrowhead.
+		Args:
+			edge_properties (dict): Dictionary of edge attributes. Key-value pairs will be used to set data associated with the edge.
+			fill (str): Fill of arrowhead.
 
-		Returns
-		-------
-		Dictionary of edge attributes.
-
+		Returns:
+			dict: Dictionary of edge attributes.
 		"""
 		edge_properties.update({'target-arrow-fill': fill})
 		return edge_properties
 
 	@staticmethod
 	def check_color_hex(color_code):
-		"""
-		Check the validity of the hexadecimal code of various node and edge color
+		"""Check the validity of the hexadecimal code of various node and edge color
 		related attributes.
 
 		This function returns an error if the hexadecimal code is not of the format
 		'#XXX' or '#XXXXXX', i.e. hexadecimal color code is not valid.
 
-		:param color_code: color code
+		Args:
+			color_code (str): Hex code of color or color name.
+
+		Returns:
+			None or str: None, if color is valid; error message if color is invalid.
 		"""
 		# if color name is given instead of hex code, no need to check its validity
 		if not color_code.startswith('#'):
@@ -724,49 +1074,34 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def validate_property(element, element_selector, property_name, valid_property_values):
-		"""
-		Goes through array to see if property is contained in the array.
+		"""Goes through array to see if property is contained in the array.
 
-		Parameters
-		----------
-		element: Element to search for in network
-		element_selector: selector for element in the network
-		property_name: name of the property
-		valid_property_values: List of valid properties
+		Args:
+			element (dict): Element to search for in network.
+			element_selector (str): Selector for element in the network.
+			property_name (str): Name of the property.
+			valid_property_values (List[str]): List of valid properties.
 
-		Returns
-		-------
-		None - if the property is valid or does not exist
-		Error message - if the property is not valid
-
+		Returns:
+			None or str: None, if the property is valid or does not exist; error message if property is invalid.
 		"""
 		if property_name in element and element[property_name] not in valid_property_values:
 			return element_selector + " contains illegal value for property: " + property_name + ".  Value given for this property was: " + \
-			       element[
-				       property_name] + ".  Accepted values for property: " + property_name + " are: [" + valid_property_values + "]"
+				   element[property_name] + ".  Accepted values for property: " + property_name + " are: [" + valid_property_values + "]"
 
 		return None
 
 	@staticmethod
 	def validate_node_data_properties(data_properties, nodes_list):
+		"""Validates the data properties.
+
+		Args:
+			data_properties (dict): Dict of node data properties
+			nodes_list (List[str]): List of nodes.
+
+		Raises:
+			Exception: If properties are invalid.
 		"""
-		Validates the data properties.
-
-		Parameters
-		----------
-		data_properties: dict of node data properties
-		nodes_list: list of nodes.
-
-		Returns
-		-------
-		None - if node_properties are valid
-
-		Raises
-		--------
-		Raises an exception - if properties are not valid.
-
-		"""
-
 		# Check to see if name is in node_properties
 		if "name" not in data_properties:
 			raise Exception("All nodes must have a unique name.  Please verify that all nodes meet this requirement.")
@@ -781,27 +1116,20 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def validate_style_properties(style_properties, selector):
-		"""
-		Validates the style properties.
+		"""Validates the style properties.
 
-		Parameters
-		----------
-		style_properties: dict of elements style properties
-		selector: selector for the element
+		Args:
+			style_properties (dict): Dict of elements style properties.
+			selector (str): Selector for the element.
 
-		Returns
-		-------
-		None - if node_properties are valid
+		Returns:
+			None: None, if properties are valid.
 
-		Raises
-		--------
-		Raises an exception - if properties are not valid.
+		Raises:
+			Exception: If properties are invalid.
 
-		Notes
-		-----
-
-		Refer to http://js.cytoscape.org/#selectors for selectors.
-
+		Note:
+			Refer to http://js.cytoscape.org/#selectors for selectors.
 		"""
 		error_list = []
 
@@ -851,30 +1179,20 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def validate_edge_data_properties(data_properties, nodes_list):
+		"""Validates the data properties.
+
+		Args:
+			data_properties (dict): Dict of edge data properties.
+			nodes_list (List[str]): List of nodes.
+
+		Raises:
+			Exception: If properties are invalid.
 		"""
-		Validates the data properties.
-
-		Parameters
-		----------
-		data_properties: dict of edge data properties
-		nodes_list: list of nodes.
-
-		Returns
-		-------
-		None - if edge_properties are valid
-
-		Raises
-		--------
-		Raises an exception - if properties are not valid.
-
-		"""
-
 		# Go through all edge properties to verify if edges contain valid properties recognized by CytoscapeJS
 
 		# If edge has no source and target nodes, throw error since they are required
 		if "source" not in data_properties or "target" not in data_properties:
-			raise Exception(
-				"All edges must have at least a source and target property.  Please verify that all edges meet this requirement.")
+			raise Exception("All edges must have at least a source and target property.  Please verify that all edges meet this requirement.")
 
 		# Check if source and target node of an edge exist in the node list
 		if data_properties["source"] not in nodes_list or data_properties["target"] not in nodes_list:
@@ -893,13 +1211,20 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def validate_style_json(style_json):
+		"""Validates the json representation of style of graph.
+
+		Args:
+			style_json (dict): Json representation for graph style.
+
+		Raises:
+			Exception: If properties are invalid.
+		"""
 		if type(style_json) is list:
 			for json in style_json:
 				GSGraph.validate_style_json(json)
 		else:
 			for elem in style_json.get('style', []):
 				if 'css' in elem:
-					GSGraph.validate_style_properties(elem['selector'], elem['css'])
+					GSGraph.validate_style_properties(elem['css'], elem['selector'])
 				else:
-					GSGraph.validate_style_properties(elem['selector'], elem['style'])
-
+					GSGraph.validate_style_properties(elem['style'], elem['selector'])

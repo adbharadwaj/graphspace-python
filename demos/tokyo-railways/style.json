@@ -1,0 +1,79 @@
+{
+    "style": [
+        {
+            "style": {
+                "font-size": 16,
+                "color": "orange",
+                "min-zoomed-font-size": 12,
+                "content": "data(station_name)",
+                "width": 20,
+                "z-index": 1,
+                "border-color": "black",
+                "height": 20,
+                "background-color": "grey"
+            },
+            "selector": "node"
+        },
+        {
+            "style": {
+                "opacity": 0.5,
+                "font-size": 8,
+                "color": "grey",
+                "line-color": "green",
+                "min-zoomed-font-size": 12,
+                "content": "data(line_name)",
+                "width": 20,
+                "curve-style": "haystack",
+                "haystack-radius": 0
+            },
+            "selector": "edge"
+        },
+        {
+            "style": {
+                "line-color": "#00FFFF"
+            },
+            "selector": "edge[company_type = 0]"
+        },
+        {
+            "style": {
+                "line-color": "#00FF33"
+            },
+            "selector": "edge[company_type = 1]"
+        },
+        {
+            "style": {
+                "line-color": "yellow"
+            },
+            "selector": "edge[company_type = 2]"
+        },
+        {
+            "style": {
+                "line-color": "red"
+            },
+            "selector": "edge[company_type = 3]"
+        },
+        {
+            "style": {
+                "active-bg-color": "black"
+            },
+            "selector": "core"
+        },
+        {
+            "style": {
+                "text-outline-color": "#000",
+                "font-size": 48,
+                "width": 60,
+                "border-color": "#000",
+                "border-width": "10px",
+                "min-zoomed-font-size": 0,
+                "text-outline-width": "10px",
+                "z-index": 9999,
+                "height": 60
+            },
+            "selector": "node:selected"
+        }
+    ],
+    "target_cytoscapejs_version": "~2.7",
+    "generated_by": "graphspace-2.0.0",
+    "format_version": "1.0"
+}

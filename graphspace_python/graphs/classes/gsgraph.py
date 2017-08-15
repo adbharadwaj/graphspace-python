@@ -520,32 +520,6 @@ class GSGraph(nx.DiGraph):
 		super(GSGraph, self).add_node(node_name, attr_dict)
 
 	def add_node_style(self, node_name, attr_dict=None, content=None, shape='ellipse', color='#FFFFFF', height=None,
-<<<<<<< HEAD
-	                                   width=None, bubble=None, valign='center', halign='center', style="solid",
-	                                   border_color='#000000', border_width=1):
-		"""
-		Add the style for the given node in the style json.
-
-		Parameters
-		----------
-		node_name: string - name of the node.
-		shape: string -- shape of node. Default = "ellipse".
-		color: string -- hexadecimal representation of the color (e.g., #FFFFFF) or color name. Default = white.
-		height: int -- height of the node's body. Use None to determine height from the number of lines in the label. Default = None.
-		width: int -- width of the node's body, or None to determine width from length of label.  Default=None.
-		bubble: string -- color of the text outline. Using this option gives a "bubble" effect; see the bubbleeffect() function. Optional.
-		valign: string -- vertical alignment. Default = center.
-		halign: string -- horizontal alignment. Default = center.
-		style: string -- style of border. Default is "solid".  
-		border_color: string -- color of border. Default is #000000. 
-		border_width: int -- width of border. Default is 4.
-
-
-		Returns
-		-------
-		None
-
-=======
 									   width=None, bubble=None, valign='center', halign='center', style="solid",
 									   border_color='#000000', border_width=1):
 		"""Add the style for the given node in the style json.
@@ -579,7 +553,6 @@ class GSGraph(nx.DiGraph):
 			'height': 90, 'width': 90, 'shape': 'ellipse', 'border-style': 'solid', 'text-wrap':
 			'wrap', 'text-halign': 'center', 'text-valign': 'center', 'background-color': 'blue'},
 			'selector': 'node[name="b"]'}]}
->>>>>>> upstream/master
 		"""
 		attr_dict = attr_dict if attr_dict is not None else dict()
 
@@ -601,14 +574,7 @@ class GSGraph(nx.DiGraph):
 		if bubble:
 			style_properties = GSGraph.set_node_bubble_effect_property(style_properties, bubble, whitetext=False)
 
-<<<<<<< HEAD
-                # if any of the properties were specified in the attr_dict, 
-                # then overwrite the default style_properties with the given attr_dict value
 		style_properties.update(attr_dict)
-                attr_dict = style_properties
-=======
-		style_properties.update(attr_dict)
->>>>>>> upstream/master
 
 		self.set_style_json({
 			'style': self.get_style_json().get('style') + [{
@@ -657,14 +623,7 @@ class GSGraph(nx.DiGraph):
 
 		selector = 'edge[source="%s"][target="%s"]' % (source, target)
 
-<<<<<<< HEAD
-                # if any of the properties were specified in the attr_dict, 
-                # then overwrite the default style_properties with the given attr_dict value
 		style_properties.update(attr_dict)
-                attr_dict = style_properties
-=======
-		style_properties.update(attr_dict)
->>>>>>> upstream/master
 
 		self.set_style_json({
 			'style': self.get_style_json().get('style') + [{
@@ -833,19 +792,9 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_bubble_effect_property(node_properties, color, whitetext=False):
-<<<<<<< HEAD
 		"""
 		Add a "bubble effect" to the node by adding a border or outline 
                 around the text ('text-outline-width': 4) with the given color ('text-outline-color': color)
-
-		Parameters
-		----------
-		whitetext - Boolean -- if True, text is colored white instead of black. Default is False.
-		color - string -- hexadecimal representation of the text outline color (e.g., #FFFFFF) or a color name.
-		node_properties - Dictionary of node attributes.  Key/value pairs will be used to set data associated with the node.
-=======
-		"""Add a "bubble effect" to the node by making the border color the same as the text outline color.
->>>>>>> upstream/master
 
 		Args:
 			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
@@ -856,7 +805,8 @@ class GSGraph(nx.DiGraph):
 			dict: Dictionary of node attributes.
 		"""
 		node_properties.update({'text-outline-color': color})
-		# also make outline thicker making the text look larger
+		#node_properties = GSGraph.set_node_border_color_property(node_properties, color)
+		# also make outline thicker and text larger
 		node_properties.update({'text-outline-width': 4})
 		if whitetext:
 			node_properties.update({'color': 'white'})

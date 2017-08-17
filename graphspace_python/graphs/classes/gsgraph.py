@@ -632,6 +632,29 @@ class GSGraph(nx.DiGraph):
 			}]
 		})
 
+	def add_style(self, selector, style_dict):
+		"""Add the style for the given selector in the style json.
+
+		Args:
+			selector (str): A selector functions similar to a CSS selector on DOM elements, but here it works on collections of graph elements.
+			style_dict (dict): Key-value pair of style attributes and their values.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.add_style('node', {'background-color': '#bbb', 'opacity': 0.8})
+			>>> G.add_style('edge', {'line-color': 'green'})
+			>>> G.get_style_json()
+			{'style': [{'style': {'opacity': 0.8, 'background-color': '#bbb'}, 'selector':
+			'node'}, {'style': {'line-color': 'green'}, 'selector': 'edge'}]}
+		"""
+		self.set_style_json({
+			'style': self.get_style_json().get('style') + [{
+				'selector': selector,
+				'style': style_dict
+			}]
+		})
+
 	def get_node_position(self, node_name):
 		"""Get the position of a node.
 

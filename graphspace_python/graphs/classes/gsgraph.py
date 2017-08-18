@@ -472,12 +472,13 @@ class GSGraph(nx.DiGraph):
 		GSGraph.validate_edge_data_properties(data_properties=attr_dict, nodes_list=self.nodes())
 		super(GSGraph, self).add_edge(source, target, attr_dict)
 
-	def add_node(self, node_name, attr_dict=None, label=None, popup=None, k=None, **attr):
+	def add_node(self, node_name, attr_dict=None, parent=None, label=None, popup=None, k=None, **attr):
 		"""Add a node to the graph.
 
 		Args:
 			node_name (str): Name of node.
 			attr_dict (dict, optional): Json representation of node data. Defaults to None.
+			parent (str, optional): Parent of the node, if any (for compound nodes). Defaults to None.
 			label (str, optional): Label of node. Defaults to None.
 			popup (str, optional): A string that will be displayed in a popup window when
 				the user clicks the node. This string can be HTML-formatted information,
@@ -507,6 +508,8 @@ class GSGraph(nx.DiGraph):
 			except AttributeError:
 				raise NetworkXError("The attr_dict argument must be a dictionary.")
 
+		if parent is not None:
+			attr_dict.update({"parent": parent})
 		if popup is not None:
 			attr_dict.update({"popup": popup})
 		if k is not None:

@@ -19,8 +19,8 @@ style_data = json.loads(response.read())
 # Initialize graph
 G = GSGraph()
 # Set name, tags and visibility status
-G.set_name('Colajs gene-gene graph')
-G.set_tags(['colajs','gene-gene'])
+G.set_name('Gene-gene graph')
+G.set_tags(['gene-gene', 'graphspace', 'demo'])
 G.set_is_public()
 # Define and set data
 data = {

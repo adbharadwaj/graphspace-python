@@ -8,7 +8,7 @@ graphspace = GraphSpace('user1@example.com', 'user1')
 G = GSGraph()
 # Set name, tags and visibility status
 G.set_name('Popup Demo')
-G.set_tags(['popup'])
+G.set_tags(['popup', 'graphspace', 'demo'])
 G.set_is_public()
 # Define and set data
 data = {

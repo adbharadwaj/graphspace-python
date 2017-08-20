@@ -17,7 +17,7 @@ with open('style.json') as style_json_file:
 G = GSGraph()
 # Set name, tags and visibility status
 G.set_name('Labels Demo')
-G.set_tags(['labels'])
+G.set_tags(['labels', 'graphspace', 'demo'])
 G.set_is_public()
 # Define and set data
 data = {

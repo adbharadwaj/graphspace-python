@@ -17,7 +17,7 @@ with open('style.json') as style_json_file:
 G = GSGraph()
 # Set name, tags and visibility status
 G.set_name('Tokyo Railways')
-G.set_tags(['tokyo-railways'])
+G.set_tags(['tokyo-railways', 'graphspace', 'demo'])
 G.set_is_public()
 # Define and set data
 data = {

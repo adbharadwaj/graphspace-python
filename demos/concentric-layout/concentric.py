@@ -15,7 +15,7 @@ graph_data = json.loads(response.read())
 G = GSGraph()
 # Set name, tags and visibility status
 G.set_name('Concentric Layout')
-G.set_tags(['concentric-layout'])
+G.set_tags(['concentric-layout', 'graphspace', 'demo'])
 G.set_is_public()
 # Define and set data
 data = {

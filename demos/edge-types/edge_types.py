@@ -9,7 +9,7 @@ graphspace = GraphSpace('user1@example.com', 'user1')
 G = GSGraph()
 # Set name, tags and visibility status
 G.set_name('Edge Types Demo')
-G.set_tags(['edge-types'])
+G.set_tags(['edge-types', 'graphspace', 'demo'])
 G.set_is_public()
 # Define and set data
 data = {

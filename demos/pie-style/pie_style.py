@@ -9,7 +9,7 @@ graphspace = GraphSpace('user1@example.com', 'user1')
 G = GSGraph()
 # Set name, tags and visibility status
 G.set_name('Pie Style')
-G.set_tags(['pie-style', 'pie'])
+G.set_tags(['pie-style', 'pie', 'graphspace', 'demo'])
 G.set_is_public()
 # Define and set data
 data = {

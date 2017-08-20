@@ -15,7 +15,7 @@ graph_data = json.loads(response.read())
 G = GSGraph()
 # Set name, tags and visibility status
 G.set_name('Grid Layout')
-G.set_tags(['grid-layout'])
+G.set_tags(['grid-layout', 'graphspace', 'demo'])
 G.set_is_public()
 # Define and set data
 data = {

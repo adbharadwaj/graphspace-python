@@ -31,7 +31,7 @@ G.set_data(data)
 
 # Construct nodes and edges of the graph from graph data
 for node in graph_data['elements']['nodes']:
-    G.add_node(node['data']['id'], node['data'], node['data']['name'])
+    G.add_node(node['data']['id'], node['data'], label=node['data']['name'])
     G.set_node_position(node['data']['id'], node['position']['y'], node['position']['x'])
 for edge in graph_data['elements']['edges']:
     G.add_edge(edge['data']['source'], edge['data']['target'], edge['data'])

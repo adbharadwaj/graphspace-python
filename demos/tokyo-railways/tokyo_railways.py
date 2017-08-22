@@ -1,3 +1,4 @@
+import urllib
 import json
 from graphspace_python.graphs.classes.gsgraph import GSGraph
 from graphspace_python.api.client import GraphSpace
@@ -5,9 +6,10 @@ from graphspace_python.api.client import GraphSpace
 # Initialize client with your username and password
 graphspace = GraphSpace('user1@example.com', 'user1')
 
-# Load the graph json file
-with open('graph.json') as graph_json_file:
-    graph_json = json.load(graph_json_file)
+# Fetch the graph data
+data_url = 'https://cdn.rawgit.com/maxkfranz/934042c1ecc464a8de85/raw'
+response = urllib.urlopen(data_url)
+graph_data = json.loads(response.read())
 
 # Load the style json file
 with open('style.json') as style_json_file:
@@ -26,8 +28,15 @@ data = {
     'directed': False
 }
 G.set_data(data)
-# Set graph_json and style_json
-G.set_graph_json(graph_json)
+
+# Construct nodes and edges of the graph from graph data
+for node in graph_data['elements']['nodes']:
+    G.add_node(node['data']['id'], node['data'])
+    G.set_node_position(node['data']['id'], node['position']['y'], node['position']['x'])
+for edge in graph_data['elements']['edges']:
+    G.add_edge(edge['data']['source'], edge['data']['target'], edge['data'])
+
+# Set style_json for the graph
 G.set_style_json(style_json)
 
 # Post graph to GraphSpace

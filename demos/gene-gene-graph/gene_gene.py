@@ -37,13 +37,13 @@ for elem in graph_data:
                 + "\">GeneCard</a><br><a target=\"_blank\" href=\"http://www.uniprot.org/uniprot/?query=" + elem['data']['name']
                 + "&fil=organism%3A%22Homo+sapiens+%28Human%29+%5B9606%5D%22&sort=score\">UniProt search</a><br><a target=\"_blank\" href=\"http://genemania.org/search/human/"
                 + elem['data']['name'] + "\">GeneMANIA</a>")
-        G.add_node(elem['data']['id'], elem['data'], elem['data']['name'], popup)
+        G.add_node(elem['data']['id'], elem['data'], label=elem['data']['name'], popup=popup)
         G.set_node_position(elem['data']['id'], elem['position']['y'], elem['position']['x'])
     else:
         G.add_edge(elem['data']['source'], elem['data']['target'], elem['data'])
 
 # Set style_json for the graph
-del style_data[1]['style']['content']
+del(style_data[1]['style']['content'])
 style_json = {
     'style': style_data
 }

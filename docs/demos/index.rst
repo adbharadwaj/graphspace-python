@@ -4,11 +4,11 @@ Demos
 +-----------------------------------------+-----------------------------------------+-----------------------------------------+
 | .. figure:: images/gene-gene.png        | .. figure:: images/tokyo-railways.png   | .. figure:: images/wineandcheese.png    |
 |   :alt: gene-gene graph image           |   :alt: Tokyo railways network image    |   :alt: wine and cheese map image       |
-|   :target: http://graphspace.org/       |   :target: http://graphspace.org/       |   :target: http://graphspace.org/       |
-|     graphs/22710                        |     graphs/22683                        |     graphs/22692                        |
-|   :align: center                        |   :align: center                        |   :align: center                        |
-|                                         |                                         |                                         |
-|   Gene-gene Graph [`GitHub`__]          |   Tokyo Railways [`GitHub`__]           |   Wine & Cheese  [`GitHub`__]           |
+|   :target: ./gene-gene-graph.html       |   :target: http://graphspace.org/       |   :target: http://graphspace.org/       |
+|   :align: center                        |     graphs/22683                        |     graphs/22692                        |
+|                                         |   :align: center                        |   :align: center                        |
+|   Gene-gene Graph [`GitHub`__]          |                                         |                                         |
+|                                         |   Tokyo Railways [`GitHub`__]           |   Wine & Cheese  [`GitHub`__]           |
 +-----------------------------------------+-----------------------------------------+-----------------------------------------+
 | .. figure:: images/popup.png            | .. figure:: images/circle.png           | .. figure:: images/concentric.png       |
 |   :alt: popup demo image                |   :alt: circle layout image             |   :alt: concentric layout image         |

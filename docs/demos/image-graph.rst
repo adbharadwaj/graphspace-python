@@ -81,8 +81,8 @@ You can add edges to the graph from an iterable container having source and targ
 >>>         ('grasshopper', 'wheat'), ('ladybug', 'aphid'), ('aphid', 'rose')]
 >>> G.add_edges_from(edges)
 
-Set styling for the node
-^^^^^^^^^^^^^^^^^^^^^^^^
+Set styling for the graph elements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can assign style to the added nodes and edges in the following manner:
 

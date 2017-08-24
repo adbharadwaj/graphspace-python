@@ -99,7 +99,7 @@ when the node is tapped on.
 Set styling for graph elements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Using the fetched style data you can define the the **style_json** for the graph.
+Using the fetched style data you can define the **style_json** for the graph.
 As during creating nodes, label is assigned to the nodes from the graph data, there
 is no need of the attribute **content** in the style attributes of the nodes. So
 styling can be set in the following way:

@@ -34,29 +34,18 @@ for elem in graph_data:
         G.add_edge(elem['data']['source'], elem['data']['target'], elem['data'])
 
 # Define style for the graph
-style_json = {
-    "style": [
-        {
-            'selector': 'node',
-            'style': {
-                'height': 20,
-                'width': 20,
-                'background-color': '#18e018'
-            }
-        },
-        {
-            'selector': 'edge',
-            'style': {
-                'curve-style': 'haystack',
-                'haystack-radius': 0,
-                'width': 5,
-                'opacity': 0.5,
-                'line-color': '#a2efa2'
-            }
-        }
-    ]
-}
-G.set_style_json(style_json)
+G.add_style('node', {
+    'height': 20,
+    'width': 20,
+    'background-color': '#18e018'
+})
+G.add_style('edge', {
+    'curve-style': 'haystack',
+    'haystack-radius': 0,
+    'width': 5,
+    'opacity': 0.5,
+    'line-color': '#a2efa2'
+})
 
 # Post graph to GraphSpace
 graph = graphspace.post_graph(G)

@@ -16,22 +16,14 @@ data = {
 }
 G.set_data(data)
 
-# Define node for the graph
+# Add node to the graph
 G.add_node('n', label='Tap me!', popup='Hello!')
 # Define node style
-style_json = {
-    "style": [
-        {
-            "style": {
-                "content": "data(label)",
-                "background-color": "grey",
-                "text-valign": "top"
-            },
-            "selector": "node"
-        }
-    ]
-}
-G.set_style_json(style_json)
+G.add_style('node', {
+    "content": "data(label)",
+    "background-color": "grey",
+    "text-valign": "top"
+})
 
 # Post graph to GraphSpace
 graph = graphspace.post_graph(G)

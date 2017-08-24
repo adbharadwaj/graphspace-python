@@ -4,40 +4,35 @@ Demos
 +-----------------------------------------+-----------------------------------------+-----------------------------------------+
 | .. figure:: images/gene-gene.png        | .. figure:: images/tokyo-railways.png   | .. figure:: images/wineandcheese.png    |
 |   :alt: gene-gene graph image           |   :alt: Tokyo railways network image    |   :alt: wine and cheese map image       |
-|   :target: ./gene-gene-graph.html       |   :target: http://graphspace.org/       |   :target: http://graphspace.org/       |
-|   :align: center                        |     graphs/22683                        |     graphs/22692                        |
-|                                         |   :align: center                        |   :align: center                        |
-|   Gene-gene Graph [`GitHub`__]          |                                         |                                         |
-|                                         |   Tokyo Railways [`GitHub`__]           |   Wine & Cheese  [`GitHub`__]           |
+|   :target: ./gene-gene-graph.html       |   :target: ./tokyo-railways.html        |   :target: ./wineandcheese.html         |
+|   :align: center                        |   :align: center                        |   :align: center                        |
+|                                         |                                         |                                         |
+|   Gene-gene Graph [`GitHub`__]          |   Tokyo Railways [`GitHub`__]           |   Wine & Cheese  [`GitHub`__]           |
 +-----------------------------------------+-----------------------------------------+-----------------------------------------+
 | .. figure:: images/popup.png            | .. figure:: images/circle.png           | .. figure:: images/concentric.png       |
 |   :alt: popup demo image                |   :alt: circle layout image             |   :alt: concentric layout image         |
-|   :target: http://graphspace.org/       |   :target: http://graphspace.org/       |   :target: http://graphspace.org/       |
-|     graphs/22708                        |     graphs/22725                        |     graphs/22735                        |
+|   :target: ./popup.html                 |   :target: ./circle-layout.html         |   :target: ./concentric-layout.html     |
 |   :align: center                        |   :align: center                        |   :align: center                        |
 |                                         |                                         |                                         |
 |   Popup [`GitHub`__]                    |   Circle Layout [`GitHub`__]            |   Concentric Layout [`GitHub`__]        |
 +-----------------------------------------+-----------------------------------------+-----------------------------------------+
 | .. figure:: images/grid.png             | .. figure:: images/image-graph.png      | .. figure:: images/edges.png            |
 |   :alt: grid layout image               |   :alt: image graph image               |   :alt: edge types image                |
-|   :target: http://graphspace.org/       |   :target: http://graphspace.org/       |   :target: http://graphspace.org/       |
-|     graphs/22736                        |     graphs/22758                        |     graphs/22771                        |
+|   :target: ./grid-layout.html           |   :target: ./image-graph.html           |   :target: ./edge-types.html            |
 |   :align: center                        |   :align: center                        |   :align: center                        |
 |                                         |                                         |                                         |
 |   Grid Layout [`GitHub`__]              |   Image Graph [`GitHub`__]              |   Edge Types [`GitHub`__]               |
 +-----------------------------------------+-----------------------------------------+-----------------------------------------+
 | .. figure:: images/labels.png           | .. figure:: images/compound-nodes.png   | .. figure:: images/pie.png              |
 |   :alt: labels image                    |   :alt: compound nodes graph image      |   :alt: pie style image                 |
-|   :target: http://graphspace.org/       |   :target: http://graphspace.org/       |   :target: http://graphspace.org/       |
-|     graphs/22774                        |     graphs/22776                        |     graphs/22755                        |
+|   :target: ./labels.html                |   :target: ./compound-nodes.html        |   :target: ./pie-style.html             |
 |   :align: center                        |   :align: center                        |   :align: center                        |
 |                                         |                                         |                                         |
 |   Labels [`GitHub`__]                   |   Compound Nodes [`GitHub`__]           |   Pie Style [`GitHub`__]                |
 +-----------------------------------------+-----------------------------------------+-----------------------------------------+
 |                                           .. figure:: images/visual.png                                                     |
 |                                             :alt: visual style image                                                        |
-|                                             :target: http://graphspace.org/                                                 |
-|                                               graphs/22789                                                                  |
+|                                             :target: ./visual-style.html                                                    |
 |                                             :align: center                                                                  |
 |                                             :width: 200px                                                                   |
 |                                                                                                                             |

@@ -422,7 +422,7 @@ class GSGraph(nx.DiGraph):
 		self.tags = tags
 
 	def add_edge(self, source, target, attr_dict=None, directed=False, popup=None, k=None, **attr):
-		"""Add a edge to the graph.
+		"""Add an edge to the graph.
 
 		Args:
 			source (str): Source node.
@@ -525,7 +525,7 @@ class GSGraph(nx.DiGraph):
 	def add_node_style(self, node_name, attr_dict=None, content=None, shape='ellipse', color='#FFFFFF', height=None,
 									   width=None, bubble=None, valign='center', halign='center', style="solid",
 									   border_color='#000000', border_width=1):
-		"""Add the style for the given node in the style json.
+		"""Add styling for a node belonging to the graph.
 
 		Args:
 			node_name (str): Name of node.
@@ -588,7 +588,7 @@ class GSGraph(nx.DiGraph):
 
 	def add_edge_style(self, source, target, attr_dict=None, directed=False, color='#000000', width=1.0, arrow_shape='triangle',
 					   edge_style='solid', arrow_fill='filled'):
-		"""Add the style for the given edge in the style json.
+		"""Add styling for an edge whose source and target nodes are provided.
 
 		Args:
 			source (str): Unique ID of the source node.
@@ -636,7 +636,7 @@ class GSGraph(nx.DiGraph):
 		})
 
 	def add_style(self, selector, style_dict):
-		"""Add the style for the given selector in the style json.
+		"""Add styling for a given selector, for e.g., 'nodes', 'edges', etc.
 
 		Args:
 			selector (str): A selector functions similar to a CSS selector on DOM elements, but here it works on collections of graph elements.
@@ -659,7 +659,7 @@ class GSGraph(nx.DiGraph):
 		})
 
 	def get_node_position(self, node_name):
-		"""Get the position of a node.
+		"""Get the x,y position of a node.
 
 		Args:
 			node_name (str): Name of the node.
@@ -671,7 +671,7 @@ class GSGraph(nx.DiGraph):
 		return self.positions_json.get(node_name, None)
 
 	def set_node_position(self, node_name, y, x):
-		"""Sets the position of a node.
+		"""Set the x,y position of a node.
 
 		Args:
 			node_name (str): Name of the node.
@@ -686,7 +686,7 @@ class GSGraph(nx.DiGraph):
 		})
 
 	def remove_node_position(self, node_name):
-		"""Remove the position of a node.
+		"""Remove the x,y position of a node.
 
 		Args:
 			node_name (str): Name of the node.

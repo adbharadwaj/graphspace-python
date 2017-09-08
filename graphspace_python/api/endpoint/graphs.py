@@ -97,8 +97,10 @@ class Graphs(object):
 				query.update({'is_public': 1})
 			response = self.client._make_request("GET", GRAPHS_PATH, url_params=query)
 			if response.get('total', 0) > 0:
+				graph = response.get('graphs')[0]
+				graph_by_id_path = GRAPHS_PATH + str(graph.get('id'))
 				return APIResponse('graph',
-					response.get('graphs')[0]
+					self.client._make_request("GET", graph_by_id_path)
 				).graph
 			else:
 				return None

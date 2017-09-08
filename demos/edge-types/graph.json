@@ -1,0 +1,167 @@
+{
+    "elements": {
+        "edges": [
+            {
+                "data": {
+                    "id": "e10",
+                    "is_directed": false,
+                    "source": "n09",
+                    "target": "n10",
+                    "type": "segments"
+                }
+            },
+            {
+                "data": {
+                    "id": "e09",
+                    "is_directed": false,
+                    "source": "n08",
+                    "target": "n07",
+                    "type": "haystack"
+                }
+            },
+            {
+                "data": {
+                    "id": "e05",
+                    "is_directed": false,
+                    "source": "n05",
+                    "target": "n06",
+                    "type": "multi-unbundled-bezier"
+                }
+            },
+            {
+                "data": {
+                    "id": "e02",
+                    "is_directed": false,
+                    "source": "n01",
+                    "target": "n02",
+                    "type": "bezier"
+                }
+            },
+            {
+                "data": {
+                    "id": "e04",
+                    "is_directed": false,
+                    "source": "n03",
+                    "target": "n04",
+                    "type": "unbundled-bezier"
+                }
+            },
+            {
+                "data": {
+                    "id": "e03",
+                    "is_directed": false,
+                    "source": "n02",
+                    "target": "n01",
+                    "type": "bezier"
+                }
+            }
+        ],
+        "nodes": [
+            {
+                "data": {
+                    "id": "n10",
+                    "name": "n10"
+                },
+                "position": {
+                    "y": 539.2444149343921,
+                    "x": 397.5767284674278
+                }
+            },
+            {
+                "data": {
+                    "id": "n09",
+                    "name": "n09",
+                    "type": "segments"
+                },
+                "position": {
+                    "y": 540.4023937212241,
+                    "x": 104.41203415199361
+                }
+            },
+            {
+                "data": {
+                    "id": "n08",
+                    "name": "n08"
+                },
+                "position": {
+                    "y": 344.95678192621995,
+                    "x": 969.4664896063522
+                }
+            },
+            {
+                "data": {
+                    "id": "n05",
+                    "name": "n05",
+                    "type": "unbundled-bezier(multiple)"
+                },
+                "position": {
+                    "y": 342.95386498414786,
+                    "x": 110.68582308522053
+                }
+            },
+            {
+                "data": {
+                    "id": "n04",
+                    "name": "n04"
+                },
+                "position": {
+                    "y": 146.55386505663682,
+                    "x": 966.0606585688766
+                }
+            },
+            {
+                "data": {
+                    "id": "n07",
+                    "name": "n07",
+                    "type": "haystack"
+                },
+                "position": {
+                    "y": 343.28091747956995,
+                    "x": 666.165425540976
+                }
+            },
+            {
+                "data": {
+                    "id": "n06",
+                    "name": "n06"
+                },
+                "position": {
+                    "y": 340.1994564900252,
+                    "x": 385.1821608654845
+                }
+            },
+            {
+                "data": {
+                    "id": "n01",
+                    "name": "n01",
+                    "type": "bezier"
+                },
+                "position": {
+                    "y": 142.4013095479434,
+                    "x": 108.05820120609259
+                }
+            },
+            {
+                "data": {
+                    "id": "n03",
+                    "name": "n03",
+                    "type": "unbundled-bezier"
+                },
+                "position": {
+                    "y": 144.98334006617193,
+                    "x": 670.0979503603081
+                }
+            },
+            {
+                "data": {
+                    "id": "n02",
+                    "name": "n02"
+                },
+                "position": {
+                    "y": 142.18635232560646,
+                    "x": 391.8459643078094
+                }
+            }
+        ]
+    }
+}

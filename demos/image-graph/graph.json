@@ -1,0 +1,24 @@
+{
+  "elements": {
+    "nodes": [
+      { "data": { "id": "cat" }, "position": { "y": -36.72629433412028, "x": 738.3270451939816 } },
+      { "data": { "id": "bird" }, "position": { "y": 152.6363522596991, "x": 738.3270451939816 } },
+      { "data": { "id": "ladybug" }, "position": { "y": 340.0682387015047, "x": 465.2444275629515 } },
+      { "data": { "id": "aphid" }, "position": { "y": 528.1363522596991, "x": 269.04641018527792 } },
+      { "data": { "id": "rose" }, "position": { "y": 716.2612896880438, "x": 738.3270451939816 } },
+      { "data": { "id": "grasshopper" }, "position": { "y": 340.0682387015047, "x": 1031.7935318891435 } },
+      { "data": { "id": "plant" }, "position": { "y": 528.1363522596991, "x": 738.3270451939816 } },
+      { "data": { "id": "wheat" }, "position": { "y": 528.1363522596991, "x": 1227.6704519398143 } }
+    ],
+
+    "edges": [
+      { "data": { "source": "cat", "target": "bird" } },
+      { "data": { "source": "bird", "target": "ladybug" } },
+      { "data": { "source": "bird", "target": "grasshopper" } },
+      { "data": { "source": "grasshopper", "target": "plant" } },
+      { "data": { "source": "grasshopper", "target": "wheat" } },
+      { "data": { "source": "ladybug", "target": "aphid" } },
+      { "data": { "source": "aphid", "target": "rose" } }
+    ]
+  }
+}

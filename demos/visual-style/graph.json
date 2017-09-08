@@ -1,0 +1,22 @@
+{
+  "elements": {
+    "nodes": [
+        { "data": { "id": "j", "label": "Jerry", "weight": 65, "faveColor": "#6FB1FC" }, "position": { "y": 482.14779610128, "x": 529.9356056693341 } },
+        { "data": { "id": "e", "label": "Elaine", "weight": 45, "faveColor": "#EDA1ED" }, "position": { "y": 482.3506424049226, "x": 641.8433984416438 } },
+        { "data": { "id": "k", "label": "Kramer", "weight": 75, "faveColor": "#86B342" }, "position": { "y": 606.380745054191, "x": 577.283511811287 } },
+        { "data": { "id": "g", "label": "George", "weight": 70, "faveColor": "#F5A45D" }, "position": { "y": 597.5054013182983, "x": 456.4376698682214 } }
+    ],
+
+    "edges": [
+        { "data": { "source": "j", "target": "e", "faveColor": "#6FB1FC", "strength": 90 } },
+        { "data": { "source": "j", "target": "k", "faveColor": "#6FB1FC", "strength": 70 } },
+        { "data": { "source": "j", "target": "g", "faveColor": "#6FB1FC", "strength": 80 } },
+        { "data": { "source": "e", "target": "j", "faveColor": "#EDA1ED", "strength": 95 } },
+        { "data": { "source": "e", "target": "k", "faveColor": "#EDA1ED", "strength": 60, "type": "questionable" } },
+        { "data": { "source": "k", "target": "j", "faveColor": "#86B342", "strength": 100 } },
+        { "data": { "source": "k", "target": "e", "faveColor": "#86B342", "strength": 100 } },
+        { "data": { "source": "k", "target": "g", "faveColor": "#86B342", "strength": 100 } },
+        { "data": { "source": "g", "target": "j", "faveColor": "#F5A45D", "strength": 90 } }
+    ]
+  }
+}

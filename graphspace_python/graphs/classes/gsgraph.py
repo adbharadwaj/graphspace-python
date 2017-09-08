@@ -362,10 +362,10 @@ class GSGraph(nx.DiGraph):
 			>>> G.get_is_public()
 			0
 		"""
-		if is_public not in [0,1]:
-			raise Exception("is_public should have value either 0 or 1.")
+		if is_public not in [0, 1, True, False]:
+			raise Exception("is_public should have value either 0 or 1 or should be boolean.")
 		else:
-			self.is_public = is_public
+			self.is_public = int(is_public)
 
 	def set_data(self, data):
 		"""Set the metadata of the graph.
@@ -422,7 +422,7 @@ class GSGraph(nx.DiGraph):
 		self.tags = tags
 
 	def add_edge(self, source, target, attr_dict=None, directed=False, popup=None, k=None, **attr):
-		"""Add a edge to the graph.
+		"""Add an edge to the graph.
 
 		Args:
 			source (str): Source node.
@@ -472,12 +472,13 @@ class GSGraph(nx.DiGraph):
 		GSGraph.validate_edge_data_properties(data_properties=attr_dict, nodes_list=self.nodes())
 		super(GSGraph, self).add_edge(source, target, attr_dict)
 
-	def add_node(self, node_name, attr_dict=None, label=None, popup=None, k=None, **attr):
+	def add_node(self, node_name, attr_dict=None, parent=None, label=None, popup=None, k=None, **attr):
 		"""Add a node to the graph.
 
 		Args:
 			node_name (str): Name of node.
 			attr_dict (dict, optional): Json representation of node data. Defaults to None.
+			parent (str, optional): Parent of the node, if any (for compound nodes). Defaults to None.
 			label (str, optional): Label of node. Defaults to None.
 			popup (str, optional): A string that will be displayed in a popup window when
 				the user clicks the node. This string can be HTML-formatted information,
@@ -507,6 +508,8 @@ class GSGraph(nx.DiGraph):
 			except AttributeError:
 				raise NetworkXError("The attr_dict argument must be a dictionary.")
 
+		if parent is not None:
+			attr_dict.update({"parent": parent})
 		if popup is not None:
 			attr_dict.update({"popup": popup})
 		if k is not None:
@@ -522,7 +525,7 @@ class GSGraph(nx.DiGraph):
 	def add_node_style(self, node_name, attr_dict=None, content=None, shape='ellipse', color='#FFFFFF', height=None,
 									   width=None, bubble=None, valign='center', halign='center', style="solid",
 									   border_color='#000000', border_width=1):
-		"""Add the style for the given node in the style json.
+		"""Add styling for a node belonging to the graph.
 
 		Args:
 			node_name (str): Name of node.
@@ -585,7 +588,7 @@ class GSGraph(nx.DiGraph):
 
 	def add_edge_style(self, source, target, attr_dict=None, directed=False, color='#000000', width=1.0, arrow_shape='triangle',
 					   edge_style='solid', arrow_fill='filled'):
-		"""Add the style for the given edge in the style json.
+		"""Add styling for an edge whose source and target nodes are provided.
 
 		Args:
 			source (str): Unique ID of the source node.
@@ -632,8 +635,31 @@ class GSGraph(nx.DiGraph):
 			}]
 		})
 
+	def add_style(self, selector, style_dict):
+		"""Add styling for a given selector, for e.g., 'nodes', 'edges', etc.
+
+		Args:
+			selector (str): A selector functions similar to a CSS selector on DOM elements, but here it works on collections of graph elements.
+			style_dict (dict): Key-value pair of style attributes and their values.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> G = GSGraph()
+			>>> G.add_style('node', {'background-color': '#bbb', 'opacity': 0.8})
+			>>> G.add_style('edge', {'line-color': 'green'})
+			>>> G.get_style_json()
+			{'style': [{'style': {'opacity': 0.8, 'background-color': '#bbb'}, 'selector':
+			'node'}, {'style': {'line-color': 'green'}, 'selector': 'edge'}]}
+		"""
+		self.set_style_json({
+			'style': self.get_style_json().get('style') + [{
+				'selector': selector,
+				'style': style_dict
+			}]
+		})
+
 	def get_node_position(self, node_name):
-		"""Get the position of a node.
+		"""Get the x,y position of a node.
 
 		Args:
 			node_name (str): Name of the node.
@@ -645,7 +671,7 @@ class GSGraph(nx.DiGraph):
 		return self.positions_json.get(node_name, None)
 
 	def set_node_position(self, node_name, y, x):
-		"""Sets the position of a node.
+		"""Set the x,y position of a node.
 
 		Args:
 			node_name (str): Name of the node.
@@ -660,7 +686,7 @@ class GSGraph(nx.DiGraph):
 		})
 
 	def remove_node_position(self, node_name):
-		"""Remove the position of a node.
+		"""Remove the x,y position of a node.
 
 		Args:
 			node_name (str): Name of the node.

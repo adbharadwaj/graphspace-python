@@ -64,6 +64,11 @@ class ErrorHandler(object):
         Args:
             error (object): HTTPError object.
             response (dict): Response dict having error details from the API call.
+
+        Raises:
+            GraphSpaceError: If an error response is received from the API call,
+                it raises any one of the GraphSpaceError depending upon the error
+                code.
         """
         try:
             raise self._error_map[response['error_code']](

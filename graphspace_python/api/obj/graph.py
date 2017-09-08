@@ -48,8 +48,9 @@ class Graph(ResponseObject, GSGraph):
 		GSGraph.__init__(self)
 		ResponseObject.__init__(self, response)
 		self.url = 'http://graphspace.org/graphs/' + str(self.id)
-		self.set_data(self.graph_json['data'])
-		self._assign_nodes_and_edges()
+		if self.graph_json is not None:
+			self.set_data(self.graph_json['data'])
+			self._assign_nodes_and_edges()
 
 	def _assign_nodes_and_edges(self):
 		"""Adds the nodes and edges of the fetched graph to the GSGraph class' nodes and edges.

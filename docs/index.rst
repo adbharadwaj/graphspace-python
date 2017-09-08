@@ -21,6 +21,7 @@ Contents:
    Overview
    Installing
    tutorial/index
+   demos/index
    reference/index
 
 

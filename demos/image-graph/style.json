@@ -1,0 +1,75 @@
+{
+    "style": [
+        {
+            "style": {
+                "height": 80,
+                "width": 80,
+                "background-fit": "cover",
+                "border-color": "#000",
+                "border-width": 3,
+                "border-opacity": 0.5
+            },
+            "selector": "node"
+        },
+        {
+            "style": {
+                "width": 6,
+                "target-arrow-shape": "triangle",
+                "line-color": "#ffaaaa",
+                "target-arrow-color": "#ffaaaa"
+            },
+            "selector": "edge"
+        },
+        {
+            "style": {
+                "background-image": "https://farm8.staticflickr.com/7272/7633179468_3e19e45a0c_b.jpg"
+            },
+            "selector": "node[id = \"bird\"]"
+        },
+        {
+            "style": {
+                "background-image": "https://farm2.staticflickr.com/1261/1413379559_412a540d29_b.jpg"
+            },
+            "selector": "node[id = \"cat\"]"
+        },
+        {
+            "style": {
+                "background-image": "https://farm4.staticflickr.com/3063/2751740612_af11fb090b_b.jpg"
+            },
+            "selector": "node[id = \"ladybug\"]"
+        },
+        {
+            "style": {
+                "background-image": "https://farm9.staticflickr.com/8316/8003798443_32d01257c8_b.jpg"
+            },
+            "selector": "node[id = \"aphid\"]"
+        },
+        {
+            "style": {
+                "background-image": "https://farm6.staticflickr.com/5109/5817854163_eaccd688f5_b.jpg"
+            },
+            "selector": "node[id = \"rose\"]"
+        },
+        {
+            "style": {
+                "background-image": "https://farm7.staticflickr.com/6098/6224655456_f4c3c98589_b.jpg"
+            },
+            "selector": "node[id = \"grasshopper\"]"
+        },
+        {
+            "style": {
+                "background-image": "https://farm1.staticflickr.com/231/524893064_f49a4d1d10_z.jpg"
+            },
+            "selector": "node[id = \"plant\"]"
+        },
+        {
+            "style": {
+                "background-image": "https://farm3.staticflickr.com/2660/3715569167_7e978e8319_b.jpg"
+            },
+            "selector": "node[id = \"wheat\"]"
+        }
+    ],
+    "target_cytoscapejs_version": "~2.7",
+    "generated_by": "graphspace-2.0.0",
+    "format_version": "1.0"
+}

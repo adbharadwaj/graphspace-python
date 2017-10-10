@@ -65,7 +65,7 @@ class Layouts(object):
 			raise Exception('Both graph_id and graph_name can\'t be none when graph object has no \'name\' or \'id\' attribute!')
 
 		if graph_id is None:
-			graph = self.get_graph(graph_name=graph_name)
+			graph = self.client.get_graph(graph_name=graph_name)
 			if graph is None or graph.id is None:
 				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (graph_name, self.client.username))
 			else:
@@ -147,7 +147,7 @@ class Layouts(object):
 			raise Exception('Both graph_id and graph_name can\'t be none when graph object has no \'name\' or \'id\' attribute and layout object has no \'graph_id\' attribute!')
 
 		if graph_id is None:
-			graph = self.get_graph(graph_name=graph_name)
+			graph = self.client.get_graph(graph_name=graph_name)
 			if graph is None or graph.id is None:
 				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (graph_name, self.client.username))
 			else:
@@ -242,7 +242,7 @@ class Layouts(object):
 			raise Exception('Both graph_id and graph_name can\'t be none when graph object has no \'name\' or \'id\' attribute and layout object has no \'graph_id\' attribute!')
 
 		if graph_id is None:
-			graph = self.get_graph(graph_name=graph_name)
+			graph = self.client.get_graph(graph_name=graph_name)
 			if graph is None or graph.id is None:
 				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (graph_name, self.client.username))
 			else:
@@ -334,7 +334,7 @@ class Layouts(object):
 			raise Exception('Both graph_id and graph_name can\'t be none when graph object has no \'name\' or \'id\' attribute!')
 
 		if graph_id is None:
-			graph = self.get_graph(graph_name=graph_name)
+			graph = self.client.get_graph(graph_name=graph_name)
 			if graph is None or graph.id is None:
 				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (graph_name, self.client.username))
 			else:
@@ -412,7 +412,7 @@ class Layouts(object):
 			raise Exception('Both graph_id and graph_name can\'t be none when graph object has no \'name\' or \'id\' attribute!')
 
 		if graph_id is None:
-			graph = self.get_graph(graph_name=graph_name)
+			graph = self.client.get_graph(graph_name=graph_name)
 			if graph is None or graph.id is None:
 				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (graph_name, self.client.username))
 			else:
@@ -477,7 +477,7 @@ class Layouts(object):
 			raise Exception('Both graph_id and graph_name can\'t be none when graph object has no \'name\' or \'id\' attribute!')
 
 		if graph_id is None:
-			graph = self.get_graph(graph_name=graph_name)
+			graph = self.client.get_graph(graph_name=graph_name)
 			if graph is None or graph.id is None:
 				raise Exception('Graph with name `%s` doesnt exist for user `%s`!' % (graph_name, self.client.username))
 			else:

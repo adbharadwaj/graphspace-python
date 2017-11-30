@@ -595,7 +595,7 @@ class Graphs(object):
 			raise Exception('Both layout_id and layout_name can\'t be none when layout object has no \'name\' or \'id\' attribute!')
 
 		if layout_id is None:
-			layout = self.get_graph_layout(layout_name=layout_name, graph_id=graph_id)
+			layout = self.client.get_graph_layout(layout_name=layout_name, graph_id=graph_id)
 			if layout is None or layout.id is None:
 				raise Exception('Layout with name `%s` of graph with graph_id=%s doesnt exist for user `%s`!' % (layout_name, graph_id, self.client.username))
 			else:

@@ -5,7 +5,7 @@ from six import string_types
 from networkx.exception import NetworkXError
 
 
-class GSGraph(nx.DiGraph):
+class GSGraph(nx.MultiDiGraph):
 	"""GSGraph class.
 
 	A GSGraph stores the details of a graph that is understood by GraphSpace.
@@ -470,7 +470,7 @@ class GSGraph(nx.DiGraph):
 		attr_dict.update({"source": source, "target": target})
 
 		GSGraph.validate_edge_data_properties(data_properties=attr_dict, nodes_list=self.nodes())
-		super(GSGraph, self).add_edge(source, target, attr_dict)
+		super(GSGraph, self).add_edge(source, target, **attr_dict)
 
 	def add_node(self, node_name, attr_dict=None, parent=None, label=None, popup=None, k=None, **attr):
 		"""Add a node to the graph.

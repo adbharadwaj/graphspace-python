@@ -1,5 +1,5 @@
 future
-networkx==1.11
+networkx>=1.11
 requests==2.10.0
 sphinx-rtd-theme
 sphinx

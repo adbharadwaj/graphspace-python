@@ -470,7 +470,10 @@ class GSGraph(nx.DiGraph):
 		attr_dict.update({"source": source, "target": target})
 
 		GSGraph.validate_edge_data_properties(data_properties=attr_dict, nodes_list=self.nodes())
-		super(GSGraph, self).add_edge(source, target, attr_dict)
+		if float(nx.__version__) >= 2:
+			super(GSGraph, self).add_edge(source, target, **attr_dict)
+		else:
+			super(GSGraph, self).add_edge(source, target, attr_dict)
 
 	def add_node(self, node_name, attr_dict=None, parent=None, label=None, popup=None, k=None, **attr):
 		"""Add a node to the graph.
@@ -520,7 +523,10 @@ class GSGraph(nx.DiGraph):
 		attr_dict.update({"name": node_name, "id": node_name})
 
 		GSGraph.validate_node_data_properties(data_properties=attr_dict, nodes_list=self.nodes())
-		super(GSGraph, self).add_node(node_name, attr_dict)
+		if float(nx.__version__) >= 2:
+			super(GSGraph, self).add_node(node_name, **attr_dict)
+		else:
+			super(GSGraph, self).add_node(node_name, attr_dict)
 
 	def add_node_style(self, node_name, attr_dict=None, content=None, shape='ellipse', color='#FFFFFF', height=None,
 									   width=None, bubble=None, valign='center', halign='center', style="solid",

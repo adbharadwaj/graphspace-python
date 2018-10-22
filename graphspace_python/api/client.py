@@ -128,7 +128,7 @@ class GraphSpace(object):
 				'Content-Type': 'application/json'
 			}
 
-		request_path = 'http://{0}{1}?{2}'.format(
+		request_path = 'https://{0}{1}?{2}'.format(
 			self.api_host,
 			six.moves.urllib.parse.quote(path.encode('utf-8')),
 			six.moves.urllib.parse.urlencode(url_params, doseq=True)

@@ -586,37 +586,37 @@ class Groups(object):
                 Refer to the `tutorial <../tutorial/tutorial.html#fetching-graphs-shared-with-a-group>`_ for more about fetching graphs of a group.
         """
 
-    query = {
-        'limit': limit,
-        'offset': offset
-    }
-    if group is not None:
-        if hasattr(group, 'id'):
-            group_id = group.id
-        elif hasattr(group, 'name'):
-            group_name = group.name
+        query = {
+            'limit': limit,
+            'offset': offset
+        }
+        if group is not None:
+            if hasattr(group, 'id'):
+                group_id = group.id
+            elif hasattr(group, 'name'):
+                group_name = group.name
 
-    if group_id is not None:
-        group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs'
-        return APIResponse('graph',
-                           self.client._make_request(
-                               "GET", group_graphs_path, url_params=query)
-                           ).graphs
-
-    if group_name is not None:
-        group = self.get_group(group_name=group_name)
-        if group is None or group.id is None:
-            raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (
-                group_name, self.client.username))
-        else:
-            group_graphs_path = GROUPS_PATH + str(group.id) + '/graphs'
+        if group_id is not None:
+            group_graphs_path = GROUPS_PATH + str(group_id) + '/graphs'
             return APIResponse('graph',
                                self.client._make_request(
                                    "GET", group_graphs_path, url_params=query)
                                ).graphs
 
-    raise Exception(
-        'Both group_id and group_name can\'t be none when group object has no \'name\' or \'id\' attribute!')
+        if group_name is not None:
+            group = self.get_group(group_name=group_name)
+            if group is None or group.id is None:
+                raise Exception('Group with name `%s` doesnt exist for user `%s`!' % (
+                    group_name, self.client.username))
+            else:
+                group_graphs_path = GROUPS_PATH + str(group.id) + '/graphs'
+                return APIResponse('graph',
+                                   self.client._make_request(
+                                       "GET", group_graphs_path, url_params=query)
+                                   ).graphs
+
+        raise Exception(
+            'Both group_id and group_name can\'t be none when group object has no \'name\' or \'id\' attribute!')
 
     def share_graph(self, graph_name=None, graph_id=None, graph=None, group_name=None, group_id=None, group=None):
         """Share a graph with a group by providing any of graph_name, graph_id or graph object

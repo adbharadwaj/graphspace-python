@@ -51,10 +51,10 @@ class GraphSpace(object):
 		User can connect to GraphSpace using username and password or username and auth_token.
 		Example:
 			>>> from graphspace_python.api.client import GraphSpace
-            >>> graphspace = GraphSpace('user1@example.com', 'user1')
-            OR
-            >>> from graphspace_python.api.client import GraphSpace
-            >>> graphspace = GraphSpace('user1@example.com', auth_token='Basic dXNlcjFAZXhhbXBsZS5jb206dXNlcjE=')
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			OR
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', auth_token='Basic dXNlcjFAZXhhbXBsZS5jb206dXNlcjE=')
 		"""
 		# self.auth_token = 'Basic %s' % base64.b64encode('{0}:{1}'.format(username, password))
 		if auth_token is not None:

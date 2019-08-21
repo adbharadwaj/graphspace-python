@@ -1,5 +1,6 @@
 import datetime
 from graphspace_python.graphs.classes.gsgraph import GSGraph
+from graphspace_python.graphs.classes.gslegend import GSLegend
 
 
 class GSLayout(object):
@@ -437,3 +438,127 @@ class GSLayout(object):
 				'style': style_dict
 			}]
 		})
+
+	def set_legend(self, gslegend_obj):
+		"""Set the json representation of legend for a layout.
+
+		Args:
+			gslegend_obj (object): GSLegend object having JSON representation of legend.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> from graphspace_python.graphs.classes.gslegend import GSLegend
+			>>> Ld = GSLegend()
+			>>> legend_json = {
+			...	    "legend":{
+			...	        "nodes":{
+			...	            "TF": {
+			...	                "shape":"ellipse",
+			...	                "background-color":"#ff1400"
+			...	            }
+			...	        },
+			...	        "edges":{
+			...	            "Enzymatic Reaction":{
+			...	                "line-color":"#0fcf25",
+			...	                "line-style":"solid",
+			...	                "arrow-shape":"triangle"
+			...	            }
+			...	        }
+			...	    }
+			...	}
+			>>> Ld.set_legend_json(legend_json)
+			>>> L = GSLayout()
+			>>> L.set_legend(Ld)
+			>>> L.get_style_json()
+			{'legend': {'edges': {'Enzymatic Reaction': {'arrow-shape': 'triangle',
+			    'line-color': '#0fcf25',
+			    'line-style': 'solid'}},
+			  'nodes': {'TF': {'background-color': '#ff1400',
+			    'shape': 'ellipse'}}},
+			'style': []}
+		"""
+		if(isinstance(gslegend_obj, GSLegend)):
+			legend_json = gslegend_obj.get_legend_json()
+			self.style_json.update(legend_json)
+		else:
+			raise Exception("set_legend method must take GSLegend object as argument")
+
+	def get_legend(self):
+		"""Get a GSLegend Object having JSON representation of legend for a layout.
+
+		Returns:
+			object: GSLegend Object having JSON representation of legend.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> from graphspace_python.graphs.classes.gslegend import GSLegend
+			>>> Ld = GSLegend()
+			>>> legend_json = {
+			...	    "legend":{
+			...	        "nodes":{
+			...	            "Source Receptor": {
+			...	                "shape":"ellipse",
+			...	                "background-color":"#ff1400"
+			...	            }
+			...	        },
+			...	        "edges":{
+			...	            "Enzymatic Reaction":{
+			...	                "line-color":"#0fcf25",
+			...	                "line-style":"solid",
+			...	                "arrow-shape":"triangle"
+			...	            }
+			...	        }
+			...	    }
+			...	}
+			>>> Ld.set_legend_json(legend_json)
+			>>> L = GSLayout()
+			>>> L.set_legend(Ld)
+			>>> L.get_legend()
+			<graphspace_python.graphs.classes.gslegend.GSLegend at 0x7fdebc59d1d0>
+		"""
+		L = GSLegend()
+		legend_json = {'legend': self.style_json.get('legend',{})}
+		L.set_legend_json(legend_json)
+		return L
+
+	def delete_legend(self, gslegend_obj):
+		"""Set the json representation of legend for the layout to null.
+
+		Args:
+			gslegend_obj (object): GSLegend object having JSON representation of legend.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+			>>> from graphspace_python.graphs.classes.gslegend import GSLegend
+			>>> Ld = GSLegend()
+			>>> legend_json = {
+			...	    "legend":{
+			...	        "nodes":{
+			...	            "TF": {
+			...	                "shape":"ellipse",
+			...	                "background-color":"#ff1400"
+			...	            }
+			...	        },
+			...	        "edges":{
+			...	            "Enzymatic Reaction":{
+			...	                "line-color":"#0fcf25",
+			...	                "line-style":"solid",
+			...	                "arrow-shape":"triangle"
+			...	            }
+			...	        }
+			...	    }
+			...	}
+			>>> Ld.set_legend_json(legend_json)
+			>>> L = GSLayout()
+			>>> L.set_legend(Ld)
+			>>> Ld = L.get_legend()
+			>>> L.delete_legend(Ld)
+
+			>>> L.get_style_json()
+			{'legend': {}, 'style': []}
+		"""
+		if(isinstance(gslegend_obj, GSLegend)):
+			gslegend_obj.delete_legend_json()
+			self.set_legend(gslegend_obj)
+		else:
+			raise Exception("delete_legend method must take GSLegend object as argument")

@@ -28,6 +28,13 @@ graphspace\_python\.graphs\.classes\.gslayout module
     :undoc-members:
     :show-inheritance:
 
+graphspace\_python\.graphs\.classes\.gslegend module
+----------------------------------------------------
+
+.. automodule:: graphspace_python.graphs.classes.gslegend
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Module contents
 ---------------

@@ -851,6 +851,206 @@ You can also delete a group by passing the group object itself as param.
 u'Successfully deleted group with id=318'
 
 
+Creating a legend
+-----------------
+
+Create an empty legend.
+
+
+>>> from graphspace_python.graphs.classes.gslegend import GSLegend
+>>> Ld = GSLegend()
+
+
+Adding legend key
+-----------------
+
+You can add an individual legend key at a time by using the 
+:meth:`~graphspace_python.graphs.classes.gsgraph.GSLegend.add_legend_entries` method.
+
+>>> # Adding a legend key with a given style and label
+>>> style = {'background-color': 'black', 'shape':'star'}
+>>> Ld.add_legend_entries('nodes', 'Receptor', style)
+>>> # Get the json representation of legend
+>>> Ld.get_legend_json()
+{'legend': {'nodes': {'Receptor': {'background-color': 'black',
+'shape': 'star'}}}}
+
+>>> # Adding another legend key with a given style and label
+>>> style = {'background-color': 'yellow', 'shape':'square'}
+>>> Ld.add_legend_entries('nodes', 'Intermediate Protein', style)
+>>> # Get the json representation of legend
+>>> Ld.get_legend_json()
+{'legend': {'nodes': {'Intermediate Protein': {'background-color': 'yellow',
+'shape': 'square'}}}}
+
+You can add JSON representation of legend at once by using the 
+:meth:`~graphspace_python.graphs.classes.gsgraph.GSLegend.set_legend_json` method.
+
+>>> Ld = GSLegend()
+>>> legend_json = {
+    "legend":{
+        "nodes":{
+            "Source Receptor": {
+                "shape":"triangle",
+                "background-color":"#ff1400"
+            }
+        },
+        "edges":{
+            "Phosphorylation":{
+                "line-color":"#0fcf25",
+                "line-style":"solid",
+                "arrow-shape":"triangle"
+            }
+        }
+    }
+}
+>>> Ld.set_legend_json(legend_json)
+>>> # Get the json representation of legend
+>>> Ld.get_legend_json()
+{'legend': {'edges': {'Phosphorylation': {'arrow-shape': 'triangle', 'line-color': '#0fcf25', 'line-style': 'solid'}}, 'nodes': {'Source Receptor': {'background-color': '#ff1400', 'shape': 'triangle'}}}}
+
+
+Updating legend key
+-------------------
+
+Setting a new style to an already present legend key will update its style.
+
+>>> style = {'line-color': "#0fcf25", "line-style":"dashed", "arrow-shape":"triangle"}
+>>> Ld.add_legend_entries('edges', 'Phosphorylation', style)
+>>> # Get the json representation of legend
+>>> Ld.get_legend_json()
+{'legend': {'edges': {'Phosphorylation': {'arrow-shape': 'triangle', 'line-color': '#0fcf25', 'line-style': 'dashed'}}, 'nodes': {'Source Receptor': {'background-color': '#ff1400', 'shape': 'triangle'}}}}
+
+Removing legend key
+-------------------
+
+You can remove an individual legend key at a time by using the 
+:meth:`~graphspace_python.graphs.classes.gsgraph.GSLegend.remove_legend_entries` method.
+
+>>> Ld.remove_legend_entries('nodes', 'Source Receptor')
+>>> # Get the json representation of legend
+>>> Ld.get_legend_json()
+{'legend': {'edges': {'Phosphorylation': {'arrow-shape': 'triangle', 'line-color': '#0fcf25', 'line-style': 'solid'}}, 'nodes': {}}}
+
+You can remove entire legend at once time by using the 
+:meth:`~graphspace_python.graphs.classes.gsgraph.GSLegend.delete_legend_json` method.
+
+>>> Ld.delete_legend_json()
+>>> # Get the json representation of legend
+>>> Ld.get_legend_json()
+{'legend': {}}
+
+
+Creating a graph with legend
+----------------------------
+
+>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+>>> from graphspace_python.graphs.classes.gslegend import GSLegend
+>>> # Create an empty graph with no nodes and no edges.
+>>> G = GSGraph()
+>>> # Adding a node 'a' with a given popup and label
+>>> G.add_node('a', popup='sample node popup text', label='A')
+>>> G.nodes(data=True)
+[('a', {'id': 'a', 'popup': 'sample node popup text', 'name': 'a',
+'label': 'A'})]
+>>> # Adding style information for node 'a'
+>>> G.add_node_style('a', shape='ellipse', color='red', width=90, height=90)
+>>> # Adding a node 'b' with a given popup and label
+>>> G.add_node('b', popup='sample node popup text', label='B')
+>>> G.nodes(data=True)
+[('a', {'id': 'a', 'popup': 'sample node popup text', 'name': 'a',
+'label': 'A'}), ('b', {'id': 'b', 'popup': 'sample node popup text',
+'name': 'b', 'label': 'B'})]
+>>> # Adding style information for node 'b'
+>>> G.add_node_style('b', shape='triangle', color='blue', width=40, height=40)
+# Adding an edge between node 'a' and node 'b'
+>>> G.add_edge('a', 'b', directed=True, popup='sample edge popup')
+>>> # Adding style information for edge
+>>> G.add_edge_style('a', 'b', directed=True, edge_style='solid')
+>>> # Creating an empty legend
+>>> Ld = GSLegend()
+>>> legend_json = {
+    "legend":{
+        "nodes":{
+            "Source Receptor": {
+                "shape":"ellipse",
+                "background-color":"red"
+            },
+            "TF": {
+                "shape":"triangle",
+                "background-color":"blue"
+            }
+        },
+        "edges":{
+            "Phosphorylation":{
+                "line-color":"black",
+                "line-style":"solid",
+                "arrow-shape":"triangle"
+            }
+        }
+    }
+}
+>>> # Adding JSON representation of legend 
+>>> Ld.set_legend_json(legend_json)
+>>> # Adding the legend 'Ld' to the graph 'G'.
+>>> G.set_legend(Ld)
+>>> # Retrieving the legend 'Ld' from the graph 'G'.
+>>> Ld = G.get_legend()
+>>> Ld.get_legend_json()
+{'legend': {'edges': {'Phosphorylation': {'arrow-shape': 'triangle', 'line-color': 'black', 'line-style': 'solid'}}, 'nodes': {'Source Receptor': {'background-color': 'red', 'shape': 'ellipse'}, 'TF': {'background-color': 'blue', 'shape': 'triangle'}}}}
+
+
+Creating a layout with legend
+----------------------------
+
+>>> from graphspace_python.graphs.classes.gslayout import GSLayout
+>>> from graphspace_python.graphs.classes.gslegend import GSLegend
+>>> # Create an empty layout with no node positions and style properties.
+>>> L = GSLayout()
+>>> # Setting position of a node 'a' with y and x coordinates
+>>> L.set_node_position('a', y=38.5, x=67.3)
+>>> # Setting position of a node 'b' with y and x coordinates
+>>> L.set_node_position('b', y=124, x=332.2)
+>>> # Add style for node 'a'
+>>> L.add_node_style('a', shape='ellipse', color='red', width=60, height=60)
+>>> # Add style for node 'b'
+>>> L.add_node_style('b', shape='triangle', color='blue', width=60, height=60)
+>>> # Add style for edge
+>>> L.add_edge_style('a', 'b', directed=True, edge_style='solid')
+>>> L.set_name('My Sample Layout')
+>>> # Creating an empty legend
+>>> Ld = GSLegend()
+>>> legend_json = {
+    "legend":{
+        "nodes":{
+            "Source Receptor": {
+                "shape":"ellipse",
+                "background-color":"red"
+            },
+            "TF": {
+                "shape":"triangle",
+                "background-color":"blue"
+            }
+        },
+        "edges":{
+            "Phosphorylation":{
+                "line-color":"black",
+                "line-style":"solid",
+                "arrow-shape":"triangle"
+            }
+        }
+    }
+}
+>>> # Adding JSON representation of legend 
+>>> Ld.set_legend_json(legend_json)
+>>> # Adding the legend 'Ld' to the layout 'L'.
+>>> L.set_legend(Ld)
+>>> # Retrieving the legend 'Ld' from the layout 'L'.
+>>> Ld = L.get_legend()
+>>> Ld.get_legend_json()
+{'legend': {'edges': {'Phosphorylation': {'arrow-shape': 'triangle', 'line-color': 'black', 'line-style': 'solid'}}, 'nodes': {'Source Receptor': {'background-color': 'red', 'shape': 'ellipse'}, 'TF': {'background-color': 'blue', 'shape': 'triangle'}}}}
+
+
 Responses
 ---------
 

@@ -71,7 +71,7 @@ class GSLegend(object):
 			>>> G.add_legend_entries(element_type='nodes', label='Receptor', style={'background-color': 'black', 'shape':'star'})
 			>>> G.get_legend_json()
 			{'legend': {'nodes': {'Receptor': {'background-color': 'black',
-    		'shape': 'star'}}}}
+			'shape': 'star'}}}}
 		"""
 		return self.legend_json
 
@@ -89,7 +89,7 @@ class GSLegend(object):
 			>>> G.add_legend_entries(element_type='nodes', label='Receptor', style={'background-color': 'black', 'shape':'star'})
 			>>> G.get_legend_json()
 			{'legend': {'nodes': {'Receptor': {'background-color': 'black',
-    		'shape': 'star'}}}}
+			'shape': 'star'}}}}
 		"""
 		from graphspace_python.graphs.classes.gsgraph import GSGraph
 
@@ -123,10 +123,10 @@ class GSLegend(object):
 			>>> G.add_legend_entries(element_type='nodes', label='Receptor', style={'background-color': 'black', 'shape':'star'})
 			>>> G.get_legend_json()
 			{'legend': {'nodes': {'Receptor': {'background-color': 'black',
-    		'shape': 'star'}}}}
-    		>>> G.remove_legend_entries('nodes', 'Receptor')
-    		>>> G.get_legend_json()
-    		{'legend': {}}
+			'shape': 'star'}}}}
+			>>> G.remove_legend_entries('nodes', 'Receptor')
+			>>> G.get_legend_json()
+			{'legend': {}}
 		"""
 		legend_json = self.get_legend_json()
 		if(label not in legend_json['legend'].get(element_type, {})):
@@ -144,10 +144,10 @@ class GSLegend(object):
 			>>> G.add_legend_entries(element_type='nodes', label='Receptor', style={'background-color': 'black', 'shape':'star'})
 			>>> G.get_legend_json()
 			{'legend': {'nodes': {'Receptor': {'background-color': 'black',
-    		'shape': 'star'}}}}
-    		>>> G.delete_legend_json()
-    		>>> G.get_legend_json()
-    		{'legend': {}}
+			'shape': 'star'}}}}
+			>>> G.delete_legend_json()
+			>>> G.get_legend_json()
+			{'legend': {}}
 		"""
 		legend_json = {'legend':{}}
 		self.set_legend_json(legend_json)

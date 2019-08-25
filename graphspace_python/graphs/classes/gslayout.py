@@ -477,11 +477,8 @@ class GSLayout(object):
 			    'shape': 'ellipse'}}},
 			'style': []}
 		"""
-		if(isinstance(gslegend_obj, GSLegend)):
-			legend_json = gslegend_obj.get_legend_json()
-			self.style_json.update(legend_json)
-		else:
-			raise Exception("set_legend method must take GSLegend object as argument")
+		G = GSGraph()
+		G._GSGraph__set_legend(self.style_json, gslegend_obj)
 
 	def get_legend(self):
 		"""Get a GSLegend Object having JSON representation of legend for a layout.
@@ -516,9 +513,8 @@ class GSLayout(object):
 			>>> L.get_legend()
 			<graphspace_python.graphs.classes.gslegend.GSLegend at 0x7fdebc59d1d0>
 		"""
-		L = GSLegend()
-		legend_json = {'legend': self.style_json.get('legend',{})}
-		L.set_legend_json(legend_json)
+		G = GSGraph()
+		L = G._GSGraph__get_legend(self.style_json)
 		return L
 
 	def delete_legend(self, gslegend_obj):
@@ -557,8 +553,5 @@ class GSLayout(object):
 			>>> L.get_style_json()
 			{'legend': {}, 'style': []}
 		"""
-		if(isinstance(gslegend_obj, GSLegend)):
-			gslegend_obj.delete_legend_json()
-			self.set_legend(gslegend_obj)
-		else:
-			raise Exception("delete_legend method must take GSLegend object as argument")
+		G = GSGraph()
+		G._GSGraph__delete_legend(self.style_json, gslegend_obj)

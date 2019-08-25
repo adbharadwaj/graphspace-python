@@ -744,11 +744,7 @@ class GSGraph(nx.DiGraph):
 			>>> G.set_tags(['sample'])
 			>>> G.set_legend(L)
 		"""
-		if(isinstance(gslegend_obj, GSLegend)):
-			legend_json = gslegend_obj.get_legend_json()
-			self.style_json.update(legend_json)
-		else:
-			raise Exception("set_legend method must take GSLegend object as argument")
+		self.__set_legend(self.style_json, gslegend_obj)
 
 	def get_legend(self):
 		"""Get a GSLegend Object having JSON representation of legend for the graph.
@@ -790,10 +786,7 @@ class GSGraph(nx.DiGraph):
 			>>> G.get_legend()
 			<graphspace_python.graphs.classes.gslegend.GSLegend at 0x7f6ae5997e10>
 		"""
-		L = GSLegend()
-		legend_json = {'legend': self.style_json.get('legend',{})}
-		L.set_legend_json(legend_json)
-		return L
+		return self.__get_legend(self.style_json)
 
 	def delete_legend(self, gslegend_obj):
 		"""Set the json representation of legend for the graph to null.
@@ -835,9 +828,46 @@ class GSGraph(nx.DiGraph):
 			>>> L = G.get_legend()
 			>>> G.delete_legend(L)
 		"""
+		self.__delete_legend(self.style_json, gslegend_obj)
+
+	def __set_legend(self, style_json, gslegend_obj):
+		"""Set the 'legend_json' attribute of GSLegend object to 'style_json' dict.
+
+		Args:
+			style_json (dict): Json representation for style.
+			gslegend_obj (object): GSLegend object having JSON representation of legend.
+
+		"""
+		if(isinstance(gslegend_obj, GSLegend)):
+			legend_json = gslegend_obj.get_legend_json()
+			style_json.update(legend_json)
+		else:
+			raise Exception("set_legend method must take GSLegend object as argument")
+
+	def __get_legend(self, style_json):
+		"""Set the legend json representation from 'style_json' dict to 'legend_json' attribute of GSLegend object and return the GSLegend object.
+
+		Args:
+			style_json (dict): Json representation for style.
+
+		Returns:
+			object: GSLegend Object having JSON representation of legend.
+		"""
+		L = GSLegend()
+		legend_json = {'legend': style_json.get('legend',{})}
+		L.set_legend_json(legend_json)
+		return L
+
+	def __delete_legend(self, style_json, gslegend_obj):
+		"""Set the legend json representation of 'style_json' dict to null.
+
+		Args:
+			style_json (dict): Json representation for style.
+			gslegend_obj (object): GSLegend object having JSON representation of legend.
+		"""
 		if(isinstance(gslegend_obj, GSLegend)):
 			gslegend_obj.delete_legend_json()
-			self.set_legend(gslegend_obj)
+			self.__set_legend(style_json, gslegend_obj)
 		else:
 			raise Exception("delete_legend method must take GSLegend object as argument")
 

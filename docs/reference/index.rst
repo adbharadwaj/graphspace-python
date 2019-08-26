@@ -56,3 +56,11 @@ GSGroup Class
     :members:
     :undoc-members:
     :show-inheritance:
+
+GSLegend Class
+--------------
+
+.. automodule:: graphspace_python.graphs.classes.gslegend
+    :members:
+    :undoc-members:
+    :show-inheritance:

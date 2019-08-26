@@ -540,7 +540,7 @@ class Groups(object):
             'Both group_id and group_name can\'t be none when group object has no \'name\' or \'id\' attribute!')
 
     def get_group_graphs(self, group_name=None, group_id=None, group=None, limit=20, offset=0):
-    """Get graphs shared with a group provided the group_name, group_id or the group object itself.
+        """Get graphs shared with a group provided the group_name, group_id or the group object itself.
 
         Args:
                 group_name (str, optional): Name of the group. Defaults to None.
@@ -585,11 +585,11 @@ class Groups(object):
         Note:
                 Refer to the `tutorial <../tutorial/tutorial.html#fetching-graphs-shared-with-a-group>`_ for more about fetching graphs of a group.
         """
-
         query = {
             'limit': limit,
             'offset': offset
         }
+        
         if group is not None:
             if hasattr(group, 'id'):
                 group_id = group.id

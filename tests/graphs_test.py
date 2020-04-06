@@ -4,6 +4,7 @@ from graphspace_python.api.client import GraphSpace
 from graphspace_python.api.obj.graph import Graph
 from layouts_test import test_layouts_endpoint
 from groups_test import test_groups_endpoint
+from legend_test import test_gslegend
 from graphspace_python.api import errors
 
 
@@ -23,6 +24,7 @@ def test_graphs_endpoint():
 	test_get_graph_by_id()
 	test_delete_graph(name='MyTestGraph')
 	test_user_not_authorised_error(graph.id)
+	test_gslegend()
 
 
 def test_graph_already_exists_error(name):

@@ -3,6 +3,7 @@ import networkx as nx
 import re
 from six import string_types
 from networkx.exception import NetworkXError
+from graphspace_python.graphs.classes.gslegend import GSLegend
 
 
 class GSGraph(nx.DiGraph):
@@ -705,6 +706,171 @@ class GSGraph(nx.DiGraph):
 		else:
 			del self.positions_json[node_name]
 
+	def set_legend(self, gslegend_obj):
+		"""Set the json representation of legend for the graph.
+
+		Args:
+			gslegend_obj (object): GSLegend object having JSON representation of legend for the graph.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> from graphspace_python.graphs.classes.gslegend import GSLegend
+			>>> L = GSLegend()
+			>>> legend_json = {
+			...	    "legend":{
+			...	        "nodes":{
+			...	            "Source Receptor": {
+			...	                "shape":"triangle",
+			...	                "background-color":"#ff1400"
+			...	             },
+			...	            "Receptor": {
+			...	                "shape":"circle",
+			...	                "background-color":"#1900ff"
+			...	            }
+			...	        },
+			...	        "edges":{
+			...	            "Phosphorylation":{
+			...	                "line-color":"#0fcf25",
+			...	                "line-style":"solid",
+			...	                "arrow-shape":"triangle"
+			...	            }
+			...	        }
+			...	    }
+			...	}
+			>>> L.set_legend_json(legend_json)
+
+			>>> G = GSGraph()
+			>>> G.set_name('My Sample Graph')
+			>>> G.set_tags(['sample'])
+			>>> G.set_legend(L)
+		"""
+		self.__set_legend(self.style_json, gslegend_obj)
+
+	def get_legend(self):
+		"""Get a GSLegend Object having JSON representation of legend for the graph.
+
+		Returns:
+			object: GSLegend Object having JSON representation of legend for the graph.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> from graphspace_python.graphs.classes.gslegend import GSLegend
+			>>> L = GSLegend()
+			>>> legend_json = {
+			...	    "legend":{
+			...	        "nodes":{
+			...	            "Source Receptor": {
+			...	                "shape":"triangle",
+			...	                "background-color":"#ff1400"
+			...	             },
+			...	            "Receptor": {
+			...	                "shape":"circle",
+			...	                "background-color":"#1900ff"
+			...	            }
+			...	        },
+			...	        "edges":{
+			...	            "Phosphorylation":{
+			...	                "line-color":"#0fcf25",
+			...	                "line-style":"solid",
+			...	                "arrow-shape":"triangle"
+			...	            }
+			...	        }
+			...	    }
+			...	}
+			>>> L.set_legend_json(legend_json)
+
+			>>> G = GSGraph()
+			>>> G.set_name('My Sample Graph')
+			>>> G.set_tags(['sample'])
+			>>> G.set_legend(L)
+			>>> G.get_legend()
+			<graphspace_python.graphs.classes.gslegend.GSLegend at 0x7f6ae5997e10>
+		"""
+		return self.__get_legend(self.style_json)
+
+	def delete_legend(self, gslegend_obj):
+		"""Set the json representation of legend for the graph to null.
+
+		Args:
+			gslegend_obj (object): GSLegend object having JSON representation of legend for the graph.
+
+		Examples:
+			>>> from graphspace_python.graphs.classes.gsgraph import GSGraph
+			>>> from graphspace_python.graphs.classes.gslegend import GSLegend
+			>>> L = GSLegend()
+			>>> legend_json = {
+			...	    "legend":{
+			...	        "nodes":{
+			...	            "Source Receptor": {
+			...	                "shape":"triangle",
+			...	                "background-color":"#ff1400"
+			...	             },
+			...	            "Receptor": {
+			...	                "shape":"circle",
+			...	                "background-color":"#1900ff"
+			...	            }
+			...	        },
+			...	        "edges":{
+			...	            "Phosphorylation":{
+			...	                "line-color":"#0fcf25",
+			...	                "line-style":"solid",
+			...	                "arrow-shape":"triangle"
+			...	            }
+			...	        }
+			...	    }
+			...	}
+			>>> L.set_legend_json(legend_json)
+
+			>>> G = GSGraph()
+			>>> G.set_name('My Sample Graph')
+			>>> G.set_tags(['sample'])
+			>>> G.set_legend(L)
+			>>> L = G.get_legend()
+			>>> G.delete_legend(L)
+		"""
+		self.__delete_legend(self.style_json, gslegend_obj)
+
+	def __set_legend(self, style_json, gslegend_obj):
+		"""Set the 'legend_json' attribute of GSLegend object to 'style_json' dict.
+
+		Args:
+			style_json (dict): Json representation for style.
+			gslegend_obj (object): GSLegend object having JSON representation of legend.
+
+		"""
+		if(isinstance(gslegend_obj, GSLegend)):
+			legend_json = gslegend_obj.get_legend_json()
+			style_json.update(legend_json)
+		else:
+			raise Exception("set_legend method must take GSLegend object as argument")
+
+	def __get_legend(self, style_json):
+		"""Set the legend json representation from 'style_json' dict to 'legend_json' attribute of GSLegend object and return the GSLegend object.
+
+		Args:
+			style_json (dict): Json representation for style.
+
+		Returns:
+			object: GSLegend Object having JSON representation of legend.
+		"""
+		L = GSLegend()
+		legend_json = {'legend': style_json.get('legend',{})}
+		L.set_legend_json(legend_json)
+		return L
+
+	def __delete_legend(self, style_json, gslegend_obj):
+		"""Set the legend json representation of 'style_json' dict to null.
+
+		Args:
+			style_json (dict): Json representation for style.
+			gslegend_obj (object): GSLegend object having JSON representation of legend.
+		"""
+		if(isinstance(gslegend_obj, GSLegend)):
+			gslegend_obj.delete_legend_json()
+			self.__set_legend(style_json, gslegend_obj)
+		else:
+			raise Exception("delete_legend method must take GSLegend object as argument")
+
 	####################################################################
 	### NODE PROPERTY FUNCTIONS #################################################
 
@@ -1067,7 +1233,7 @@ class GSGraph(nx.DiGraph):
 		"""
 		if property_name in element and element[property_name] not in valid_property_values:
 			return element_selector + " contains illegal value for property: " + property_name + ".  Value given for this property was: " + \
-				   element[property_name] + ".  Accepted values for property: " + property_name + " are: [" + valid_property_values + "]"
+				   element[property_name] + ".  Accepted values for property: " + property_name + " are: [" + str(valid_property_values) + "]"
 
 		return None
 
@@ -1135,6 +1301,8 @@ class GSGraph(nx.DiGraph):
 			("mid-source-arrow-fill", GSGraph.ALLOWED_ARROW_FILL),
 			("target-arrow-fill", GSGraph.ALLOWED_ARROW_FILL),
 			("mid-target-arrow-fill", GSGraph.ALLOWED_ARROW_FILL)
+			# Edge legend specific
+			("arrow-shape", GSGraph.ALLOWED_ARROW_SHAPES)
 		]
 
 		for property_name, allowed_property_values in node_validity_checklist:

@@ -11,6 +11,7 @@ def test_gslegend():
 	test_remove_legend_entries()
 	test_remove_invalid_legend_entries()
 	test_delete_legend_json()
+	pass
 
 
 def test_set_legend_json():
@@ -48,14 +49,14 @@ def test_add_legend_entries():
 def test_add_invalid_legend_entries():
 	Ld = GSLegend()
 	style = {'background-color': 'yellow'}
-	with pytest.raises(KeyError):
+	with pytest.raises(Exception):
 		Ld.add_legend_entries('nodes', 'TF', style)
 
 
 def test_add_invalid_style_legend_entries():
 	Ld = GSLegend()
 	style = {'background-color': 'yellow', 'shape':'decagon'}
-	with pytest.raises(KeyError):
+	with pytest.raises(Exception):
 		Ld.add_legend_entries('nodes', 'TF', style)
 
 
@@ -75,7 +76,7 @@ def test_remove_legend_entries():
 def test_remove_invalid_legend_entries():
 	Ld = GSLegend()
 	Ld.add_legend_entries(element_type='nodes', label='Receptor', style={'background-color': 'black', 'shape':'star'})
-	with pytest.raises(KeyError):
+	with pytest.raises(Exception):
 		Ld.remove_legend_entries('nodes', 'TF')
 
 

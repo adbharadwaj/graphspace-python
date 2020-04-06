@@ -1300,7 +1300,7 @@ class GSGraph(nx.DiGraph):
 			("source-arrow-fill", GSGraph.ALLOWED_ARROW_FILL),
 			("mid-source-arrow-fill", GSGraph.ALLOWED_ARROW_FILL),
 			("target-arrow-fill", GSGraph.ALLOWED_ARROW_FILL),
-			("mid-target-arrow-fill", GSGraph.ALLOWED_ARROW_FILL)
+			("mid-target-arrow-fill", GSGraph.ALLOWED_ARROW_FILL),
 			# Edge legend specific
 			("arrow-shape", GSGraph.ALLOWED_ARROW_SHAPES)
 		]

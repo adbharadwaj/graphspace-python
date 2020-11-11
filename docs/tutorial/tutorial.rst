@@ -5,10 +5,14 @@ Start here to begin working with `graphspace-python`.
 Connecting to GraphSpace
 ------------------------
 
-You can connect to GraphSpace using your username and password.
+You can connect to GraphSpace using your username and password,
 
 >>> from graphspace_python.api.client import GraphSpace
 >>> graphspace = GraphSpace('user1@example.com', 'user1')
+
+or using your username and authentication key.
+>>> from graphspace_python.api.client import GraphSpace
+>>> graphspace = GraphSpace('user1@example.com', auth_token='Basic dXNlcjFAZXhhbXBsZS5jb206dXNlcjE=')
 
 You can also set the api host using the :meth:`~graphspace_python.api.client.GraphSpace.set_api_host`
 method if you are using a different server.

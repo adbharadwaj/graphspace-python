@@ -40,14 +40,26 @@ class GraphSpace(object):
 		Groups
 	]
 
-	def __init__(self, username, password):
+	def __init__(self, username=None, password=None, auth_token=None):
 		"""Construct a new 'GraphSpace' client object.
 
 		Args:
 			username (str): Email of the user.
 			password (str): Password of the user.
+			auth_token (str): Basic authorization value
+
+		User can connect to GraphSpace using username and password or username and auth_token.
+		Example:
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', 'user1')
+			OR
+			>>> from graphspace_python.api.client import GraphSpace
+			>>> graphspace = GraphSpace('user1@example.com', auth_token='Basic dXNlcjFAZXhhbXBsZS5jb206dXNlcjE=')
 		"""
 		# self.auth_token = 'Basic %s' % base64.b64encode('{0}:{1}'.format(username, password))
+		if auth_token is not None:
+			userpass = base64.b64decode(auth_token[len('Basic')+1:])   #'username:password'
+			password = userpass[len(username)+1:]
 		self.auth_token = requests.auth.HTTPBasicAuth(username, password)
 		self.username = username
 		self.api_host = API_HOST

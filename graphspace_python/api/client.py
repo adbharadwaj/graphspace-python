@@ -71,7 +71,7 @@ class GraphSpace(object):
 		 		instance of the bound method.
 		"""
 		for method in instance_methods:
-			if method[0][0] is not '_':
+			if method[0][0] != '_':
 				self.__setattr__(method[0], method[1])
 
 	def set_api_host(self, host):

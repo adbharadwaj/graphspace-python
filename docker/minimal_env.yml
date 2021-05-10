@@ -1,0 +1,9 @@
+name: graphspace-python
+channels:
+dependencies:
+  - future
+  - networkx=1.11
+  - requests=2.10.0
+  - pytest
+  - mock
+  - python=3.5

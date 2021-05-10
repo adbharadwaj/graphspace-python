@@ -31,7 +31,6 @@ then inside the container in the `/home/graphspace-python/example` directory cal
 
 the output files will be linked to the host machine in the example subdirectory.
 
-
 ## Run (Windows) -- AR did not test.
 
 To use the docker container with windows, use a bash terminal such as Git for Windows.

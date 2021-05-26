@@ -471,7 +471,7 @@ class GSGraph(nx.DiGraph):
 		attr_dict.update({"source": source, "target": target})
 
 		GSGraph.validate_edge_data_properties(data_properties=attr_dict, nodes_list=self.nodes())
-		if float(nx.__version__) >= 2:
+		if nx.__version__[0] == '2': # networkx 2.x
 			super(GSGraph, self).add_edge(source, target, **attr_dict)
 		else:
 			super(GSGraph, self).add_edge(source, target, attr_dict)
@@ -524,7 +524,7 @@ class GSGraph(nx.DiGraph):
 		attr_dict.update({"name": node_name, "id": node_name})
 
 		GSGraph.validate_node_data_properties(data_properties=attr_dict, nodes_list=self.nodes())
-		if float(nx.__version__) >= 2:
+		if nx.__version__[0] == '2': # networkx 2.x
 			super(GSGraph, self).add_node(node_name, **attr_dict)
 		else:
 			super(GSGraph, self).add_node(node_name, attr_dict)

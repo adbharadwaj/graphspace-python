@@ -27,7 +27,7 @@ To mount the example data inside the container:
 
 then inside the container in the `/home/graphspace-python/example` directory call:
 
-`python test.py example-graph.txt compbio@reed.edu compbio`
+`python test.py example-graph.txt user6@example.com user6`
 
 the output files will be linked to the host machine in the example subdirectory.
 

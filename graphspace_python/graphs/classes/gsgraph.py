@@ -990,7 +990,9 @@ class GSGraph(nx.DiGraph):
 
 	@staticmethod
 	def set_node_bubble_effect_property(node_properties, color, whitetext=False):
-		"""Add a "bubble effect" to the node by making the border color the same as the text outline color.
+		"""
+		Add a "bubble effect" to the node by adding a border or outline 
+                around the text ('text-outline-width': 4) with the given color ('text-outline-color': color)
 
 		Args:
 			node_properties (dict): Dictionary of node attributes. Key-value pairs will be used to set data associated with the node.
@@ -1001,7 +1003,7 @@ class GSGraph(nx.DiGraph):
 			dict: Dictionary of node attributes.
 		"""
 		node_properties.update({'text-outline-color': color})
-		node_properties = GSGraph.set_node_border_color_property(node_properties, color)
+		#node_properties = GSGraph.set_node_border_color_property(node_properties, color)
 		# also make outline thicker and text larger
 		node_properties.update({'text-outline-width': 4})
 		if whitetext:
